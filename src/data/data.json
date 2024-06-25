@@ -1,0 +1,37 @@
+[
+  {
+    "label": "Saturday",
+    "sales": "1700",
+    "earning": "1200"
+  },
+  {
+    "label": "Sunday",
+    "sales": "1900",
+    "earning": "1500"
+  },
+  {
+    "label": "Monday",
+    "sales": "1800",
+    "earning": "1400"
+  },
+  {
+    "label": "Tuesday",
+    "sales": "2150",
+    "earning": "1850"
+  },
+  {
+    "label": "Wednesday",
+    "sales": "2600",
+    "earning": "2200"
+  },
+  {
+    "label": "Thursday",
+    "sales": "1950",
+    "earning": "1600"
+  },
+  {
+    "label": "Friday",
+    "sales": "2680",
+    "earning": "3200"
+  }
+]

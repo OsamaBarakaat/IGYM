@@ -1,0 +1,21 @@
+.spanSVGPrimary svg {
+    stroke: var(--main-color);
+    stroke-width: 3px;
+    margin-right: 2px;
+}
+
+.plans-details {
+    position: relative;
+}
+
+.offerDesign {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 1rem;
+    background-color: var(--main-color);
+    color: whitesmoke;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+
+}

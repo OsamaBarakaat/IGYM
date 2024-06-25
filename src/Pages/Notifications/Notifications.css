@@ -1,0 +1,26 @@
+.allNotifications {
+    max-height: 75vh;
+    overflow: auto;
+    width: 90%;
+    margin: 0 auto;
+    box-shadow: var(--main-box-shadow);
+}
+
+
+.singleNotif {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1rem;
+    margin: 0.25rem 0;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    background-color: var(--main-background-color-two);
+    border-radius: 0.5rem 0.5rem 0 0;
+    overflow: auto;
+}
+
+.notifContent {
+    flex-grow: 1;
+    font-weight: 100;
+}

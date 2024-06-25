@@ -1,0 +1,142 @@
+@media (max-width:370px) {
+    .gyms {
+        margin-bottom: 10rem;
+    }
+}
+
+.buttonOnSearch {
+    position: absolute;
+    top: 50%;
+    right: 2rem;
+    transform: translateY(-50%);
+}
+
+.inputSearch {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: none;
+    transition: all 0.3s ease;
+    color: var(--main-text-color);
+    font-size: small;
+    transition: all 0.3s ease;
+    background-color: var(--main-background-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+}
+
+.inputSearch:focus {
+    outline: 1px solid var(--main-color);
+}
+
+.mainTableTwo {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    table-layout: auto;
+}
+
+.mainTableTwo img {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+}
+
+.tdOfImg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.tdOfImg span:first-child {
+    margin: 0 0.5rem;
+}
+
+.mainTableTwo th,
+.mainTableTwo td {
+    border: 1px solid var(--main-border-color);
+    padding: 0.5rem;
+    min-width: 100px;
+}
+
+.mainTableTwo th {
+    position: relative;
+}
+
+.mainTableTwo th::after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: var(--main-color);
+    opacity: 0.5;
+}
+
+.mainTableTwo tr:last-child {
+    border-bottom: none;
+}
+
+.mainTableTwo td {
+    padding: 1rem;
+}
+
+@media (max-width:1050px) {
+    .mainTableTwo thead {
+        display: none;
+    }
+
+    .tdOfImg {
+        justify-content: flex-end;
+
+    }
+
+    .tdOfImg span:first-child {
+        margin: 0 0.5rem;
+    }
+
+    .mainTableTwo,
+    .mainTableTwo tbody,
+    .mainTableTwo tr,
+    .mainTableTwo td {
+        display: block;
+        width: 100%;
+
+    }
+
+    .mainTableTwo tr,
+    .mainTableTwo td {
+        padding: 1rem;
+        background-color: var(--main-background-color-two);
+
+    }
+
+    .mainTableTwo tr {
+        margin-bottom: 1rem;
+        border-radius: 0.5rem;
+    }
+
+    .mainTableTwo td {
+        text-align: right;
+        padding: 0.5rem;
+        position: relative;
+        margin-bottom: 0.5rem;
+    }
+
+    .mainTableTwo td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        text-align: left;
+        width: 40%;
+        padding: 0.5rem;
+        color: var(--main-color);
+        font-weight: var(--main-font-weight);
+        border-radius: 0.5rem;
+    }
+}

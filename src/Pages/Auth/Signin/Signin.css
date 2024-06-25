@@ -1,0 +1,49 @@
+.signin {
+    min-height: 100vh;
+    position: relative;
+    background-color: var(--main-background-color-two);
+}
+
+@media screen and (max-width: 768px) {
+    .signin {
+        min-height: 120vh;
+        background-color: var(--main-background-color-two);
+    }
+}
+
+.main-cont-signin {
+    width: 30%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--main-background-color);
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+@media screen and (max-width: 1250px) {
+    .main-cont-signin {
+        width: 50%;
+    }
+
+}
+
+@media screen and (max-width: 1000px) {
+    .main-cont-signin {
+        width: 60%;
+    }
+
+}
+
+@media screen and (max-width: 768px) {
+    .main-cont-signin {
+        width: 90%;
+    }
+
+}
+
+.signin-header {
+    color: var(--main-text-color);
+    opacity: 0.9;
+}

@@ -1,0 +1,76 @@
+.mobileSide {
+    position: fixed;
+    overflow: auto;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--main-background-color);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    bottom: 0;
+    z-index: 100;
+    gap: 1rem;
+}
+
+.mobileSide svg {
+    stroke: var(--main-color);
+    stroke-width: 0.5;
+}
+
+.linkMobileSide {
+    text-decoration: none;
+    color: var(--main-color);
+}
+
+.mobileSide div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobileSide div span:first-child {
+    padding: 1rem;
+    background-color: var(--main-background-color-two);
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.ulOfmobileSide {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.ulOfmobileSide li {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    color: var(--main-text-color);
+    background-color: rgb(230 230 230);
+    text-decoration: none;
+    list-style: none;
+
+}
+
+.ulOfmobileSide li:hover {
+    background-color: rgb(201, 201, 201);
+    cursor: pointer;
+}
+
+.LinkOfMobileOffcanvas {
+    text-decoration: none;
+    color: var(--main-color-500);
+    margin-left: 1rem;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}

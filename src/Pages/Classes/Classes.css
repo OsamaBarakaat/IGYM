@@ -1,0 +1,53 @@
+.repeat,
+.mins,
+.includedIn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 1rem;
+    border-radius: 1rem;
+    font-weight: lighter;
+    font-size: smaller;
+}
+
+.repeat {
+    background-color: orange;
+    color: black;
+}
+
+.mins {
+    background-color: green;
+    color: white;
+}
+
+.includedIn {
+    background-color: blue;
+    color: white;
+}
+
+.coach {
+    background-color: var(--main-background-color-two);
+    border-radius: 0.5rem;
+    padding: 0.25rem 1rem;
+    margin: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.min-vh-40 {
+    min-height: 50vh;
+}
+
+@media screen and (max-width: 768px) {
+    .midCol {
+        flex-direction: column;
+    }
+}
+
+.multiSelect {
+    background-color: rgb(33, 34, 24);
+    color: black;
+    position: relative;
+    z-index: 100;
+}

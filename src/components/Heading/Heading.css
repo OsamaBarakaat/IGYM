@@ -1,0 +1,15 @@
+.titleContainer {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 2rem 1rem 1rem 1rem;
+    background-color: var(--main-background-color);
+    overflow: hidden;
+}
+
+.title {
+    color: var(--main-text-color);
+    margin-left: 1rem;
+    font-size: 24px;
+    font-weight: var(--main-font-weight);
+}

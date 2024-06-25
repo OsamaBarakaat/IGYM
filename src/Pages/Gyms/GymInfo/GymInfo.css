@@ -1,0 +1,190 @@
+.gymProfile {
+    background-color: var(--main-background-color-two);
+    min-height: 100vh;
+    color: var(--main-text-color);
+    transition: all 0.5s ease;
+
+}
+
+.gymProfile header {
+    background-color: var(--main-background-color);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.backAndDots {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--main-text-color);
+}
+
+.backAndDots svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+}
+
+.logoAndInfo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transition: all 0.5s ease;
+
+}
+
+.info h2 {
+    font-weight: var(--main-font-weight);
+}
+
+.info p {
+    font-size: small;
+    font-weight: var(--main-font-weight);
+    opacity: 0.9;
+}
+
+.navOfGymProfile .navItems {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1rem;
+    width: 65%;
+    gap: 1rem;
+}
+
+@media screen and (max-width: 992px) {
+    .navOfGymProfile .navItems {
+        width: 70%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .navOfGymProfile .navItems {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .navOfGymProfile .navItems {
+        width: 100%;
+        flex-wrap: wrap;
+        padding: 0;
+    }
+}
+
+@media screen and (max-width: 350px) {}
+
+.navOfGymProfile .navItems div {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: var(--main-font-weight);
+}
+
+.infoCard {
+    background-color: var(--main-background-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem auto;
+    transition: all 0.5s ease;
+
+}
+
+.inputFoucs {
+    width: 100%;
+    height: max-content;
+    padding: 1rem;
+    margin: 1rem;
+    border: none;
+    transition: all 0.3s ease;
+    color: var(--main-text-color);
+    font-size: small;
+    transition: all 0.3s ease;
+    background-color: var(--main-background-color-two);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    outline: 1px solid var(--main-border-color);
+}
+
+.inputFoucs:focus {
+    outline: 1px solid var(--main-color);
+}
+
+.pOfGymInfo {
+    max-height: 20vh;
+    width: 80%;
+    overflow: auto;
+    padding: 1rem;
+    margin: 1rem;
+    border: none;
+    transition: all 0.3s ease;
+    color: var(--main-text-color);
+    font-size: small;
+    transition: all 0.3s ease;
+    background-color: var(--main-background-color-two);
+    text-align: center;
+    border-radius: 0.5rem;
+}
+
+.locationAndPlans {
+    display: flex;
+    justify-content: space-between;
+    align-items: auto;
+    gap: 1rem;
+
+}
+
+
+
+.location {
+    width: 60%;
+    overflow: auto;
+
+}
+
+.plans {
+    width: 39%;
+    height: max-content;
+
+}
+
+@media (max-width:992px) {
+    .locationAndPlans {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .location {
+        width: 100%;
+
+    }
+
+    .plans {
+        width: 100%;
+    }
+
+}
+
+.locationAndPlans div {
+    background-color: var(--main-background-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
+
+}
+
+.location div {
+    height: 100%;
+}
+
+.location iframe {
+    width: 100%;
+    /* min-height: 300px; */
+    height: 100%;
+    border: none;
+    border-radius: 0.5rem;
+    margin: auto;
+}

@@ -1,0 +1,466 @@
+.GeneralSettingsOne {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "sidebar main";
+    transition: all 0.3s ease;
+    min-height: 100vh;
+    overflow: auto;
+}
+
+@media (max-width:450px) {
+    .GeneralSettingsOne {
+        padding-bottom: 2rem;
+        margin-bottom: 15rem;
+    }
+}
+
+.GeneralSettingsOne p {
+    font-weight: var(--main-font-weight);
+}
+
+.DangerButtonContainer {
+    padding: 1rem;
+    margin: 2rem;
+    display: none;
+}
+
+@media (max-width: 1024px) {
+    .GeneralSettingsOne {
+        grid-template-columns: 1fr;
+        grid-template-areas: "main";
+    }
+
+    .GeneralSettingsOneSidebar {
+        display: none;
+    }
+
+    .myInfoHeading {
+        display: none;
+    }
+
+    .DangerButtonContainer {
+        display: block;
+    }
+
+}
+
+@media (min-width:1025px) {
+    .secondNav {
+        display: none;
+    }
+}
+
+.secondNav {
+    background-color: var(--main-background-color);
+    border-bottom: 2px solid var(--main-border-color);
+    padding: 2rem;
+}
+
+.secondNav .head {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    font-size: 2rem;
+    margin: 0.5rem 0;
+    font-weight: 600;
+    color: var(--main-text-color);
+}
+
+.secondNavItems {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    color: var(--main-text-color);
+}
+
+.secondNavItems div {
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    color: var(--main-text-color);
+    font-size: smaller;
+    width: 100%;
+
+}
+
+.secondNavItems div:active {
+    background-color: var(--main-background-color-two);
+    cursor: pointer;
+    border: 1px solid var(--main-color);
+}
+
+.GeneralSettingsOneSidebar {
+    grid-area: sidebar;
+    border-right: 2px solid var(--main-border-color);
+    background-color: var(--main-background-color);
+    min-height: 100vh;
+    padding: 2rem;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    left: 0;
+
+}
+
+.main-GS-content {
+    grid-area: main;
+}
+
+.GeneralSettingsOneSidebar p {
+    color: var(--main-text-color);
+    margin-bottom: 1rem;
+
+}
+
+.GeneralSettingsOneNav ul {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    font-weight: 600;
+
+}
+
+.GeneralSettingsOneNav ul li {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    color: var(--main-text-color);
+    font-size: smaller;
+    width: 100%;
+
+}
+
+.GeneralSettingsOneNav ul li:hover {
+    background-color: var(--main-background-color-two);
+    cursor: pointer;
+
+}
+
+/* ========================  */
+.tableContainer {
+    width: 95%;
+    margin: 1rem auto;
+    background-color: var(--main-background-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    color: var(--main-text-color);
+    font-size: small;
+    overflow-x: auto;
+}
+
+.mainTable {
+    border-collapse: collapse;
+    margin-top: 1rem;
+    overflow: auto;
+    width: 100%;
+}
+
+.mainTable th,
+.mainTable td {
+    border: 1px solid var(--main-border-color);
+    padding: 0.5rem;
+    min-width: 100px;
+
+}
+
+
+.mainTable tr:last-child {
+    border-bottom: none;
+}
+
+.mainTable td {
+    padding: 1rem;
+}
+
+.optionOfSelect {
+    padding: 0.25rem;
+}
+
+.flexcenteraround button {
+    width: 45%;
+}
+
+.plansOfMyGym {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 1rem;
+}
+
+.plansOfMyGym .plans-details {
+    background-color: var(--main-background-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    color: var(--main-text-color);
+    width: calc(50% - 2rem);
+    position: relative;
+    overflow: auto;
+    transition: all 0.3s ease;
+
+}
+
+.main-of-pd div {
+    margin: 0.5rem;
+}
+
+
+.add-plan {
+    border: 3px dashed var(--main-color);
+    background-color: var(--main-color);
+    opacity: 0.6;
+}
+
+.add-plan .Add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.add-plan .Add svg {
+    width: 35px;
+    height: 35px;
+    color: var(--main-color);
+    margin: 1rem;
+
+}
+
+.add-plan:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+@media (max-width: 1100px) {
+    .plansOfMyGym .plans-details {
+        width: calc(100% - 2rem);
+    }
+
+    .plansOfMyGym {
+        justify-content: center;
+    }
+}
+
+.lineFlex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+
+}
+
+.lineFlex div {
+    margin: 0.25rem
+}
+
+@media (max-width: 1300px) {
+    .lineFlex {
+        flex-wrap: wrap;
+
+    }
+
+
+}
+
+.costpermonth {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.costpermonth div {
+    width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .costpermonth {
+        flex-direction: column;
+        gap: 0;
+    }
+
+}
+
+/* ======== */
+.toggle {
+    height: 50px;
+    /* Updated */
+    width: 100px;
+    /* Updated */
+    border-radius: 25px;
+    /* Updated */
+    margin: auto;
+    background-image: linear-gradient(aqua, skyblue);
+    position: relative;
+    cursor: pointer;
+}
+
+.toggle.night {
+    background-image: linear-gradient(midnightblue, rebeccapurple);
+}
+
+.notch {
+    height: 45px;
+    /* Updated */
+    width: 45px;
+    /* Updated */
+    border-radius: 50%;
+    background: yellow;
+    position: absolute;
+    top: 2.5px;
+    /* Updated */
+    left: 2.5px;
+    /* Updated */
+    box-shadow: 0 0 5px yellow;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.notch>.crater {
+    background: burlywood;
+    border-radius: 50%;
+    position: absolute;
+    opacity: 0;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.4) inset;
+}
+
+.night .crater {
+    opacity: 0.4;
+}
+
+.crater:first-child {
+    left: 2.5px;
+    /* Updated */
+    top: 7.5px;
+    /* Updated */
+    height: 7.5px;
+    /* Updated */
+    width: 20px;
+    /* Updated */
+    transform: rotate(-45deg);
+}
+
+.crater:last-child {
+    right: 5px;
+    /* Updated */
+    top: 7.5px;
+    /* Updated */
+    height: 7.5px;
+    /* Updated */
+    width: 12.5px;
+    /* Updated */
+    transform: rotate(45deg);
+}
+
+.night>.notch {
+    background: whitesmoke;
+    box-shadow: 0 0 5px whitesmoke;
+    transform: translate(50px, 0);
+    /* Updated */
+}
+
+.shape {
+    position: absolute;
+    background: whitesmoke;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.shape.sm {
+    height: 2.5px;
+    /* Updated */
+    width: 25px;
+    /* Updated */
+    top: 50%;
+    left: 30%;
+    /* Updated */
+}
+
+.shape.md {
+    height: 5px;
+    /* Updated */
+    width: 37.5px;
+    /* Updated */
+    top: 12.5%;
+    /* Updated */
+    left: 12.5%;
+    /* Updated */
+    z-index: 2;
+}
+
+.shape.lg {
+    height: 7.5px;
+    /* Updated */
+    width: 50px;
+    /* Updated */
+    bottom: 10px;
+    /* Updated */
+    left: 12.5%;
+    /* Updated */
+}
+
+.night .shape {
+    background: lightgray;
+    box-shadow: 0 0 10px 2px violet;
+}
+
+.night .shape.sm {
+    height: 2.5px;
+    /* Updated */
+    width: 2.5px;
+    /* Updated */
+    transform: translate(-10px, 0);
+}
+
+.night .shape.sm:first-of-type {
+    transform: translate(-20px, -5px);
+    /* Updated */
+}
+
+.night .shape.md {
+    height: 5px;
+    /* Updated */
+    width: 5px;
+    /* Updated */
+    transform: translate(5px, 0);
+}
+
+.night .shape.lg {
+    height: 7.5px;
+    /* Updated */
+    width: 7.5px;
+    /* Updated */
+    transform: translate(-5px, 0);
+}
+
+
+.golden-background {
+    background-image: linear-gradient(135deg, #f5d87bba 0%, #fd9f85d4 100%)
+}
+
+.silver-background {
+    background-image: linear-gradient(135deg, #b8b8b8c7 0%, #676464d8 100%)
+}
+
+
+.pag-item {
+    background-color: var(--main-background-color-two);
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid var(--main-color);
+    cursor: pointer;
+
+}

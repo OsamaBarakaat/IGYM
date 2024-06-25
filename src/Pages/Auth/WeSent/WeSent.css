@@ -1,0 +1,10 @@
+.back svg {
+    color: var(--main-text-color);
+    font-weight: var(--main-font-weight);
+    width: 25px;
+    height: 25px;
+}
+
+.back {
+    margin: 1rem 0;
+}

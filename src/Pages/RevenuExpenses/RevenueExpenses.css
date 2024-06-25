@@ -1,0 +1,110 @@
+.container {
+    padding: 20px;
+}
+
+
+.card-title {
+    font-weight: bold;
+}
+
+.card-body h4 {
+    margin-top: 20px;
+    font-size: 1.5rem;
+}
+
+.roundeddd {
+    border-radius: 100%;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.roundeddd-one {
+    background-color: #E7EDFF;
+}
+
+.roundeddd-two {
+    background-color: #FFE0EB;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.tabs-content {
+    margin-top: 20px;
+}
+
+.row {
+    margin-top: 20px;
+}
+
+@media only screen and (max-width: 600px) {
+    .card h4 {
+        font-size: 1.2rem;
+    }
+
+    .container {
+        padding: 10px;
+    }
+}
+
+.contOfCardsAndChart {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    gap: 1rem;
+    grid-template-areas: "card1 card2 chart chart";
+}
+
+.CardsOfContOne {
+    grid-area: card1;
+}
+
+.CardsOfContOne:hover {
+    .adadada {
+        background-color: #396AFF;
+        color: black;
+    }
+}
+
+.CardsOfContTwo {
+    grid-area: card2;
+
+}
+
+.CardsOfContTwo:hover {
+    .sdsdsdsd {
+        background-color: #FF82AC;
+        color: black;
+    }
+}
+
+.ChartOfCont {
+    grid-area: chart;
+
+
+}
+
+@media (max-width: 768px) {
+    .contOfCardsAndChart {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        grid-template-rows: 1fr 1fr 1fr;
+        gap: 1rem;
+        grid-template-areas: "card1" "card2" "chart";
+    }
+
+    .CardsOfContOne {
+        grid-area: card1;
+    }
+
+    .CardsOfContTwo {
+        grid-area: card2;
+    }
+
+    .ChartOfCont {
+        grid-area: chart;
+    }
+}

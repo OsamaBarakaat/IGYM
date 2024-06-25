@@ -1,0 +1,153 @@
+.sideBar {
+  height: 100vh;
+  background-color: var(--main-background-color);
+  padding: 2rem;
+  transition: all 0.5s ease;
+  overflow: auto;
+  color: var(--main-text-color);
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "logo" "sidebar-content" "collapseSideBar";
+  border-right-width: 2px;
+  border-right-style: solid;
+  border-right-color: var(--main-border-color);
+}
+
+.logoOfSideBar {
+  margin-bottom: 1rem;
+  text-align: start;
+  grid-area: logo;
+  font-size: 25px;
+  font-weight: bold;
+  color: var(--main-color);
+}
+
+.ulOfSideBar {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ulOfSideBar li {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 1.5rem;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  color: var(--main-text-color);
+}
+
+.ulOfSideBar li:hover {
+  background-color: var(--main-background-color-two);
+  cursor: pointer;
+  color: var(--main-text-color);
+}
+
+.ulOfSideBar li span {
+  margin-left: 0.5rem;
+}
+
+.collapseSideBar {
+  grid-area: collapseSideBar;
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-content {
+  flex-grow: 1;
+  grid-area: sidebar-content;
+}
+
+.collapseSideBar button {
+  border: none;
+  outline: none;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--main-background-color-two);
+  color: var(--main-text-color);
+  font-size: 0.75rem;
+}
+
+.collapseSideBar button:active {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.collapseSideBar button span {
+  margin: 0 0.5rem;
+}
+
+.collapseSideBar svg {
+  transition: all 0.3s ease;
+}
+
+/* -----  */
+.inactiveSideBar {
+  transition: all 0.5s ease;
+  height: 100vh;
+  background-color: var(--main-background-color);
+  padding: 2rem;
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+  left: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "logo" "sidebar-content" "collapseSideBar";
+  color: var(--main-text-color);
+  border-right-width: 2px;
+  border-right-style: solid;
+  border-right-color: var(--main-border-color);
+}
+
+.inactiveSideBar .ulOfSideBar li {
+  display: flex;
+  justify-content: center;
+}
+
+.inactiveSideBar .ulOfSideBar li span {
+  margin: 0;
+}
+
+.inactiveSideBar .spanOfTitleOfUl {
+  display: none;
+}
+
+.Link {
+  text-decoration: none;
+  color: white;
+}
+
+#button-tooltip {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-size: smaller;
+}
+
+#inactive-button-tooltip {
+  display: none;
+}
+
+.popover {
+  max-height: 50vh;
+  overflow: auto;
+}
+
+.popoverBody>div {
+  padding: 0 0.5rem;
+}
+
+.popoverBody>div:hover {
+  cursor: pointer;
+  background-color: #eee;
+}

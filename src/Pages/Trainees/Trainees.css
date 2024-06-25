@@ -1,0 +1,41 @@
+.searchInput {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background-color: var(--main-background-color-two);
+    color: var(--main-text-color);
+}
+
+.modala {
+    background-color: var(--main-background-color);
+    color: var(--main-text-color);
+    overflow: auto;
+}
+
+.inputStyle {
+    width: 2rem !important;
+    height: 2rem;
+    margin: 1rem;
+    padding: 0.5rem;
+    font-size: 2rem;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+@media only screen and (max-width: 770px) {
+    .margin-top--small .inputStyle {
+        width: 0.5rem !important;
+        height: 0.5rem;
+        margin: 0 5px;
+        font-size: 1rem;
+    }
+
+    .card>form>p {
+        font-size: 1.2em !important;
+    }
+}

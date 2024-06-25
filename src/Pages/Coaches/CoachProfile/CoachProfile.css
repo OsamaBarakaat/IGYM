@@ -1,0 +1,43 @@
+.inputsInCoachProfile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.mainContentOfCoach {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+
+}
+
+@media screen and (max-width: 1000px) {
+    .mainContentOfCoach {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .imageAndsave {
+        width: 100%;
+    }
+}
+
+.inputsInCoachProfile .inputFeild {
+    width: calc(50% - 1rem);
+}
+
+@media screen and (max-width: 1000px) {
+    .inputsInCoachProfile {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    .inputsInCoachProfile .inputFeild {
+        width: 100%;
+    }
+
+}

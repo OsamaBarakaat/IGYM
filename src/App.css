@@ -1,0 +1,598 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+    scroll-behavior: smooth;
+}
+
+:root {
+    --main-color: #396aff;
+    --main-color-500: #396aff;
+    --main-text-color: #eeeeeeee;
+    --main-text-color-two: rgb(33, 34, 24);
+    --main-background-color: rgb(33, 34, 24);
+    --main-background-color-two: #353624;
+    --main-border-color: rgb(66, 66, 65);
+    --main-box-shadow: 0px 1px 3px var(--main-switch-color);
+    --box-shadow-card: 0px 1px 2px rgba(0, 0, 0, 0.05);
+    --success: rgb(33, 150, 83);
+    --danger: rgb(211, 64, 83);
+    --warning: rgb(255, 167, 11);
+    --main-font-weight: 600;
+    --main-switch-color: #ffffff66;
+}
+
+[data-theme="light"] {
+    --main-color: #396aff;
+    --main-background-color: rgb(254, 255, 254);
+    --main-background-color-two: #f4f4f4;
+    --main-text-color: rgba(33, 33, 33, 0.933);
+    --main-border-color: rgb(232, 233, 232);
+    --main-switch-color: rgb(33, 34, 24);
+
+
+}
+
+@media (max-width: 400px) {
+    body {
+        font-size: 14px;
+        /* Adjust as needed */
+        /* color: #ac0785; */
+    }
+
+    .container {
+        width: 100%;
+        padding: 10px;
+        /* Adjust as needed */
+    }
+}
+
+.main-color {
+    color: var(--main-color);
+}
+
+.main-text-color {
+    color: var(--main-text-color);
+}
+
+.border-bottom-main-color {
+    border-bottom: 4px solid var(--main-color);
+}
+
+.warning {
+    color: var(--warning);
+}
+
+/* Styling the scrollbar track */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    /* Width of the scrollbar */
+}
+
+/* Styling the scrollbar thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+    background: var(--main-color);
+    /* Color of the scrollbar thumb */
+    border-radius: 3px;
+    /* Round corners */
+}
+
+/* Styling the scrollbar track on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--main-color);
+    /* Color of the scrollbar thumb on hover */
+}
+
+/* Styling the scrollbar track */
+::-webkit-scrollbar-track {
+    background: none;
+    /* or background: transparent; */
+}
+
+/* Styling the scrollbar track in Firefox */
+.scrollbar {
+    scrollbar-color: var(--main-color) #f1f1f1;
+    scrollbar-width: thin;
+    /* or auto to hide on non-scrollable content */
+}
+
+/* Styling the scrollbar thumb in Firefox */
+.scrollbar-thumb {
+    background-color: var(--main-color);
+    border-radius: 6px;
+}
+
+.app-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "sidebar main";
+
+}
+
+@media (max-width:768px) {
+    .app-container {
+        grid-template-columns: 1fr;
+        grid-template-areas: "main";
+    }
+}
+
+.sideBarOfAppJs {
+    grid-area: sidebar;
+}
+
+
+.main-content {
+    grid-area: main;
+    background-color: var(--main-background-color-two);
+    min-height: 100vh;
+
+}
+
+@media screen and (max-width: 768px) {
+    .main-content {
+        padding-bottom: 3rem;
+        margin-bottom: 5rem;
+    }
+
+}
+
+.midText {
+    font-size: 1.175rem;
+    font-weight: bold;
+}
+
+.text-small-opacity {
+    font-size: small;
+    opacity: 0.7;
+    margin: 0;
+
+}
+
+
+.text-small-opacity p {
+    margin: 0
+}
+
+.transition {
+    transition: all 0.3s ease;
+
+}
+
+.font-small {
+    font-size: 16px;
+}
+
+.border-bottom-main {
+    border-bottom: 2px solid var(--main-color);
+
+}
+
+.opacityL {
+    opacity: 0.6;
+}
+
+.opacitySmall {
+    opacity: 0.8;
+}
+
+.w-40 {
+    width: 40%;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.cursor-not-allowed {
+    cursor: no-drop !important;
+
+}
+
+.font-wheight {
+    font-weight: var(--main-font-weight);
+}
+
+.font-smaller {
+    font-size: small;
+
+}
+
+@media (max-width: 768px) {
+    .small-100 {
+        width: 100%;
+    }
+}
+
+.bold {
+    font-weight: bold;
+
+}
+
+.fontLarge {
+    font-size: 1.5rem;
+    font-weight: var(--main-font-weight);
+}
+
+.fontMid {
+    font-size: 1rem;
+    font-weight: var(--main-font-weight);
+
+}
+
+.flexcenterstart {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: start;
+}
+
+.flexcenteraround {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: space-around;
+}
+
+.flexcenterbetween {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.flexcenterend {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    text-align: center;
+}
+
+.flexcentercenter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.logo {
+    width: 130px;
+    height: 130px;
+    border-radius: 100%;
+}
+
+.logoLarge {
+    width: 190px;
+    height: 190px;
+    border-radius: 2rem;
+    margin: 1rem;
+}
+
+@media screen and (max-width: 550px) {
+    .logo {
+        width: 100px;
+        height: 100px;
+        border-radius: 100%;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .logo {
+        width: 80px;
+        height: 80px;
+        border-radius: 100%;
+    }
+}
+
+@media screen and (max-width: 850px) {
+    .logoLarge {
+        width: 140px;
+        height: 140px;
+        border-radius: 100%;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .logoLarge {
+        width: 100px;
+        height: 100px;
+        border-radius: 100%;
+    }
+}
+
+.logo-small {
+    width: 50px;
+    height: 50px;
+    border-radius: 2rem;
+    margin: 1rem;
+}
+
+.logo-small img {
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+}
+
+.logo-extra-small {
+    width: 30px;
+    height: 30px;
+
+}
+
+.logo-extra-small img {
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+}
+
+.logo img {
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+}
+
+.border-bottom {
+    border-bottom: 2px solid var(--main-background-color);
+
+}
+
+.PrimaryButton {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: var(--main-color-500);
+    border: none;
+    font-size: small;
+    transition: all 0.3s ease;
+    background-color: var(--main-background-color-two);
+    cursor: pointer;
+    font-weight: var(--main-font-weight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.PrimaryButton span:first-child {
+    margin-right: 0.5rem;
+
+}
+
+.PrimaryButton:hover {
+    background-color: var(--main-color-500);
+    cursor: pointer;
+    color: whitesmoke;
+}
+
+.PrimaryButtonTwo {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: var(--main-color-500);
+    border: none;
+    font-size: small;
+    transition: all 0.3s ease;
+    background-color: var(--main-background-color-two);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    border: 1px solid var(--main-color-500);
+
+
+}
+
+.PrimaryButtonTwo span:first-child {
+    margin-right: 0.5rem;
+
+}
+
+.PrimaryButtonTwo:hover {
+    cursor: pointer;
+}
+
+.SecondaryButtonTwo {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: var(--main-background-color-two);
+    border: none;
+    font-weight: var(--main-font-weight);
+    transition: all 0.3s ease;
+    background-color: var(--main-text-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+}
+
+.SecondaryButtonTwo span:first-child {
+    margin-right: 0.5rem;
+
+}
+
+.SecondaryButtonTwo:hover {
+    cursor: pointer;
+    color: var(--main-text-color);
+    background-color: var(--main-background-color-two);
+}
+
+.SecondaryButton {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    /* color: var(--main-text-color); */
+    color: whitesmoke;
+    border: none;
+    font-size: small;
+    transition: all 0.3s ease;
+    background-color: var(--main-color-500);
+    cursor: pointer;
+    font-weight: var(--main-font-weight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.SecondaryButton:hover {
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.SecondaryButton span:first-child {
+    margin-right: 0.5rem;
+
+}
+
+.textButton {
+    color: var(--main-color-500);
+    font-weight: var(--main-font-weight);
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    outline: none;
+
+}
+
+.textButton:hover {
+    text-decoration: underline;
+}
+
+.textButton:active {
+    color: indigo;
+}
+
+.textButtonTwo {
+    color: var(--main-color-500);
+    font-weight: var(--main-font-weight);
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    outline: none;
+}
+
+.textButtonTwo:hover {
+    text-decoration: underline;
+}
+
+.primarySvg {
+    color: var(--main-color-500);
+}
+
+.underLineHover:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.DangerButton {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: whitesmoke;
+    border: none;
+    font-size: small;
+    transition: all 0.3s ease;
+    background-color: var(--danger);
+    cursor: pointer;
+    font-weight: var(--main-font-weight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.DangerButton span:first-child {
+    margin-right: 0.5rem;
+
+}
+
+.DangerButton:hover {
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.widthSmall {
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+}
+
+@media screen and (max-width: 550px) {
+    .widthSmall {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        margin-right: 0.5rem;
+    }
+}
+
+.widthMedium {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+}
+
+.bigCard {
+    background-color: var(--main-background-color);
+    color: var(--main-text-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem auto;
+    transition: all 0.5s ease;
+
+}
+
+.bigCardTwo {
+    background-color: var(--main-background-color);
+    color: var(--main-text-color);
+    padding: 1rem;
+    transition: all 0.5s ease;
+}
+
+#modal {
+    background-color: var(--main-background-color);
+    color: var(--main-text-color);
+}
+
+.RowMid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.RowMid div {
+    width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .RowMid {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 0;
+    }
+}
+
+.input-error {
+    font-size: 18px;
+    padding: 10px 10px 10px 5px;
+    display: block;
+    width: 100%;
+    border-radius: 5px;
+    background-color: var(--main-background-color-two);
+    color: var(--main-text-color);
+    outline: none;
+    border-radius: 5px;
+    font-size: small;
+    padding: 1rem;
+    border: 1px solid #fb3434;
+}
+
+.error-message {
+    color: #fb3434;
+    font-size: x-small;
+    margin-bottom: 0.5rem;
+}
+
+button:disabled {
+    opacity: 0.35;
+    background-color: bisque;
+}

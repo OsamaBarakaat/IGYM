@@ -1,0 +1,23 @@
+.day-container {
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: var(--main-background-color-two);
+    color: var(--main-text-color);
+}
+
+.day-container label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+}
+
+
+.floating-label {
+    margin-bottom: 10px;
+}
+
+.pink-icon {
+    stroke: #ff5e78;
+    stroke-width: 1px;
+}

@@ -1,0 +1,62 @@
+.roles {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.singleRole,
+.add-role-card {
+    width: 45%;
+    max-height: 50vh;
+    overflow: auto;
+}
+
+@media (max-width: 768px) {
+
+    .singleRole,
+    .add-role-card {
+        width: 100%;
+    }
+}
+
+.spanSVGDanger svg {
+    stroke: var(--danger);
+    stroke-width: 3px;
+    margin-right: 2px;
+}
+
+.add-role-card {
+    width: 45%;
+    max-height: 50vh;
+    overflow: auto;
+    background-color: var(--main-background-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    opacity: 0.7;
+    margin: 1rem 0;
+    color: var(--main-text-color);
+    position: relative;
+    transition: all 0.3s ease;
+    border: 3px dashed var(--main-color);
+    margin-left: 1.5rem;
+}
+
+.add-role-card:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.Add-Role {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.Add-Role svg {
+    width: 2rem;
+    height: 2rem;
+    color: var(--main-color);
+}
