@@ -4,7 +4,7 @@ const BASE_URL = "https://gym-api-d2a5.onrender.com";
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 30000,
+  timeout: 90000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -13,7 +13,7 @@ const axiosInstance = axios.create({
 
 export const privateAxiosInstance = axios.create({
     baseURL: BASE_URL,
-    timeout: 30000,
+    timeout: 90000,
     headers: {
         "Content-Type": "application/json",
     },

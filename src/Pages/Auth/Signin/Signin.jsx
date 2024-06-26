@@ -41,7 +41,7 @@ const Signin = () => {
       navigate("/");
     } catch (error) {
       console.log(error);
-      if (error.message === "timeout of 30000ms exceeded") {
+      if (error.message === "timeout of 90000ms exceeded") {
         toast.error("Network Error");
       } else if (error.response.data.message) {
         toast.error(error.response.data.message);

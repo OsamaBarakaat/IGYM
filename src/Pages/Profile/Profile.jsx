@@ -28,7 +28,7 @@ const Profile = () => {
   const [showEyeOfReConfirm, setShowEyeOfReConfirm] = useState(false);
 
   const navigate = useNavigate();
-  const userData = useSelector((state) => state.user);
+  const {data:userData} = useSelector((state) => state.user);
   console.log(userData);
   const dispatch = useDispatch();
   const handleUpload = () => {
