@@ -35,9 +35,7 @@ const Signin = () => {
         password: values.password,
       });
       console.log(res.data);
-      dispatch(setUser(res.data.data.user));
-      localStorage.setItem("accessToken", res.data.data.accessToken);
-      localStorage.setItem("jwt", res.data.data.refreshToken);
+      dispatch(setUser({data: res.data.data.user, token: res.data.data.accessToken}));
       setLoadingInput(false);
       toast.success("user signed in successfully");
       navigate("/");

@@ -1,7 +1,9 @@
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 const RequireAuth = ({ children }) => {
-  return localStorage.getItem("jwt") ? children : <Navigate to="/signin" />;
+  const user = useSelector((state) => state.user);
+  return user?.token ? children : <Navigate to="/signin" />;
 };
 
 export default RequireAuth;

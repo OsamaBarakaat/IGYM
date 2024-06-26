@@ -12,7 +12,7 @@ import Plans from "./Pages/Plans/Plans";
 import Layout from "./Pages/Layout/Layout";
 import Forgetpass from "./Pages/Auth/ForgetPass/Forgetpass";
 import WeSent from "./Pages/Auth/WeSent/WeSent";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 import LandedForgetpass from "./Pages/Auth/Landed-Forgetpass/LandedForgetpass";
 import SetPass from "./Pages/Auth/LandedFromInvit/SetPass/SetPass";
 import SetName from "./Pages/Auth/LandedFromInvit/SetName/SetName";
@@ -30,15 +30,14 @@ import EditWorkingTimes from "./Pages/Settings/EditWorkingTimes/EditWorkingTimes
 import RevenueExpenses from "./Pages/RevenuExpenses/RevenueExpenses";
 function App() {
   const theme = useSelector((state) => {
-    return state.theme
+    return state.theme;
   });
+
   return (
     <Router>
       <div className="App" data-theme={theme}>
         <Routes>
-          <Route path="/" element={<RequireAuth>
-            <Layout />
-          </RequireAuth>} >
+          <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
@@ -57,12 +56,19 @@ function App() {
             <Route path="/editworkingtimes" element={<EditWorkingTimes />} />
             <Route path="/revenueexpenses" element={<RevenueExpenses />} />
           </Route>
-          <Route path="/signin" element={<NoAuth >
-            <Signin />
-          </NoAuth>} >
-          </Route>
+          <Route
+            path="/signin"
+            element={
+              <NoAuth>
+                <Signin />
+              </NoAuth>
+            }
+          ></Route>
           <Route path="/forgetpass" element={<Forgetpass />} />
-          <Route path="/resetpassword/:invitToken" element={<LandedForgetpass />} />
+          <Route
+            path="/resetpassword/:invitToken"
+            element={<LandedForgetpass />}
+          />
           <Route path="/setpass/:invitToken" element={<SetPass />} />
           <Route path="/setname" element={<SetName />} />
           <Route path="/wesent" element={<WeSent />} />
