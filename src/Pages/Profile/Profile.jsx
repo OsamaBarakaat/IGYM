@@ -306,7 +306,7 @@ const Profile = () => {
                         <Form.Control
                           type="text"
                           placeholder="name"
-                          defaultValue={userData?.name}
+                          value={userData?.name}
                           readOnly
                         />
                       </FloatingLabel>
@@ -339,7 +339,7 @@ const Profile = () => {
                             <Form.Control
                               type="number"
                               placeholder="phone number"
-                              defaultValue={userData.phones[0]}
+                              value={userData.phones[0]}
                               readOnly
                             />
                           )}
