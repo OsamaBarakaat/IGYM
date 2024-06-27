@@ -142,7 +142,7 @@ const Profile = () => {
         });
         console.log(res.data.data);
         toast.success("Profile updated successfully");
-        dispatch(setUser(res.data.data));
+        dispatch(setUser({ data: res.data.data }));
       } catch (error) {
         console.log(error);
         toast.error("Something went wrong");
