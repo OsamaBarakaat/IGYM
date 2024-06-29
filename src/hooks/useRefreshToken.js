@@ -9,7 +9,7 @@ const useRefreshToken = () => {
     const dispatch = useDispatch();
     const refresh = async () => {
         try {
-            const { data } = await axiosInstance.get("/admins/refresh-token");
+            const { data } = await axiosInstance.get("/owners/refresh-token");
             console.log(data);
             dispatch(setUser({token: data.data.accessToken}));
             return data.data.accessToken;

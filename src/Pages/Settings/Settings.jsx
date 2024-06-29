@@ -266,7 +266,7 @@ const Settings = () => {
 
   useEffect(() => {
     const fetchAdmins = async () => {
-      const res = await axiosPrivate.get(`/admins?page=${page}&limit=${limit}`);
+      const res = await axiosPrivate.get(`/owners?page=${page}&limit=${limit}`);
       setAdmins(res?.data?.data?.documents);
       console.log("admins", res?.data?.data?.documents);
       console.log(res);

@@ -30,7 +30,7 @@ const Signin = () => {
     }, 1000);
 
     try {
-      const res = await axiosInstance.post("/admins/login", {
+      const res = await axiosInstance.post("/owners/login", {
         email: values.email,
         password: values.password,
       });

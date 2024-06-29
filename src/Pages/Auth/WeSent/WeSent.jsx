@@ -38,7 +38,7 @@ const WeSent = () => {
 
         <div className="signin-header">
           <p>
-            We've sent an email to <strong>Osama@gmail.com </strong> with a link
+            We've sent an email with a link
             to reset your password.
           </p>
         </div>

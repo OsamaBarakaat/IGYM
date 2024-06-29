@@ -17,7 +17,7 @@ const Forgetpass = () => {
     console.log("user signed in : ", values);
     actions.setSubmitting(true);
     try {
-      const res = await axiosInstance.post("/admins/forget-password", {
+      const res = await axiosInstance.post("/owners/forget-password", {
         email: values.email,
         clientUrl: "https://my-gym-panel.vercel.app/resetpassword/",
       });

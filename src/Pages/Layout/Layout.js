@@ -15,7 +15,7 @@ const Layout = () => {
   const [loading, setLoading] = useState(true);
   const fetchUser = async () => {
     try {
-      const { data } = await axiosPrivate.get("/admins/me");
+      const { data } = await axiosPrivate.get("/owners/me/");
       console.log(data.data);
       dispatch(setUser({data: data.data}));
     } catch (error) {

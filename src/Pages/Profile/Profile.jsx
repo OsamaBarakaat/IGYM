@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "../../components/Heading/Heading";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import "./Profile.css";
@@ -41,11 +41,7 @@ const Profile = () => {
 
   const LogOut = async () => {
     try {
-      await axiosInstance.post("/admins/logout", null, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      });
+      await axiosInstance.post("/owners/logout");
       toast.success("Logged out successfully");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("jwt");
@@ -67,7 +63,7 @@ const Profile = () => {
   const updateImage = async () => {
     try {
       const res = await axiosPrivate.patch(
-        "/admins/update-my-profile",
+        "/owners/update-my-profile",
         formData,
         {
           headers: {
@@ -89,7 +85,7 @@ const Profile = () => {
     actions.setSubmitting(true);
 
     try {
-      const res = await axiosPrivate.patch("/admins/update-my-password", {
+      const res = await axiosPrivate.patch("/owners/update-my-password", {
         currentPassword: values.oldPassword,
         password: values.newPassword,
         passwordConfirm: values.confirmPassword,
@@ -136,7 +132,7 @@ const Profile = () => {
       console.log(values);
 
       try {
-        const res = await axiosPrivate.patch("/admins/update-my-profile", {
+        const res = await axiosPrivate.patch("/owners/update-my-profile/", {
           name: values.name,
           phones: [values?.phones],
         });
@@ -171,6 +167,9 @@ const Profile = () => {
     } else setTypeReOfConfirmPass("password");
   };
 
+  useEffect(() => {
+    console.log("sssssssss",updateProfile.handleSubmit);
+  })
   return (
     <div className="Profile" style={{ minHeight: "100vh" }}>
       <aside className="profileSide">
@@ -399,7 +398,7 @@ const Profile = () => {
                           className="mb-3"
                         >
                           <Form.Control
-                            type="number"
+                            type="text"
                             name="phones"
                             placeholder="phone number"
                             value={updateProfile.values.phones}

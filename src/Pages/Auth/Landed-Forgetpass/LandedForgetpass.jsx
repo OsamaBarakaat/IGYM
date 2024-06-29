@@ -41,7 +41,7 @@ const LandedForgetpass = () => {
       }, 1000);
 
       const { data } = await axiosInstance.patch(
-        `/admins/reset-password/${invitToken}`,
+        `/owners/reset-password/${invitToken}`,
         {
           password: values.newPassword,
           passwordConfirm: values.confirmPassword,
