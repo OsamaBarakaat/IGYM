@@ -358,12 +358,7 @@ const Coaches = () => {
                     <button className="SecondaryButton w-100" type="submit">
                       Edit
                     </button>
-                    <button
-                      className="DangerButton w-100"
-                      onClick={handleClose}
-                    >
-                      Cancel
-                    </button>
+                    <button className="DangerButton w-100">Delete Coach</button>
                   </div>
                 </div>
               </form>

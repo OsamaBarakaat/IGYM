@@ -28,8 +28,24 @@ const Classes = () => {
   };
 
   const removeInput = (index) => {
-    const newInputs = inputs.filter((_, i) => i !== index);
-    setInputs(newInputs);
+    const newInputsEdit = inputs.filter((_, i) => i !== index);
+    setInputs(newInputsEdit);
+  };
+  const [inputsEdit, setInputsEdit] = useState(["fateure 1", "fateure 2"]);
+
+  const handleChangeOfPlansEdit = (index, event) => {
+    const newInputsEdit = [...inputsEdit];
+    newInputsEdit[index] = event.target.value;
+    setInputsEdit(newInputsEdit);
+  };
+
+  const addInputEdit = () => {
+    setInputsEdit([...inputsEdit, ""]);
+  };
+
+  const removeInputEdit = (index) => {
+    const newInputsEdit = inputsEdit.filter((_, i) => i !== index);
+    setInputsEdit(newInputsEdit);
   };
   const Plans = [
     {
@@ -723,7 +739,7 @@ const Classes = () => {
                   </div>
                   <div className="mb-2 w-100 includedFitures">
                     <p className="font-bold">Class Includes</p>
-                    {inputs.map((input, index) => (
+                    {inputsEdit.map((input, index) => (
                       <Row key={index} className="mb-3 w-100">
                         <Col>
                           <FloatingLabel
@@ -738,24 +754,24 @@ const Classes = () => {
                               placeholder="Enter feature"
                               value={input}
                               onChange={(event) =>
-                                handleChangeOfPlans(index, event)
+                                handleChangeOfPlansEdit(index, event)
                               }
                             />
                           </FloatingLabel>
                         </Col>
                         <Col xs="auto">
-                          {inputs.length > 1 && (
+                          {inputsEdit.length > 1 && (
                             <Button
                               variant="danger"
-                              onClick={() => removeInput(index)}
+                              onClick={() => removeInputEdit(index)}
                             >
                               -
                             </Button>
                           )}
                         </Col>
                         <Col xs="auto">
-                          {index === inputs.length - 1 && input !== "" && (
-                            <Button variant="primary" onClick={addInput}>
+                          {index === inputsEdit.length - 1 && input !== "" && (
+                            <Button variant="primary" onClick={addInputEdit}>
                               +
                             </Button>
                           )}
@@ -768,13 +784,8 @@ const Classes = () => {
                   <button className="SecondaryButton w-100" type="submit">
                     Edit class
                   </button>
-                  <button
-                    onClick={() => {
-                      setModalShowEditClass(false);
-                    }}
-                    className="DangerButton w-100"
-                  >
-                    Close
+                  <button className="DangerButton w-100" type="button">
+                    Delete Class
                   </button>
                 </div>
               </form>

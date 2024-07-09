@@ -91,9 +91,26 @@ const Plans = () => {
     const newInputs = inputs.filter((_, i) => i !== index);
     setInputs(newInputs);
   };
+  const inputs2 = ["feature1", "feature2"];
+  const [inputs22, setInputs22] = useState(inputs2);
+
+  const handleChangeOfEditPlans = (index, event) => {
+    const newInputs = [...inputs22];
+    newInputs[index] = event.target.value;
+    setInputs22(newInputs);
+  };
+
+  const addInputEdit = () => {
+    setInputs22([...inputs22, ""]);
+  };
+
+  const removeInputEdit = (index) => {
+    const newInputs = inputs22.filter((_, i) => i !== index);
+    setInputs22(newInputs);
+  };
 
   const handlePrintValues = () => {
-    console.log(inputs);
+    console.log(inputs22);
   };
 
   // get plans
@@ -257,6 +274,7 @@ const Plans = () => {
       name: "Locker rooms",
     },
   ];
+
   if (loading) {
     return (
       <>
@@ -798,6 +816,328 @@ const Plans = () => {
                   </Modal.Body>
                 </Modal>
               </div>
+              <div className="modalEditPlan">
+                <Modal
+                  show={modalEditPlan}
+                  onHide={() => setModalShowEditPlan(false)}
+                  size="lg"
+                  aria-labelledby="contained-modal-title-vcenter"
+                  centered
+                >
+                  <Modal.Header closeButton id="modal">
+                    <Modal.Title id="contained-modal-title-vcenter">
+                      Edit Plan
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body id="modal">
+                    <div>
+                      <form onSubmit={handleSubmit}>
+                        <div>
+                          <div className="mb-2">
+                            <FloatingLabel
+                              controlId="floatingInput"
+                              label="Plan Name"
+                              id={
+                                errors.name && touched.name
+                                  ? "floatingError"
+                                  : "floatingInput"
+                              }
+                            >
+                              <Form.Control
+                                type="text"
+                                placeholder="Plan Name"
+                                name="name"
+                                value={values.name}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </FloatingLabel>
+                            {errors.name && touched.name && (
+                              <small className="error-message">
+                                {errors.name}
+                              </small>
+                            )}
+                          </div>
+
+                          <div className="costpermonth">
+                            <div className="mb-2">
+                              <FloatingLabel
+                                controlId="floatingInput"
+                                label="Cost"
+                                id={
+                                  errors.cost && touched.cost
+                                    ? "floatingError"
+                                    : "floatingInput"
+                                }
+                              >
+                                <Form.Control
+                                  type="number"
+                                  placeholder="Cost"
+                                  name="cost"
+                                  value={values.cost}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                />
+                              </FloatingLabel>
+                              {errors.cost && touched.cost && (
+                                <small className="error-message">
+                                  {errors.cost}
+                                </small>
+                              )}
+                            </div>
+                            <p>Per</p>
+                            <div className="mb-2">
+                              <FloatingLabel
+                                controlId="floatingInput"
+                                label="Duration(months)"
+                                id={
+                                  errors.duration && touched.duration
+                                    ? "floatingError"
+                                    : "floatingInput"
+                                }
+                              >
+                                <Form.Control
+                                  type="number"
+                                  placeholder="Duration"
+                                  value={values.duration}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  name="duration"
+                                />
+                              </FloatingLabel>
+                              {errors.duration && touched.duration && (
+                                <small className="error-message">
+                                  {errors.duration}
+                                </small>
+                              )}
+                            </div>
+                          </div>
+                          <div className="costpermonth">
+                            <div className="mb-2">
+                              <FloatingLabel
+                                controlId="floatingInput"
+                                label="Freeze Days"
+                                id={
+                                  errors.freezeDays && touched.freezeDays
+                                    ? "floatingError"
+                                    : "floatingInput"
+                                }
+                              >
+                                <Form.Control
+                                  type="number"
+                                  placeholder="Freeze Days"
+                                  name="freezeDays"
+                                  value={values.freezeDays}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                />
+                              </FloatingLabel>
+                              {errors.freezeDays && touched.freezeDays && (
+                                <small className="error-message">
+                                  {errors.freezeDays}
+                                </small>
+                              )}
+                            </div>
+                            <div className="mb-2">
+                              <FloatingLabel
+                                controlId="floatingInput"
+                                label="Minimum Freeze Days"
+                                id={
+                                  errors.minFreezeDays && touched.minFreezeDays
+                                    ? "floatingError"
+                                    : "floatingInput"
+                                }
+                              >
+                                <Form.Control
+                                  type="number"
+                                  placeholder="Minimum Freeze Days"
+                                  value={values.minFreezeDays}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  name="minFreezeDays"
+                                />
+                              </FloatingLabel>
+                              {errors.minFreezeDays &&
+                                touched.minFreezeDays && (
+                                  <small className="error-message">
+                                    {errors.minFreezeDays}
+                                  </small>
+                                )}
+                            </div>
+                          </div>
+                          <div className="costpermonth">
+                            <div className="mb-2">
+                              <FloatingLabel
+                                controlId="floatingInput"
+                                label="Invitations Number"
+                                id={
+                                  errors.invitationsNumber &&
+                                  touched.invitationsNumber
+                                    ? "floatingError"
+                                    : "floatingInput"
+                                }
+                              >
+                                <Form.Control
+                                  type="number"
+                                  placeholder="Invitations Number"
+                                  name="invitationsNumber"
+                                  value={values.invitationsNumber}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                />
+                              </FloatingLabel>
+                              {errors.invitationsNumber &&
+                                touched.invitationsNumber && (
+                                  <small className="error-message">
+                                    {errors.invitationsNumber}
+                                  </small>
+                                )}
+                            </div>
+                            <div className="mb-2">
+                              <FloatingLabel
+                                controlId="floatingInput"
+                                label="Private Sessions Number"
+                                id={
+                                  errors.privateSessionsNumber &&
+                                  touched.privateSessionsNumber
+                                    ? "floatingError"
+                                    : "floatingInput"
+                                }
+                              >
+                                <Form.Control
+                                  type="number"
+                                  placeholder="Private Sessions Number"
+                                  value={values.privateSessionsNumber}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  name="privateSessionsNumber"
+                                />
+                              </FloatingLabel>
+                              {errors.privateSessionsNumber &&
+                                touched.privateSessionsNumber && (
+                                  <small className="error-message">
+                                    {errors.privateSessionsNumber}
+                                  </small>
+                                )}
+                            </div>
+                            <div className="mb-2">
+                              <FloatingLabel
+                                controlId="floatingInput"
+                                label="Nutrition Sessions Number"
+                                id={
+                                  errors.nutritionSessionsNumber &&
+                                  touched.nutritionSessionsNumber
+                                    ? "floatingError"
+                                    : "floatingInput"
+                                }
+                              >
+                                <Form.Control
+                                  type="number"
+                                  placeholder="Nutrition Sessions Number"
+                                  value={values.nutritionSessionsNumber}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  name="nutritionSessionsNumber"
+                                />
+                              </FloatingLabel>
+                              {errors.nutritionSessionsNumber &&
+                                touched.nutritionSessionsNumber && (
+                                  <small className="error-message">
+                                    {errors.nutritionSessionsNumber}
+                                  </small>
+                                )}
+                            </div>
+                          </div>
+                          <div className="mb-2 w-100 includedFitures">
+                            <p className="font-bold">Plan Includes</p>
+                            {inputs22.map((input, index) => (
+                              <Row key={index} className="mb-3 w-100">
+                                <Col>
+                                  <FloatingLabel
+                                    className="w-100"
+                                    controlId="floatingInput"
+                                    label="Featurs"
+                                    id={"floatingInput"}
+                                  >
+                                    <Form.Control
+                                      className="w-100"
+                                      type="text"
+                                      placeholder={`Enter Feature ${index + 1}`}
+                                      value={input}
+                                      onChange={(event) =>
+                                        handleChangeOfEditPlans(index, event)
+                                      }
+                                    />
+                                  </FloatingLabel>
+                                </Col>
+                                <Col xs="auto">
+                                  {inputs22.length > 1 && (
+                                    <Button
+                                      variant="danger"
+                                      type="button"
+                                      onClick={() => removeInputEdit(index)}
+                                    >
+                                      -
+                                    </Button>
+                                  )}
+                                </Col>
+                                <Col xs="auto">
+                                  {index === inputs22.length - 1 && (
+                                    <Button
+                                      variant="primary"
+                                      type="button"
+                                      onClick={addInputEdit}
+                                    >
+                                      +
+                                    </Button>
+                                  )}
+                                </Col>
+                              </Row>
+                            ))}
+                          </div>
+                          <div className="mb-2 w-100">
+                            <FloatingLabel
+                              controlId="floatingInput"
+                              label="Description"
+                              id={
+                                errors.description && touched.description
+                                  ? "floatingError"
+                                  : "floatingInput"
+                              }
+                            >
+                              <Form.Control
+                                as="textarea"
+                                placeholder="Description"
+                                name="description"
+                                value={values.description}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </FloatingLabel>
+                            {errors.description && touched.description && (
+                              <small className="error-message">
+                                {errors.description}
+                              </small>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flexcenterbetween gap-2 ">
+                          <button
+                            className="SecondaryButton w-100"
+                            type="submit"
+                            disabled={isSubmitting}
+                          >
+                            Edit Plan
+                          </button>
+                          <button type="button" className="DangerButton w-100">
+                            Delete Plan
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </Modal.Body>
+                </Modal>
+              </div>
 
               <div className="OfferModals">
                 <div className="modalAddOffer">
@@ -1040,212 +1380,6 @@ const Plans = () => {
                     </Modal.Body>
                   </Modal>
                 </div>
-              </div>
-              <div className="modalEditPlan">
-                <Modal
-                  show={modalEditPlan}
-                  onHide={() => setModalShowEditPlan(false)}
-                  size="lg"
-                  aria-labelledby="contained-modal-title-vcenter"
-                  centered
-                >
-                  <Modal.Header closeButton id="modal">
-                    <Modal.Title id="contained-modal-title-vcenter">
-                      Edit Plan
-                    </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body id="modal">
-                    <div>
-                      <form onSubmit={editPlan.handleSubmit}>
-                        <div>
-                          <div className="mb-2">
-                            <FloatingLabel
-                              controlId="floatingInput"
-                              label="Plan Name"
-                              id={
-                                editPlan.errors.name && editPlan.touched.name
-                                  ? "floatingError"
-                                  : "floatingInput"
-                              }
-                            >
-                              <Form.Control
-                                type="text"
-                                placeholder="Plan Name"
-                                name="name"
-                                value={editPlan.values.name}
-                                onChange={editPlan.handleChange}
-                                onBlur={editPlan.handleBlur}
-                              />
-                            </FloatingLabel>
-                            {editPlan.errors.name && editPlan.touched.name && (
-                              <small className="error-message">
-                                {editPlan.errors.name}
-                              </small>
-                            )}
-                          </div>
-
-                          <div className="costpermonth">
-                            <div className="mb-2">
-                              <FloatingLabel
-                                controlId="floatingInput"
-                                label="Cost"
-                                id={
-                                  editPlan.errors.cost && editPlan.touched.cost
-                                    ? "floatingError"
-                                    : "floatingInput"
-                                }
-                              >
-                                <Form.Control
-                                  type="number"
-                                  placeholder="Cost"
-                                  name="cost"
-                                  value={editPlan.values.cost}
-                                  onChange={editPlan.handleChange}
-                                  onBlur={editPlan.handleBlur}
-                                ></Form.Control>
-                              </FloatingLabel>
-                              {editPlan.errors.cost &&
-                                editPlan.touched.cost && (
-                                  <small className="error-message">
-                                    {editPlan.errors.cost}
-                                  </small>
-                                )}
-                            </div>
-                            <p>Per</p>
-                            <div className="mb-2">
-                              <FloatingLabel
-                                controlId="floatingInput"
-                                label="Duration"
-                                id={
-                                  editPlan.errors.duration &&
-                                  editPlan.touched.duration
-                                    ? "floatingError"
-                                    : "floatingInput"
-                                }
-                              >
-                                <Form.Control
-                                  type="number"
-                                  placeholder="Duration"
-                                  value={editPlan.values.duration}
-                                  onChange={editPlan.handleChange}
-                                  onBlur={editPlan.handleBlur}
-                                  name="duration"
-                                ></Form.Control>
-                              </FloatingLabel>
-                              {editPlan.errors.duration &&
-                                editPlan.touched.duration && (
-                                  <small className="error-message">
-                                    {editPlan.errors.duration}
-                                  </small>
-                                )}
-                            </div>
-                          </div>
-
-                          <div className="RowMid">
-                            <div className="mb-2">
-                              <FloatingLabel
-                                controlId="floatingInput"
-                                label="freezeDays"
-                                id={
-                                  editPlan.errors.freezeDays &&
-                                  editPlan.touched.freezeDays
-                                    ? "floatingError"
-                                    : "floatingInput"
-                                }
-                              >
-                                <Form.Control
-                                  type="number"
-                                  placeholder="freezeDays"
-                                  name="freezeDays"
-                                  value={editPlan.values.freezeDays}
-                                  onChange={editPlan.handleChange}
-                                  onBlur={editPlan.handleBlur}
-                                ></Form.Control>
-                              </FloatingLabel>
-                              {editPlan.errors.freezeDays &&
-                                editPlan.touched.freezeDays && (
-                                  <small className="error-message">
-                                    {editPlan.errors.freezeDays}
-                                  </small>
-                                )}
-                            </div>
-                            <div className="mb-2">
-                              <FloatingLabel
-                                controlId="floatingInput"
-                                label="minFreezeDays"
-                                id={
-                                  errors.minFreezeDays && touched.minFreezeDays
-                                    ? "floatingError"
-                                    : "floatingInput"
-                                }
-                              >
-                                <Form.Control
-                                  type="number"
-                                  placeholder="minFreezeDays"
-                                  value={values.minFreezeDays}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  name="minFreezeDays"
-                                ></Form.Control>
-                              </FloatingLabel>
-                              {errors.minFreezeDays &&
-                                touched.minFreezeDays && (
-                                  <small className="error-message">
-                                    {errors.minFreezeDays}
-                                  </small>
-                                )}
-                            </div>
-                          </div>
-
-                          <div className="mb-2 w-100">
-                            <FloatingLabel
-                              controlId="floatingInput"
-                              label="Description"
-                              id={
-                                editPlan.errors.description &&
-                                editPlan.touched.description
-                                  ? "floatingError"
-                                  : "floatingInput"
-                              }
-                            >
-                              <Form.Control
-                                type="text"
-                                placeholder="description"
-                                name="description"
-                                value={editPlan.values.description}
-                                onChange={editPlan.handleChange}
-                                onBlur={editPlan.handleBlur}
-                              ></Form.Control>
-                            </FloatingLabel>
-                            {editPlan.errors.description &&
-                              editPlan.touched.description && (
-                                <small className="error-message">
-                                  {editPlan.errors.description}
-                                </small>
-                              )}
-                          </div>
-                        </div>
-                        <div className="flexcenteraround">
-                          <button
-                            className="SecondaryButton"
-                            type="submit"
-                            disabled={editPlan.isSubmitting}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => {
-                              setModalShowEditPlan(false);
-                            }}
-                            className="DangerButton"
-                          >
-                            Close
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </Modal.Body>
-                </Modal>
               </div>
             </>
           ) : (

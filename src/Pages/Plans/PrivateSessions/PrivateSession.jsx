@@ -359,13 +359,8 @@ const PrivateSession = () => {
                   <button className="SecondaryButton w-100" type="submit">
                     Edit Private Session
                   </button>
-                  <button
-                    onClick={() => {
-                      setModalShowEditPS(false);
-                    }}
-                    className="DangerButton w-100"
-                  >
-                    Close
+                  <button className="DangerButton w-100">
+                    Delete Private Session
                   </button>
                 </div>
               </form>
@@ -465,7 +460,7 @@ const PrivateSession = () => {
                     }}
                     className="DangerButton w-100"
                   >
-                    Close
+                    Delete Offer
                   </button>
                 </div>
               </form>

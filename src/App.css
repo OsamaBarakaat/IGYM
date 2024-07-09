@@ -507,6 +507,31 @@
     opacity: 0.6;
 }
 
+.SuccessButton {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: whitesmoke;
+    border: none;
+    font-size: small;
+    transition: all 0.3s ease;
+    background-color: var(--success);
+    cursor: pointer;
+    font-weight: var(--main-font-weight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.SuccessButton span:first-child {
+    margin-right: 0.5rem;
+
+}
+
+.SuccessButton:hover {
+    cursor: pointer;
+    opacity: 0.6;
+}
+
 .widthSmall {
     width: 60px;
     height: 60px;

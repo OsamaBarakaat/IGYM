@@ -35,7 +35,9 @@ const Signin = () => {
         password: values.password,
       });
       console.log(res.data);
-      dispatch(setUser({data: res.data.data.user, token: res.data.data.accessToken}));
+      dispatch(
+        setUser({ data: res.data.data.user, token: res.data.data.accessToken })
+      );
       setLoadingInput(false);
       toast.success("user signed in successfully");
       navigate("/");
