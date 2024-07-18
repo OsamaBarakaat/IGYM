@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FloatingLabel, Form, Modal } from "react-bootstrap";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import axiosInstance from "../../../api/axios";
+import { useSelector } from "react-redux";
 
 const PrivateSession = () => {
   const [modalShowAddPS, setModalShowAddPS] = useState(false);
@@ -7,44 +10,59 @@ const PrivateSession = () => {
   const [modalShowAddOfferPS, setModalShowAddOfferPS] = useState(false);
   const [modalShowEditOfferPS, setModalShowEditOfferPS] = useState(false);
   const handleClosePS = () => setModalShowAddPS(false);
-  const PrivateSessions = [
-    {
-      numberOfSeccions: 4,
-      price: 120,
-      expiresIn: "15 days",
-      isOffer: false,
-    },
-    {
-      numberOfSeccions: 6,
-      price: 200,
-      expiresIn: "30 days",
-      isOffer: true,
-      offerPrice: 150,
-    },
-    {
-      numberOfSeccions: 8,
-      price: 300,
-      expiresIn: "45 days",
-      isOffer: false,
-    },
-    {
-      numberOfSeccions: 10,
-      price: 400,
-      expiresIn: "60 days",
-      isOffer: false,
-    },
-    {
-      numberOfSeccions: 12,
-      price: 500,
-      expiresIn: "75 days",
-      isOffer: true,
-      offerPrice: 450,
-    },
-  ];
+  const [privateSessions, setPrivateSessions] = useState([]);
+
+  const {gymId} = useSelector((state) => state.user);
+
+
+  function getExpirationDate(document) {
+    const { createdAt, expireIn, expireType } = document;
+
+    const creationDate = new Date(createdAt);
+    let expirationDate;
+
+    switch (expireType) {
+      case "days":
+        expirationDate = new Date(creationDate);
+        expirationDate.setDate(creationDate.getDate() + expireIn);
+        break;
+      case "weeks":
+        expirationDate = new Date(creationDate);
+        expirationDate.setDate(creationDate.getDate() + expireIn * 7);
+        break;
+      case "months":
+        expirationDate = new Date(creationDate);
+        expirationDate.setMonth(creationDate.getMonth() + expireIn);
+        break;
+      case "years":
+        expirationDate = new Date(creationDate);
+        expirationDate.setFullYear(creationDate.getFullYear() + expireIn);
+        break;
+      default:
+        throw new Error(`Unknown expireType: ${expireType}`);
+    }
+
+    return expirationDate.toLocaleDateString();
+  }
+
+  useEffect(() => {
+    const fetchPrivateSessions = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `/gyms/${gymId}/private-sessions/`
+        );
+        setPrivateSessions(response.data.data.documents);        
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchPrivateSessions();
+  }, []);
+
   return (
     <div className="mainContent m-2 min-vh-100">
       <div className="plansOfMyGym">
-        {PrivateSessions.map((session) => {
+        {privateSessions.map((session) => {
           return (
             <div className="plans-details">
               {session?.isOffer && <div className="offerDesign">Offer</div>}
@@ -124,27 +142,27 @@ const PrivateSession = () => {
               <div className="privateSessionBody my-3">
                 <div className="flexcenterbetween">
                   <p className="fontLarge">
-                    {session.numberOfSeccions} Sessions package
+                    {session.sessions} Sessions package
                   </p>
                   {session.isOffer ? (
                     <p>
                       <span className="fontMid">
-                        {session.offerPrice} <span>EGP</span>
+                        {session.cost} <span>EGP</span>
                       </span>{" "}
-                      / {session.numberOfSeccions} sessions
+                      / {session.sessions} sessions
                     </p>
                   ) : (
                     <p>
                       <span className="fontMid">
-                        {session.price} <span>EGP</span>{" "}
+                        {session.cost} <span>EGP</span>{" "}
                       </span>
-                      / {session.numberOfSeccions} sessions
+                      / {session.sessions} sessions
                     </p>
                   )}
                 </div>
                 <div className="flexcenterstart">
                   <p className="font-smaller opacitySmall">
-                    Expires in {session.expiresIn}
+                    Expires in {getExpirationDate(session)}
                   </p>
                 </div>
               </div>

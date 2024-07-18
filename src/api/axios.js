@@ -1,10 +1,9 @@
 import axios from "axios"
 
-const BASE_URL = "https://gym-api-d2a5.onrender.com";
+const BASE_URL = "http://localhost:8000";
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 90000,
   headers: {
     "Content-Type": "application/json",
   },

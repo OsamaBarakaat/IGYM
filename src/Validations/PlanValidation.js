@@ -29,3 +29,17 @@ export const planValidationSchema = Yup.object().shape({
     .min(0, "nutritionSessionsNumber must be at least 0"),
 });
 
+
+export const offerValidationSchema = Yup.object().shape({
+  cost: Yup.number()
+    .required("Cost is required")
+    .positive("Cost must be a positive number")
+    .min(1, "Cost must be at least 1"),
+  duration: Yup.number()
+    .required("Duration is required")
+    .positive("Duration must be a positive number")
+    .min(1, "Duration must be at least 1"),
+  expireAt: Yup.date()
+    .required("Expiration date is required")
+    .min(new Date(), "Expiration date cannot be in the past"),
+});

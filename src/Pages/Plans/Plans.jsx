@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FloatingLabel, Form, Modal, Button, Col, Row } from "react-bootstrap";
-import { planValidationSchema } from "../../Validations/PlanValidation";
+import {
+  offerValidationSchema,
+  planValidationSchema,
+} from "../../Validations/PlanValidation";
 import { useFormik } from "formik";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Loader from "../../components/Loader/Loader";
@@ -8,6 +11,7 @@ import { toast } from "react-toastify";
 import "./Plans.css";
 import PrivateSession from "./PrivateSessions/PrivateSession";
 
+let planId;
 const Plans = () => {
   const [loading, setLoading] = useState(true);
   const [modalAddPlan, setModalShowAddPlan] = useState(false);
@@ -163,7 +167,8 @@ const Plans = () => {
     onSubmit: async (values) => {
       try {
         console.log("values", values);
-        const { data } = await axiosPrivate.put(
+        console.log("inputs", inputs22);
+        const { data } = await axiosPrivate.patch(
           `/gyms/666ddfad7a0f09d99493d976/plans/${selectedPlan?._id}`,
           {
             name: values.name,
@@ -174,7 +179,7 @@ const Plans = () => {
             invitationsNumber: values.invitationsNumber,
             privateSessionsNumber: values.privateSessionsNumber,
             nutritionSessionsNumber: values.nutritionSessionsNumber,
-            features: inputs,
+            features: inputs22,
             description: values.description,
           }
         );
@@ -195,11 +200,68 @@ const Plans = () => {
     },
   });
 
+  // edit offer
+  const [selectedOffer, setSelectedOffer] = useState(null);
+
+  useEffect(() => {
+    if (selectedOffer) {
+      console.log("selectedOffer", selectedOffer);
+      editOffer.setValues({
+        cost: selectedOffer?.cost || "",
+        duration: selectedOffer?.duration || "",
+        expireAt: selectedOffer?.expireAt || "",
+      });
+    }
+  }, [selectedOffer]);
+  const handleShowEditOffer = async (offer) => {
+    setSelectedOffer(offer);
+    setModalShowEditOffer(true);
+  };
+
+  const editOffer = useFormik({
+    initialValues: {
+      cost: "",
+      duration: "",
+      expireAt: "",
+    },
+    // validationSchema: offerValidationSchema,
+    onSubmit: async (values) => {
+      console.log("values", values);
+      try {
+        const { data } = await axiosPrivate.patch(
+          `gyms/666ddfad7a0f09d99493d976/plans/${planId}/offer`,
+          {
+            cost: values.cost || undefined,
+            duration: values.duration || undefined,
+            expireAt: values.expireAt || undefined,
+          }
+        );
+        console.log("res", data);
+        toast.success("Offer updated successfullyyy");
+        const editedPlans = plans.map((plan) => {
+          if (data?.data?._id === plan._id) {
+            return data?.data;
+          }
+          return plan;
+        });
+
+        setPlans(editedPlans);
+      } catch (error) {
+        if (error.response.status === 400) {
+          toast.error(error.response.data.message);
+        }else{
+        toast.error("Something went wronggg");          
+        }
+        console.log(error);
+      }
+    },
+  });
+
   //delete plan
   const handleDeletePlan = async (id) => {
     try {
       const res = await axiosPrivate.delete(
-        `//gyms/666ddfad7a0f09d99493d976/plans/${id}`
+        `/gyms/666ddfad7a0f09d99493d976/plans/${id}`
       );
       console.log("res", res);
       toast.success("Plan deleted successfully");
@@ -207,9 +269,7 @@ const Plans = () => {
         return plan._id !== id;
       });
       setPlans(newPlans);
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 2000);
+      setModalShowEditPlan(false);
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
@@ -319,15 +379,20 @@ const Plans = () => {
                 {plans.map((plan) => {
                   return (
                     <div className={"plans-details"}>
-                      {plan?.offer && <div className="offerDesign">Offer</div>}
+                      {(plan?.offer.cost || plan?.offer.duration) &&
+                        new Date(plan?.offer.expireAt) > new Date() && (
+                          <div className="offerDesign">Offer</div>
+                        )}
                       <div className="main-of-pd">
                         <div className="my-2 mx-0 addEditDeletePlan d-flex justify-content-end align-items-center">
-                          {plan?.offer ? (
+                          {(plan?.offer.cost || plan?.offer.duration) &&
+                          new Date(plan?.offer.expireAt) > new Date() ? (
                             <>
                               <button
                                 className="SecondaryButton mx-1"
                                 onClick={() => {
-                                  setModalShowEditOffer(true);
+                                  handleShowEditOffer(plan?.offer);
+                                  planId = plan?._id;
                                 }}
                               >
                                 Edit Offer
@@ -338,8 +403,15 @@ const Plans = () => {
                               <button
                                 className="PrimaryButton mx-1"
                                 onClick={() => {
+                                  planId = plan._id;
                                   setModalShowAddOffer(true);
+                                  editOffer.setValues({
+                                    cost: "",
+                                    duration: "",
+                                    expireAt: "",
+                                  });
                                 }}
+
                               >
                                 Add Offer
                               </button>
@@ -358,21 +430,26 @@ const Plans = () => {
                         <div className="line1 flexcenterbetween">
                           <div className="d-flex flex-column justify-content-center align-items-start">
                             <span className="midText">{plan?.name}</span>
-                            {plan?.offer && (
-                              <small className="offerEndIn opacityL d-block">
-                                Offer ends in {plan?.offerEndIn}
-                              </small>
-                            )}
+                            {(plan?.offer.cost || plan?.offer.duration) &&
+                              new Date(plan?.offer.expireAt) > new Date() && (
+                                <small className="offerEndIn opacityL d-block">
+                                  Offer ends in{" "}
+                                  {new Date(
+                                    plan?.offer.expireAt
+                                  ).toLocaleDateString()}
+                                </small>
+                              )}
                           </div>
 
                           <span>
-                            {plan?.offer ? (
+                            {plan?.offer.cost &&
+                            new Date(plan?.offer.expireAt) > new Date() ? (
                               <>
                                 <del className="opacityL mx-2">
                                   {plan?.cost}EGP
                                 </del>
                                 <span className="midText primary-color">
-                                  {plan?.offerCost}EGP
+                                  {plan?.offer.cost}EGP
                                 </span>
                               </>
                             ) : (
@@ -380,12 +457,20 @@ const Plans = () => {
                                 <span className="midText">{plan?.cost}EGP</span>
                               </>
                             )}
-                            /{plan?.duration} Months
+                            /
+                            {plan?.offer.duration &&
+                            new Date(plan?.offer.expireAt) > new Date() ? (
+                              <>
+                                <span>{plan?.offer.duration}</span> Months
+                              </>
+                            ) : (
+                              <span>{plan?.duration} Months</span>
+                            )}
                           </span>
                         </div>
                         <p className="opacitySmall">Plan Includes</p>
                         <div className="line2 flexcenterbetween flex-wrap">
-                          {planIncludes.map((include) => {
+                          {plan.features.map((feature) => {
                             return (
                               <div className="w-40 m-1 p-1 flexcenterstart">
                                 <span className="spanSVGPrimary">
@@ -400,7 +485,7 @@ const Plans = () => {
                                     <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
                                   </svg>
                                 </span>
-                                <span className="">{include?.name}</span>
+                                <span className="">{feature}</span>
                               </div>
                             );
                           })}
@@ -831,14 +916,14 @@ const Plans = () => {
                   </Modal.Header>
                   <Modal.Body id="modal">
                     <div>
-                      <form onSubmit={handleSubmit}>
+                      <form onSubmit={editPlan.handleSubmit}>
                         <div>
                           <div className="mb-2">
                             <FloatingLabel
                               controlId="floatingInput"
                               label="Plan Name"
                               id={
-                                errors.name && touched.name
+                                editPlan.errors.name && editPlan.touched.name
                                   ? "floatingError"
                                   : "floatingInput"
                               }
@@ -847,14 +932,14 @@ const Plans = () => {
                                 type="text"
                                 placeholder="Plan Name"
                                 name="name"
-                                value={values.name}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                                value={editPlan.values.name}
+                                onChange={editPlan.handleChange}
+                                onBlur={editPlan.handleBlur}
                               />
                             </FloatingLabel>
-                            {errors.name && touched.name && (
+                            {editPlan.errors.name && editPlan.touched.name && (
                               <small className="error-message">
-                                {errors.name}
+                                {editPlan.errors.name}
                               </small>
                             )}
                           </div>
@@ -865,7 +950,7 @@ const Plans = () => {
                                 controlId="floatingInput"
                                 label="Cost"
                                 id={
-                                  errors.cost && touched.cost
+                                  editPlan.errors.cost && editPlan.touched.cost
                                     ? "floatingError"
                                     : "floatingInput"
                                 }
@@ -874,16 +959,17 @@ const Plans = () => {
                                   type="number"
                                   placeholder="Cost"
                                   name="cost"
-                                  value={values.cost}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
+                                  value={editPlan.values.cost}
+                                  onChange={editPlan.handleChange}
+                                  onBlur={editPlan.handleBlur}
                                 />
                               </FloatingLabel>
-                              {errors.cost && touched.cost && (
-                                <small className="error-message">
-                                  {errors.cost}
-                                </small>
-                              )}
+                              {editPlan.errors.cost &&
+                                editPlan.touched.cost && (
+                                  <small className="error-message">
+                                    {editPlan.errors.cost}
+                                  </small>
+                                )}
                             </div>
                             <p>Per</p>
                             <div className="mb-2">
@@ -891,7 +977,8 @@ const Plans = () => {
                                 controlId="floatingInput"
                                 label="Duration(months)"
                                 id={
-                                  errors.duration && touched.duration
+                                  editPlan.errors.duration &&
+                                  editPlan.touched.duration
                                     ? "floatingError"
                                     : "floatingInput"
                                 }
@@ -899,17 +986,18 @@ const Plans = () => {
                                 <Form.Control
                                   type="number"
                                   placeholder="Duration"
-                                  value={values.duration}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
+                                  value={editPlan.values.duration}
+                                  onChange={editPlan.handleChange}
+                                  onBlur={editPlan.handleBlur}
                                   name="duration"
                                 />
                               </FloatingLabel>
-                              {errors.duration && touched.duration && (
-                                <small className="error-message">
-                                  {errors.duration}
-                                </small>
-                              )}
+                              {editPlan.errors.duration &&
+                                editPlan.touched.duration && (
+                                  <small className="error-message">
+                                    {editPlan.errors.duration}
+                                  </small>
+                                )}
                             </div>
                           </div>
                           <div className="costpermonth">
@@ -918,7 +1006,8 @@ const Plans = () => {
                                 controlId="floatingInput"
                                 label="Freeze Days"
                                 id={
-                                  errors.freezeDays && touched.freezeDays
+                                  editPlan.errors.freezeDays &&
+                                  editPlan.touched.freezeDays
                                     ? "floatingError"
                                     : "floatingInput"
                                 }
@@ -927,23 +1016,25 @@ const Plans = () => {
                                   type="number"
                                   placeholder="Freeze Days"
                                   name="freezeDays"
-                                  value={values.freezeDays}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
+                                  value={editPlan.values.freezeDays}
+                                  onChange={editPlan.handleChange}
+                                  onBlur={editPlan.handleBlur}
                                 />
                               </FloatingLabel>
-                              {errors.freezeDays && touched.freezeDays && (
-                                <small className="error-message">
-                                  {errors.freezeDays}
-                                </small>
-                              )}
+                              {editPlan.errors.freezeDays &&
+                                editPlan.touched.freezeDays && (
+                                  <small className="error-message">
+                                    {editPlan.errors.freezeDays}
+                                  </small>
+                                )}
                             </div>
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
                                 label="Minimum Freeze Days"
                                 id={
-                                  errors.minFreezeDays && touched.minFreezeDays
+                                  editPlan.errors.minFreezeDays &&
+                                  editPlan.touched.minFreezeDays
                                     ? "floatingError"
                                     : "floatingInput"
                                 }
@@ -951,16 +1042,16 @@ const Plans = () => {
                                 <Form.Control
                                   type="number"
                                   placeholder="Minimum Freeze Days"
-                                  value={values.minFreezeDays}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
+                                  value={editPlan.values.minFreezeDays}
+                                  onChange={editPlan.handleChange}
+                                  onBlur={editPlan.handleBlur}
                                   name="minFreezeDays"
                                 />
                               </FloatingLabel>
-                              {errors.minFreezeDays &&
-                                touched.minFreezeDays && (
+                              {editPlan.errors.minFreezeDays &&
+                                editPlan.touched.minFreezeDays && (
                                   <small className="error-message">
-                                    {errors.minFreezeDays}
+                                    {editPlan.errors.minFreezeDays}
                                   </small>
                                 )}
                             </div>
@@ -971,8 +1062,8 @@ const Plans = () => {
                                 controlId="floatingInput"
                                 label="Invitations Number"
                                 id={
-                                  errors.invitationsNumber &&
-                                  touched.invitationsNumber
+                                  editPlan.errors.invitationsNumber &&
+                                  editPlan.touched.invitationsNumber
                                     ? "floatingError"
                                     : "floatingInput"
                                 }
@@ -981,15 +1072,15 @@ const Plans = () => {
                                   type="number"
                                   placeholder="Invitations Number"
                                   name="invitationsNumber"
-                                  value={values.invitationsNumber}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
+                                  value={editPlan.values.invitationsNumber}
+                                  onChange={editPlan.handleChange}
+                                  onBlur={editPlan.handleBlur}
                                 />
                               </FloatingLabel>
-                              {errors.invitationsNumber &&
-                                touched.invitationsNumber && (
+                              {editPlan.errors.invitationsNumber &&
+                                editPlan.touched.invitationsNumber && (
                                   <small className="error-message">
-                                    {errors.invitationsNumber}
+                                    {editPlan.errors.invitationsNumber}
                                   </small>
                                 )}
                             </div>
@@ -998,8 +1089,8 @@ const Plans = () => {
                                 controlId="floatingInput"
                                 label="Private Sessions Number"
                                 id={
-                                  errors.privateSessionsNumber &&
-                                  touched.privateSessionsNumber
+                                  editPlan.errors.privateSessionsNumber &&
+                                  editPlan.touched.privateSessionsNumber
                                     ? "floatingError"
                                     : "floatingInput"
                                 }
@@ -1007,16 +1098,16 @@ const Plans = () => {
                                 <Form.Control
                                   type="number"
                                   placeholder="Private Sessions Number"
-                                  value={values.privateSessionsNumber}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
+                                  value={editPlan.values.privateSessionsNumber}
+                                  onChange={editPlan.handleChange}
+                                  onBlur={editPlan.handleBlur}
                                   name="privateSessionsNumber"
                                 />
                               </FloatingLabel>
-                              {errors.privateSessionsNumber &&
-                                touched.privateSessionsNumber && (
+                              {editPlan.errors.privateSessionsNumber &&
+                                editPlan.touched.privateSessionsNumber && (
                                   <small className="error-message">
-                                    {errors.privateSessionsNumber}
+                                    {editPlan.errors.privateSessionsNumber}
                                   </small>
                                 )}
                             </div>
@@ -1025,8 +1116,8 @@ const Plans = () => {
                                 controlId="floatingInput"
                                 label="Nutrition Sessions Number"
                                 id={
-                                  errors.nutritionSessionsNumber &&
-                                  touched.nutritionSessionsNumber
+                                  editPlan.errors.nutritionSessionsNumber &&
+                                  editPlan.touched.nutritionSessionsNumber
                                     ? "floatingError"
                                     : "floatingInput"
                                 }
@@ -1034,16 +1125,18 @@ const Plans = () => {
                                 <Form.Control
                                   type="number"
                                   placeholder="Nutrition Sessions Number"
-                                  value={values.nutritionSessionsNumber}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
+                                  value={
+                                    editPlan.values.nutritionSessionsNumber
+                                  }
+                                  onChange={editPlan.handleChange}
+                                  onBlur={editPlan.handleBlur}
                                   name="nutritionSessionsNumber"
                                 />
                               </FloatingLabel>
-                              {errors.nutritionSessionsNumber &&
-                                touched.nutritionSessionsNumber && (
+                              {editPlan.errors.nutritionSessionsNumber &&
+                                editPlan.touched.nutritionSessionsNumber && (
                                   <small className="error-message">
-                                    {errors.nutritionSessionsNumber}
+                                    {editPlan.errors.nutritionSessionsNumber}
                                   </small>
                                 )}
                             </div>
@@ -1100,7 +1193,8 @@ const Plans = () => {
                               controlId="floatingInput"
                               label="Description"
                               id={
-                                errors.description && touched.description
+                                editPlan.errors.description &&
+                                editPlan.touched.description
                                   ? "floatingError"
                                   : "floatingInput"
                               }
@@ -1109,27 +1203,34 @@ const Plans = () => {
                                 as="textarea"
                                 placeholder="Description"
                                 name="description"
-                                value={values.description}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                                value={editPlan.values.description}
+                                onChange={editPlan.handleChange}
+                                onBlur={editPlan.handleBlur}
                               />
                             </FloatingLabel>
-                            {errors.description && touched.description && (
-                              <small className="error-message">
-                                {errors.description}
-                              </small>
-                            )}
+                            {editPlan.errors.description &&
+                              editPlan.touched.description && (
+                                <small className="error-message">
+                                  {editPlan.errors.description}
+                                </small>
+                              )}
                           </div>
                         </div>
                         <div className="flexcenterbetween gap-2 ">
                           <button
                             className="SecondaryButton w-100"
                             type="submit"
-                            disabled={isSubmitting}
+                            disabled={editPlan.isSubmitting}
                           >
                             Edit Plan
                           </button>
-                          <button type="button" className="DangerButton w-100">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleDeletePlan(selectedPlan._id);
+                            }}
+                            className="DangerButton w-100"
+                          >
                             Delete Plan
                           </button>
                         </div>
@@ -1155,7 +1256,7 @@ const Plans = () => {
                     </Modal.Header>
                     <Modal.Body id="modal">
                       <div>
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={editOffer.handleSubmit}>
                           <div>
                             <div className="costpermonth">
                               <div className="mb-2">
@@ -1163,7 +1264,8 @@ const Plans = () => {
                                   controlId="floatingInput"
                                   label="Offer Cost"
                                   id={
-                                    errors.cost && touched.cost
+                                    editOffer.errors.cost &&
+                                    editOffer.touched.cost
                                       ? "floatingError"
                                       : "floatingInput"
                                   }
@@ -1172,16 +1274,17 @@ const Plans = () => {
                                     type="number"
                                     placeholder="Cost"
                                     name="cost"
-                                    value={values.cost}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
+                                    value={editOffer.values.cost}
+                                    onChange={editOffer.handleChange}
+                                    onBlur={editOffer.handleBlur}
                                   ></Form.Control>
                                 </FloatingLabel>
-                                {errors.cost && touched.cost && (
-                                  <small className="error-message">
-                                    {errors.cost}
-                                  </small>
-                                )}
+                                {editOffer.errors.cost &&
+                                  editOffer.touched.cost && (
+                                    <small className="error-message">
+                                      {editOffer.errors.cost}
+                                    </small>
+                                  )}
                               </div>
                               <p>Per</p>
                               <div className="mb-2">
@@ -1189,7 +1292,8 @@ const Plans = () => {
                                   controlId="floatingInput"
                                   label="Duration(months)"
                                   id={
-                                    errors.duration && touched.duration
+                                    editOffer.errors.duration &&
+                                    editOffer.touched.duration
                                       ? "floatingError"
                                       : "floatingInput"
                                   }
@@ -1197,17 +1301,18 @@ const Plans = () => {
                                   <Form.Control
                                     type="number"
                                     placeholder="Duration"
-                                    value={values.duration}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
+                                    value={editOffer.values.duration}
+                                    onChange={editOffer.handleChange}
+                                    onBlur={editOffer.handleBlur}
                                     name="duration"
                                   ></Form.Control>
                                 </FloatingLabel>
-                                {errors.duration && touched.duration && (
-                                  <small className="error-message">
-                                    {errors.duration}
-                                  </small>
-                                )}
+                                {editOffer.errors.duration &&
+                                  editOffer.touched.duration && (
+                                    <small className="error-message">
+                                      {editOffer.errors.duration}
+                                    </small>
+                                  )}
                               </div>
                             </div>
                             <div className="mb-2 w-100">
@@ -1215,7 +1320,8 @@ const Plans = () => {
                                 controlId="floatingInput"
                                 label="End Date to the Offer"
                                 id={
-                                  errors.description && touched.description
+                                  editOffer.errors.description &&
+                                  editOffer.touched.description
                                     ? "floatingError"
                                     : "floatingInput"
                                 }
@@ -1225,24 +1331,25 @@ const Plans = () => {
                                   min="1997-01-01"
                                   max="2030-12-31"
                                   placeholder="dd/mm/yyyy"
-                                  name="description"
-                                  value={values.description}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
+                                  name="expireAt"
+                                  value={editOffer.values.expireAt.split("T")[0]}
+                                  onChange={editOffer.handleChange}
+                                  onBlur={editOffer.handleBlur}
                                 ></Form.Control>
                               </FloatingLabel>
-                              {errors.description && touched.description && (
-                                <small className="error-message">
-                                  {errors.description}
-                                </small>
-                              )}
+                              {editOffer.errors.description &&
+                                editOffer.touched.description && (
+                                  <small className="error-message">
+                                    {editOffer.errors.description}
+                                  </small>
+                                )}
                             </div>
                           </div>
                           <div className="flexcenterbetween gap-2">
                             <button
                               className="SecondaryButton w-100"
                               type="submit"
-                              disabled={isSubmitting}
+                              disabled={editOffer.isSubmitting}
                             >
                               Add
                             </button>
@@ -1275,7 +1382,7 @@ const Plans = () => {
                     </Modal.Header>
                     <Modal.Body id="modal">
                       <div>
-                        <form>
+                        <form onSubmit={editOffer.handleSubmit}>
                           <div>
                             <div className="costpermonth">
                               <div className="mb-2">
@@ -1283,7 +1390,8 @@ const Plans = () => {
                                   controlId="floatingInput"
                                   label="Offer Cost"
                                   id={
-                                    errors.cost && touched.cost
+                                    editOffer.errors.cost &&
+                                    editOffer.touched.cost
                                       ? "floatingError"
                                       : "floatingInput"
                                   }
@@ -1292,16 +1400,17 @@ const Plans = () => {
                                     type="number"
                                     placeholder="Cost"
                                     name="cost"
-                                    value={values.cost}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
+                                    value={editOffer.values.cost}
+                                    onChange={editOffer.handleChange}
+                                    onBlur={editOffer.handleBlur}
                                   ></Form.Control>
                                 </FloatingLabel>
-                                {errors.cost && touched.cost && (
-                                  <small className="error-message">
-                                    {errors.cost}
-                                  </small>
-                                )}
+                                {editOffer.errors.cost &&
+                                  editOffer.touched.cost && (
+                                    <small className="error-message">
+                                      {editOffer.errors.cost}
+                                    </small>
+                                  )}
                               </div>
                               <p>Per</p>
                               <div className="mb-2">
@@ -1309,7 +1418,8 @@ const Plans = () => {
                                   controlId="floatingInput"
                                   label="Duration(months)"
                                   id={
-                                    errors.duration && touched.duration
+                                    editOffer.errors.duration &&
+                                    editOffer.touched.duration
                                       ? "floatingError"
                                       : "floatingInput"
                                   }
@@ -1317,17 +1427,18 @@ const Plans = () => {
                                   <Form.Control
                                     type="number"
                                     placeholder="Duration"
-                                    value={values.duration}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
+                                    value={editOffer.values.duration}
+                                    onChange={editOffer.handleChange}
+                                    onBlur={editOffer.handleBlur}
                                     name="duration"
                                   ></Form.Control>
                                 </FloatingLabel>
-                                {errors.duration && touched.duration && (
-                                  <small className="error-message">
-                                    {errors.duration}
-                                  </small>
-                                )}
+                                {editOffer.errors.duration &&
+                                  editOffer.touched.duration && (
+                                    <small className="error-message">
+                                      {editOffer.errors.duration}
+                                    </small>
+                                  )}
                               </div>
                             </div>
                             <div className="mb-2 w-100">
@@ -1335,7 +1446,8 @@ const Plans = () => {
                                 controlId="floatingInput"
                                 label="End Date to the Offer"
                                 id={
-                                  errors.description && touched.description
+                                  editOffer.errors.expireAt &&
+                                  editOffer.touched.expireAt
                                     ? "floatingError"
                                     : "floatingInput"
                                 }
@@ -1345,28 +1457,32 @@ const Plans = () => {
                                   min="1997-01-01"
                                   max="2030-12-31"
                                   placeholder="dd/mm/yyyy"
-                                  name="description"
-                                  value={values.description}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
+                                  name="expireAt"
+                                  value={
+                                    editOffer.values.expireAt.split("T")[0]
+                                  }
+                                  onChange={editOffer.handleChange}
+                                  onBlur={editOffer.handleBlur}
                                 ></Form.Control>
                               </FloatingLabel>
-                              {errors.description && touched.description && (
-                                <small className="error-message">
-                                  {errors.description}
-                                </small>
-                              )}
+                              {editOffer.errors.expireAt &&
+                                editOffer.touched.expireAt && (
+                                  <small className="error-message">
+                                    {editOffer.errors.expireAt}
+                                  </small>
+                                )}
                             </div>
                           </div>
                           <div className="flexcenterbetween gap-2">
                             <button
                               className="SecondaryButton w-100"
                               type="submit"
-                              disabled={isSubmitting}
+                              disabled={editOffer.isSubmitting}
                             >
                               Edit
                             </button>
                             <button
+                              type="button"
                               onClick={() => {
                                 setModalShowEditOffer(false);
                               }}
