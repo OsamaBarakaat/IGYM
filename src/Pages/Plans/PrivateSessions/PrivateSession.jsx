@@ -3,6 +3,9 @@ import { FloatingLabel, Form, Modal } from "react-bootstrap";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import axiosInstance from "../../../api/axios";
 import { useSelector } from "react-redux";
+import { useFormik } from "formik";
+import { psOfferValidationSchema, psValidationSchema } from "../../../Validations/PrivateSession";
+import { toast } from "react-toastify";
 
 const PrivateSession = () => {
   const [modalShowAddPS, setModalShowAddPS] = useState(false);
@@ -12,8 +15,110 @@ const PrivateSession = () => {
   const handleClosePS = () => setModalShowAddPS(false);
   const [privateSessions, setPrivateSessions] = useState([]);
 
-  const {gymId} = useSelector((state) => state.user);
+  const { gymId } = useSelector((state) => state.user);
+  const axiosPrivate = useAxiosPrivate();
 
+  /************ formik *************/
+  // Add PS
+  const addPS = useFormik({
+    initialValues: {
+      cost: "",
+      sessions: "",
+      expireIn: "",
+      durationType: "",
+    },
+    validationSchema: psValidationSchema,
+    onSubmit: async (values, actions) => {
+      console.log("Form submitted:", values);
+      actions.setSubmitting(true);
+      try {
+        const res = await axiosPrivate.post(`/gyms/${gymId}/private-sessions`, {
+          cost: values.cost,
+          sessions: values.sessions,
+          expireIn: values.expireIn,
+          expireType: values.durationType,
+        });
+        console.log(res);
+        toast.success("Private Session created successfully");
+        actions.resetForm();
+        setPrivateSessions([res.data.data, ...privateSessions]);
+        setModalShowAddPS(false);
+      } catch (error) {
+        console.log(error);
+        toast.error("Something went wrong");
+      }
+    },
+  });
+
+  // Edit PS
+  const editPS = useFormik({
+    initialValues: {
+      cost: "",
+      sessions: "",
+      expireIn: "",
+      durationType: "",
+    },
+    validationSchema: psValidationSchema,
+    onSubmit: async (values, actions) => {
+      console.log("Form submitted:", values);
+      actions.setSubmitting(true);
+      try {
+        const res = await axiosPrivate.patch(
+          `/gyms/${gymId}/private-sessions/${values._id}`,
+          {
+            cost: values.cost,
+            sessions: values.sessions,
+            expireIn: values.expireIn,
+            expireType: values.durationType,
+          }
+        );
+        console.log(res);
+        toast.success("Private Session updated successfully");
+        actions.resetForm();
+        setModalShowEditPS(false);
+        setPrivateSessions(
+          privateSessions.map((session) =>
+            session._id === values._id ? res.data.data : session
+          )
+        );
+      } catch (error) {
+        console.log(error);
+        toast.error("Something went wrong");
+      }
+    },
+  });
+
+  // Add Offer PS
+  const addOfferPS = useFormik({
+    initialValues: {
+      cost: "",
+      sessions: "",
+      expireAt: "",
+    },
+    validationSchema: psOfferValidationSchema,
+    onSubmit: async (values, actions) => {
+      console.log("Form submitted:", values);
+      actions.setSubmitting(true);
+      try {
+        const res = await axiosPrivate.post(
+          `/gyms/${gymId}/private-sessions/offer`,
+          {
+            cost: values.cost,
+            sessions: values.sessions,
+            expireIn: values.expireIn,
+            expireType: values.durationType,
+          }
+        );
+        console.log(res);
+        toast.success("Private Session Offer created successfully");
+        actions.resetForm();
+        setModalShowAddOfferPS(false);
+      } catch (error) {
+        console.log(error);
+        toast.error("Something went wrong");
+      }
+    },
+  });
 
   function getExpirationDate(document) {
     const { createdAt, expireIn, expireType } = document;
@@ -51,7 +156,7 @@ const PrivateSession = () => {
         const response = await axiosInstance.get(
           `/gyms/${gymId}/private-sessions/`
         );
-        setPrivateSessions(response.data.data.documents);        
+        setPrivateSessions(response.data.data.documents);
       } catch (error) {
         console.error(error);
       }
@@ -65,9 +170,13 @@ const PrivateSession = () => {
         {privateSessions.map((session) => {
           return (
             <div className="plans-details">
-              {session?.isOffer && <div className="offerDesign">Offer</div>}
+              {(session?.offer.cost || session?.offer.duration) &&
+                new Date(session?.offer.expireAt) > new Date() && (
+                  <div className="offerDesign">Offer</div>
+                )}
               <div className="flexcenterend gap-2">
-                {session.isOffer ? (
+                {(session?.offer.cost || session?.offer.duration) &&
+                new Date(session?.offer.expireAt) > new Date() ? (
                   <button
                     className="SecondaryButton"
                     onClick={() => setModalShowEditOfferPS(true)}
@@ -118,7 +227,16 @@ const PrivateSession = () => {
                 )}
                 <button
                   className="PrimaryButton"
-                  onClick={() => setModalShowEditPS(true)}
+                  onClick={() => {
+                    editPS.setValues({
+                      cost: session.cost,
+                      sessions: session.sessions,
+                      expireIn: session.expireIn,
+                      durationType: session.expireType,
+                      _id: session._id,
+                    });
+                    setModalShowEditPS(true);
+                  }}
                 >
                   <span>
                     <svg
@@ -144,12 +262,12 @@ const PrivateSession = () => {
                   <p className="fontLarge">
                     {session.sessions} Sessions package
                   </p>
-                  {session.isOffer ? (
+                  {new Date(session?.offer.expireAt) > new Date() ? (
                     <p>
                       <span className="fontMid">
-                        {session.cost} <span>EGP</span>
+                        {session.offer.cost || session.cost} <span>EGP</span>
                       </span>{" "}
-                      / {session.sessions} sessions
+                      / {session.offer.sessions || session.sessions} sessions
                     </p>
                   ) : (
                     <p>
@@ -210,35 +328,59 @@ const PrivateSession = () => {
           </Modal.Header>
           <Modal.Body id="modal">
             <div>
-              <form>
+              <form onSubmit={addPS.handleSubmit}>
                 <div>
                   <div className="flexcenterbetween gap-2">
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
                         label="Cost"
-                        id={"floatingInput"}
+                        id={
+                          addPS.errors.cost && addPS.touched.cost
+                            ? "floatingError"
+                            : "floatingInput"
+                        }
                       >
                         <Form.Control
                           type="text"
                           placeholder="Cost"
                           name="cost"
+                          value={addPS.values.cost}
+                          onChange={addPS.handleChange}
+                          onBlur={addPS.handleBlur}
                         />
                       </FloatingLabel>
+                      {addPS.errors.cost && addPS.touched.cost && (
+                        <small className="error-message">
+                          {addPS.errors.cost}
+                        </small>
+                      )}
                     </div>
 
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
                         label="Sessions Number"
-                        id={"floatingInput"}
+                        id={
+                          addPS.errors.sessions && addPS.touched.sessions
+                            ? "floatingError"
+                            : "floatingInput"
+                        }
                       >
                         <Form.Control
                           type="number"
                           placeholder="Sessions Number"
                           name="sessions"
+                          value={addPS.values.sessions}
+                          onChange={addPS.handleChange}
+                          onBlur={addPS.handleBlur}
                         ></Form.Control>
                       </FloatingLabel>
+                      {addPS.errors.sessions && addPS.touched.sessions && (
+                        <small className="error-message">
+                          {addPS.errors.sessions}
+                        </small>
+                      )}
                     </div>
                   </div>
                   <p className="opacitySmall font-small"> Expires In</p>
@@ -247,30 +389,58 @@ const PrivateSession = () => {
                       <FloatingLabel
                         controlId="floatingInput"
                         label="Number"
-                        id={"floatingInput"}
+                        id={
+                          addPS.errors.expireIn && addPS.touched.expireIn
+                            ? "floatingError"
+                            : "floatingInput"
+                        }
                       >
                         <Form.Control
                           type="number"
                           placeholder="Number"
-                          name="expiresIn"
+                          name="expireIn"
+                          value={addPS.values.expireIn}
+                          onChange={addPS.handleChange}
+                          onBlur={addPS.handleBlur}
                         ></Form.Control>
                       </FloatingLabel>
+                      {addPS.errors.expireIn && addPS.touched.expireIn && (
+                        <small className="error-message">
+                          {addPS.errors.expireIn}
+                        </small>
+                      )}
                     </div>
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
                         label="duration type"
-                        id={"floatingInput"}
+                        id={
+                          addPS.errors.durationType &&
+                          addPS.touched.durationType
+                            ? "floatingError"
+                            : "floatingInput"
+                        }
                       >
-                        <Form.Select name="durationType">
+                        <Form.Select
+                          name="durationType"
+                          value={addPS.values.durationType}
+                          onChange={addPS.handleChange}
+                          onBlur={addPS.handleBlur}
+                        >
                           <option value="" disabled selected>
                             Select Duration type
                           </option>
-                          <option value={"day"}>day</option>
-                          <option value={"week"}>week</option>
-                          <option value={"month"}>month</option>
+                          <option value={"days"}>days</option>
+                          <option value={"weeks"}>weeks</option>
+                          <option value={"months"}>months</option>
                         </Form.Select>
                       </FloatingLabel>
+                      {addPS.errors.durationType &&
+                        addPS.touched.durationType && (
+                          <small className="error-message">
+                            {addPS.errors.durationType}
+                          </small>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -308,19 +478,26 @@ const PrivateSession = () => {
           </Modal.Header>
           <Modal.Body id="modal">
             <div>
-              <form>
+              <form onSubmit={editPS.handleSubmit}>
                 <div>
                   <div className="flexcenterbetween gap-2">
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
                         label="Cost"
-                        id={"floatingInput"}
+                        id={
+                          editPS.errors.cost && editPS.touched.cost
+                            ? "floatingError"
+                            : "floatingInput"
+                        }
                       >
                         <Form.Control
                           type="text"
                           placeholder="Cost"
                           name="cost"
+                          value={editPS.values.cost}
+                          onChange={editPS.handleChange}
+                          onBlur={editPS.handleBlur}
                         />
                       </FloatingLabel>
                     </div>
@@ -329,12 +506,19 @@ const PrivateSession = () => {
                       <FloatingLabel
                         controlId="floatingInput"
                         label="Sessions Number"
-                        id={"floatingInput"}
+                        id={
+                          editPS.errors.sessions && editPS.touched.sessions
+                            ? "floatingError"
+                            : "floatingInput"
+                        }
                       >
                         <Form.Control
                           type="number"
                           placeholder="Sessions Number"
                           name="sessions"
+                          value={editPS.values.sessions}
+                          onChange={editPS.handleChange}
+                          onBlur={editPS.handleBlur}
                         ></Form.Control>
                       </FloatingLabel>
                     </div>
@@ -345,12 +529,19 @@ const PrivateSession = () => {
                       <FloatingLabel
                         controlId="floatingInput"
                         label="Number"
-                        id={"floatingInput"}
+                        id={
+                          editPS.errors.expireIn && editPS.touched.expireIn
+                            ? "floatingError"
+                            : "floatingInput"
+                        }
                       >
                         <Form.Control
                           type="number"
                           placeholder="Number"
-                          name="expiresIn"
+                          name="expireIn"
+                          value={editPS.values.expireIn}
+                          onChange={editPS.handleChange}
+                          onBlur={editPS.handleBlur}
                         ></Form.Control>
                       </FloatingLabel>
                     </div>
@@ -358,15 +549,25 @@ const PrivateSession = () => {
                       <FloatingLabel
                         controlId="floatingInput"
                         label="duration type"
-                        id={"floatingInput"}
+                        id={
+                          editPS.errors.durationType &&
+                          editPS.touched.durationType
+                            ? "floatingError"
+                            : "floatingInput"
+                        }
                       >
-                        <Form.Select name="durationType">
+                        <Form.Select
+                          name="durationType"
+                          value={editPS.values.durationType}
+                          onChange={editPS.handleChange}
+                          onBlur={editPS.handleBlur}
+                        >
                           <option value="" disabled selected>
                             Select Duration type
                           </option>
-                          <option value={"day"}>day</option>
-                          <option value={"week"}>week</option>
-                          <option value={"month"}>month</option>
+                          <option value={"days"}>days</option>
+                          <option value={"weeks"}>weeks</option>
+                          <option value={"months"}>months</option>
                         </Form.Select>
                       </FloatingLabel>
                     </div>
@@ -508,15 +709,30 @@ const PrivateSession = () => {
                       <FloatingLabel
                         controlId="floatingInput"
                         label="Offer Price"
-                        id={"floatingInput"}
+                        id={
+                          addOfferPS.errors.cost &&
+                          addOfferPS.touched.cost
+                            ? "floatingError"
+                            : "floatingInput"
+                        }
                       >
                         <Form.Control
                           type="number"
                           min={0}
                           placeholder="Offer Price"
-                          name="offerPrice"
+                          name="cost"
+                          value={addOfferPS.values.cost}
+                          onChange={addOfferPS.handleChange}
+                          onBlur={addOfferPS.handleBlur}
                         />
                       </FloatingLabel>
+                      {
+                        addOfferPS.errors.cost &&
+                        addOfferPS.touched.cost &&
+                        <div className="text-danger">
+                          {addOfferPS.errors.cost}
+                        </div>
+                      }
                     </div>
 
                     <div className="mb-2 w-100">
@@ -524,17 +740,61 @@ const PrivateSession = () => {
                         controlId="floatingInput"
                         min={0}
                         label="Sessions Number"
-                        id={"floatingInput"}
+                        id={
+                          addOfferPS.errors.sessions &&
+                          addOfferPS.touched.sessions
+                            ? "floatingError"
+                            : "floatingInput"
+                        }
                       >
                         <Form.Control
                           type="number"
                           placeholder="Sessions Number"
                           name="sessions"
+                          value={addOfferPS.values.sessions}
+                          onChange={addOfferPS.handleChange}
+                          onBlur={addOfferPS.handleBlur}
                         ></Form.Control>
                       </FloatingLabel>
+                      {
+                        addOfferPS.errors.sessions &&
+                        addOfferPS.touched.sessions &&
+                        <div className="text-danger">
+                          {addOfferPS.errors.sessions}
+                        </div>
+                      }
                     </div>
                   </div>
-                  <p className="opacitySmall font-small"> Expires In</p>
+                  <div className="mb-2 w-100">
+                    <FloatingLabel
+                      controlId="floatingInput"
+                      label="End Date to the Offer"
+                      id={
+                        addOfferPS.errors.expireAt &&
+                        addOfferPS.touched.expireAt
+                          ? "floatingError"
+                          : "floatingInput"
+                      }
+                    >
+                      <Form.Control
+                        type="date"
+                        min="1997-01-01"
+                        max="2030-12-31"
+                        placeholder="dd/mm/yyyy"
+                        name="expireAt"
+                        value={addOfferPS.values.expireAt.split("T")[0]}
+                        onChange={addOfferPS.handleChange}
+                        onBlur={addOfferPS.handleBlur}
+                      ></Form.Control>
+                    </FloatingLabel>
+                    {addOfferPS.errors.expireAt &&
+                      addOfferPS.touched.expireAt && (
+                        <small className="error-message">
+                          {addOfferPS.errors.expireAt}
+                        </small>
+                      )}
+                  </div>
+                  {/* <p className="opacitySmall font-small"> Expires In</p>
                   <div className="flexcenterbetween gap-2">
                     <div className="mb-2 w-100">
                       <FloatingLabel
@@ -565,7 +825,7 @@ const PrivateSession = () => {
                         </Form.Select>
                       </FloatingLabel>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="flexcenterbetween gap-2">

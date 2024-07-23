@@ -1320,8 +1320,8 @@ const Plans = () => {
                                 controlId="floatingInput"
                                 label="End Date to the Offer"
                                 id={
-                                  editOffer.errors.description &&
-                                  editOffer.touched.description
+                                  editOffer.errors.expireAt &&
+                                  editOffer.touched.expireAt
                                     ? "floatingError"
                                     : "floatingInput"
                                 }
