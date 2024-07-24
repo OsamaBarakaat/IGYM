@@ -14,7 +14,6 @@ const PrivateSession = () => {
   const [modalShowEditOfferPS, setModalShowEditOfferPS] = useState(false);
   const handleClosePS = () => setModalShowAddPS(false);
   const [privateSessions, setPrivateSessions] = useState([]);
-
   const { gymId } = useSelector((state) => state.user);
   const axiosPrivate = useAxiosPrivate();
 
@@ -100,19 +99,23 @@ const PrivateSession = () => {
       console.log("Form submitted:", values);
       actions.setSubmitting(true);
       try {
-        const res = await axiosPrivate.post(
-          `/gyms/${gymId}/private-sessions/offer`,
+        const res = await axiosPrivate.patch(
+          `/gyms/${gymId}/private-sessions/${values._id}/offer`,
           {
             cost: values.cost,
             sessions: values.sessions,
-            expireIn: values.expireIn,
-            expireType: values.durationType,
+            expireAt: values.expireAt,
           }
         );
         console.log(res);
         toast.success("Private Session Offer created successfully");
         actions.resetForm();
         setModalShowAddOfferPS(false);
+        setPrivateSessions(
+          privateSessions.map((session) =>
+            session._id === values._id ? res.data.data : session
+          )
+        )
       } catch (error) {
         console.log(error);
         toast.error("Something went wrong");
@@ -120,36 +123,25 @@ const PrivateSession = () => {
     },
   });
 
-  function getExpirationDate(document) {
-    const { createdAt, expireIn, expireType } = document;
 
-    const creationDate = new Date(createdAt);
-    let expirationDate;
-
-    switch (expireType) {
-      case "days":
-        expirationDate = new Date(creationDate);
-        expirationDate.setDate(creationDate.getDate() + expireIn);
-        break;
-      case "weeks":
-        expirationDate = new Date(creationDate);
-        expirationDate.setDate(creationDate.getDate() + expireIn * 7);
-        break;
-      case "months":
-        expirationDate = new Date(creationDate);
-        expirationDate.setMonth(creationDate.getMonth() + expireIn);
-        break;
-      case "years":
-        expirationDate = new Date(creationDate);
-        expirationDate.setFullYear(creationDate.getFullYear() + expireIn);
-        break;
-      default:
-        throw new Error(`Unknown expireType: ${expireType}`);
+  /************ Handle Functions *************/
+  // delete PS
+  const handleDeletePS = async (id) => {
+    try {
+      const res = await axiosPrivate.delete(
+        `/gyms/${gymId}/private-sessions/${id}`
+      );
+      console.log("res", res);
+      toast.success("Private Session deleted successfully");
+      setPrivateSessions(
+        privateSessions.filter((session) => session._id !== id)
+      );
+      setModalShowEditPS(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
     }
-
-    return expirationDate.toLocaleDateString();
   }
-
   useEffect(() => {
     const fetchPrivateSessions = async () => {
       try {
@@ -179,7 +171,15 @@ const PrivateSession = () => {
                 new Date(session?.offer.expireAt) > new Date() ? (
                   <button
                     className="SecondaryButton"
-                    onClick={() => setModalShowEditOfferPS(true)}
+                    onClick={() => {
+                      addOfferPS.setValues({
+                        _id: session._id,
+                        cost: session?.offer.cost,
+                        sessions: session?.offer.sessions,
+                        expireAt: session?.offer.expireAt,
+                      })
+                      setModalShowEditOfferPS(true)
+                    }}
                   >
                     <span>
                       <svg
@@ -203,6 +203,10 @@ const PrivateSession = () => {
                   <button
                     className="SecondaryButton"
                     onClick={() => {
+                      addOfferPS.setValues({
+                        ...addOfferPS.values,
+                        _id: session._id,
+                      });
                       setModalShowAddOfferPS(true);
                     }}
                   >
@@ -280,7 +284,7 @@ const PrivateSession = () => {
                 </div>
                 <div className="flexcenterstart">
                   <p className="font-smaller opacitySmall">
-                    Expires in {getExpirationDate(session)}
+                    Expires in {`${session.expireIn} ${session.expireType}`} 
                   </p>
                 </div>
               </div>
@@ -578,7 +582,7 @@ const PrivateSession = () => {
                   <button className="SecondaryButton w-100" type="submit">
                     Edit Private Session
                   </button>
-                  <button className="DangerButton w-100">
+                  <button type="button" onClick={() => handleDeletePS(editPS.values._id)} className="DangerButton w-100">
                     Delete Private Session
                   </button>
                 </div>
@@ -602,40 +606,95 @@ const PrivateSession = () => {
           </Modal.Header>
           <Modal.Body id="modal">
             <div>
-              <form>
+              <form onSubmit={addOfferPS.handleSubmit}>
                 <div>
                   <div className="flexcenterbetween gap-2">
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
                         label="Offer Price"
-                        id={"floatingInput"}
+                        id={
+                          addOfferPS.errors.cost && addOfferPS.touched.cost
+                            ? "floatingError"
+                            : "floatingInput"
+                        }
                       >
                         <Form.Control
                           type="number"
                           min={0}
                           placeholder="Offer Price"
-                          name="offerPrice"
+                          name="cost"
+                          value={addOfferPS.values.cost}
+                          onChange={addOfferPS.handleChange}
+                          onBlur={addOfferPS.handleBlur}
                         />
                       </FloatingLabel>
+                      {addOfferPS.errors.cost && addOfferPS.touched.cost && (
+                        <div className="text-danger">
+                          {addOfferPS.errors.cost}
+                        </div>
+                      )}
                     </div>
 
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
+                        min={0}
                         label="Sessions Number"
-                        id={"floatingInput"}
+                        id={
+                          addOfferPS.errors.sessions &&
+                          addOfferPS.touched.sessions
+                            ? "floatingError"
+                            : "floatingInput"
+                        }
                       >
                         <Form.Control
                           type="number"
-                          min={0}
                           placeholder="Sessions Number"
                           name="sessions"
+                          value={addOfferPS.values.sessions}
+                          onChange={addOfferPS.handleChange}
+                          onBlur={addOfferPS.handleBlur}
                         ></Form.Control>
                       </FloatingLabel>
+                      {addOfferPS.errors.sessions &&
+                        addOfferPS.touched.sessions && (
+                          <div className="text-danger">
+                            {addOfferPS.errors.sessions}
+                          </div>
+                        )}
                     </div>
                   </div>
-                  <p className="opacitySmall font-small"> Expires In</p>
+                  <div className="mb-2 w-100">
+                    <FloatingLabel
+                      controlId="floatingInput"
+                      label="End Date to the Offer"
+                      id={
+                        addOfferPS.errors.expireAt &&
+                        addOfferPS.touched.expireAt
+                          ? "floatingError"
+                          : "floatingInput"
+                      }
+                    >
+                      <Form.Control
+                        type="date"
+                        min="1997-01-01"
+                        max="2030-12-31"
+                        placeholder="dd/mm/yyyy"
+                        name="expireAt"
+                        value={addOfferPS.values.expireAt.split("T")[0]}
+                        onChange={addOfferPS.handleChange}
+                        onBlur={addOfferPS.handleBlur}
+                      ></Form.Control>
+                    </FloatingLabel>
+                    {addOfferPS.errors.expireAt &&
+                      addOfferPS.touched.expireAt && (
+                        <small className="error-message">
+                          {addOfferPS.errors.expireAt}
+                        </small>
+                      )}
+                  </div>
+                  {/* <p className="opacitySmall font-small"> Expires In</p>
                   <div className="flexcenterbetween gap-2">
                     <div className="mb-2 w-100">
                       <FloatingLabel
@@ -666,7 +725,7 @@ const PrivateSession = () => {
                         </Form.Select>
                       </FloatingLabel>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="flexcenterbetween gap-2">
@@ -674,12 +733,13 @@ const PrivateSession = () => {
                     Edit Offer
                   </button>
                   <button
+                    type="button"
                     onClick={() => {
                       setModalShowEditOfferPS(false);
                     }}
                     className="DangerButton w-100"
                   >
-                    Delete Offer
+                    Close
                   </button>
                 </div>
               </form>
@@ -702,7 +762,7 @@ const PrivateSession = () => {
           </Modal.Header>
           <Modal.Body id="modal">
             <div>
-              <form>
+              <form onSubmit={addOfferPS.handleSubmit}>
                 <div>
                   <div className="flexcenterbetween gap-2">
                     <div className="mb-2 w-100">
@@ -710,8 +770,7 @@ const PrivateSession = () => {
                         controlId="floatingInput"
                         label="Offer Price"
                         id={
-                          addOfferPS.errors.cost &&
-                          addOfferPS.touched.cost
+                          addOfferPS.errors.cost && addOfferPS.touched.cost
                             ? "floatingError"
                             : "floatingInput"
                         }
@@ -726,13 +785,11 @@ const PrivateSession = () => {
                           onBlur={addOfferPS.handleBlur}
                         />
                       </FloatingLabel>
-                      {
-                        addOfferPS.errors.cost &&
-                        addOfferPS.touched.cost &&
+                      {addOfferPS.errors.cost && addOfferPS.touched.cost && (
                         <div className="text-danger">
                           {addOfferPS.errors.cost}
                         </div>
-                      }
+                      )}
                     </div>
 
                     <div className="mb-2 w-100">
@@ -756,13 +813,12 @@ const PrivateSession = () => {
                           onBlur={addOfferPS.handleBlur}
                         ></Form.Control>
                       </FloatingLabel>
-                      {
-                        addOfferPS.errors.sessions &&
-                        addOfferPS.touched.sessions &&
-                        <div className="text-danger">
-                          {addOfferPS.errors.sessions}
-                        </div>
-                      }
+                      {addOfferPS.errors.sessions &&
+                        addOfferPS.touched.sessions && (
+                          <div className="text-danger">
+                            {addOfferPS.errors.sessions}
+                          </div>
+                        )}
                     </div>
                   </div>
                   <div className="mb-2 w-100">
@@ -833,6 +889,7 @@ const PrivateSession = () => {
                     Add Offer
                   </button>
                   <button
+                    type="button"
                     onClick={() => {
                       setModalShowAddOfferPS(false);
                     }}
