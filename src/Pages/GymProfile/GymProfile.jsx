@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "../../components/Heading/Heading";
 import "./GymProfile.css";
 import gymLogo from "../../assetss/default/png-transparent-gym-logo-thumbnail.png";
@@ -21,10 +21,14 @@ import {
   FaInstagram,
   FaPlus,
 } from "react-icons/fa";
+import axiosInstance, { privateAxiosInstance } from "../../api/axios";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const GymProfile = () => {
   const [currentPage, setCurrentPage] = useState("info");
-
+  const { gymId } = useSelector((state) => state.user);
+  const [gymInfo, setGymInfo] = useState(null);
   const navigate = useNavigate();
   const [showImage, setShowImage] = useState(false);
   const [expandedImage, setExpandedImage] = useState(null);
@@ -32,22 +36,120 @@ const GymProfile = () => {
     setExpandedImage(image);
     setShowImage(true);
   };
-  const images = [
-    airGym,
-    equipment,
-    airGym,
-    equipment,
-    airGym,
-    equipment,
-    airGym,
-    equipment,
-    airGym,
-  ]; // Add your image URLs here
 
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const handleChangeImg = async (e, key) => {
+    const img = e.target.files[0];
+
+    if (!img) return;
+
+    try {
+      const formData = new FormData();
+      formData.append(key, img);
+
+      const response = await privateAxiosInstance.put(
+        `/gyms/${gymId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setGymInfo({ ...gymInfo, [key]: response.data.data[key] });
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error(error.response.data);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const handleGalleryChange = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    try {
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append(`images`, file);
+      });
+
+      const response = await privateAxiosInstance.put(
+        `/gyms/${gymId}/branch`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("gallery", response.data.data);
+
+      setGymInfo({ ...gymInfo, branchInfo: response.data.data });
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error(error.response.data);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const handleChangeLink = (e) => {
+    const { name, value } = e.target;
+    const links = { ...gymInfo.links, [name]: value };
+    setGymInfo({ ...gymInfo, links });
+  }
+
+    const handleChangePhone = (e) => {
+      const { value } = e.target;
+      const phones = [value];
+      setGymInfo({ ...gymInfo, phones });
+    };
+
+  const handleSubmitLinks = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await privateAxiosInstance.put(
+        `/gyms/${gymId}`,
+        { links: gymInfo.links, phones: gymInfo.phones }
+      );
+      console.log("links", response.data.data);
+      setGymInfo({ ...gymInfo, links: response.data.data.links });
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error(error.response.data);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const fetchGymInfo = async () => {
+    try {
+      const response = await axiosInstance.get(`/gyms/${gymId}`);
+      console.log("gymInfo", response.data.data);
+      setGymInfo(response.data.data);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchGymInfo();
+  }, []);
+
+  const workingDays = [
+    "friday",
+    "saturday",
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+  ];
 
   const valueOfText =
     "Our gym, named 'Elite Fitness Haven,' is not just a place to work out; it's a community where health and well-being are prioritized. Nestled in the heart of the city, we boast state-of-the-art equipment, expert trainers, and a diverse range of classes catering to all fitness levels. What sets us apart is our personalized approach; every member is treated with individual attention, ensuring that their unique fitness goals are met. Our commitment to excellence, combined with a supportive environment, makes us the best choice for anyone serious about their fitness journey.";
@@ -62,7 +164,7 @@ const GymProfile = () => {
           <div className="themeContent">
             <div className="flexcenteraround themelogo">
               <div className="themeLogo logo-small">
-                <img src={gymLogo} alt="gym logo" />
+                <img src={gymInfo?.logo} alt="gym logo" />
               </div>
               <div>
                 {/* <input type="file" className="textButton w-100">
@@ -88,14 +190,19 @@ const GymProfile = () => {
                       </svg>
                     </span>
                   </div>
-                  <input type="file" id="changeLogo" className="sr-only" />
+                  <input
+                    type="file"
+                    id="changeLogo"
+                    onChange={(e) => handleChangeImg(e, "logo")}
+                    className="sr-only"
+                  />
                 </label>
               </div>
             </div>
             <span className="divider"></span>
             <div className="flexcenteraround themeIcon">
               <div className="themeLogo logo-small">
-                <img src={gymLogo} alt="gym logo" />
+                <img src={gymInfo?.icon} alt="gym Icon" />
               </div>
               <div>
                 <label htmlFor="changeIcon">
@@ -118,7 +225,12 @@ const GymProfile = () => {
                       </svg>
                     </span>
                   </div>
-                  <input type="file" id="changeIcon" className="sr-only" />
+                  <input
+                    type="file"
+                    id="changeIcon"
+                    onChange={(e) => handleChangeImg(e, "icon")}
+                    className="sr-only"
+                  />
                 </label>
               </div>
             </div>
@@ -163,7 +275,7 @@ const GymProfile = () => {
           <h3>Gym Info</h3>
 
           <p name="info" className=" m-auto pOfGymInfo rounded-2">
-            {valueOfText}
+            {gymInfo?.description}
           </p>
         </div>
         <div className="locationAndPlans">
@@ -223,55 +335,25 @@ const GymProfile = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td data-label="Day">Monday</td>
-                  <td data-label="Opening">9:00 AM</td>
-                  <td data-label="Closing">9:00 PM</td>
-                  <td data-label="Peak hours">9:00 AM</td>
-                  <td data-label="Female hours">9:00 PM</td>
-                </tr>
-                <tr>
-                  <td data-label="Day">Tuesday</td>
-                  <td data-label="Opening">9:00 AM</td>
-                  <td data-label="Closing">9:00 PM</td>
-                  <td data-label="Peak hours">9:00 AM</td>
-                  <td data-label="Female hours">9:00 PM</td>
-                </tr>
-                <tr>
-                  <td data-label="Day">Wensday</td>
-                  <td data-label="Opening">9:00 AM</td>
-                  <td data-label="Closing">9:00 PM</td>
-                  <td data-label="Peak hours">9:00 AM</td>
-                  <td data-label="Female hours">9:00 PM</td>
-                </tr>
-                <tr>
-                  <td data-label="Day">Thursday</td>
-                  <td data-label="Opening">9:00 AM</td>
-                  <td data-label="Closing">9:00 PM</td>
-                  <td data-label="Peak hours">9:00 AM</td>
-                  <td data-label="Female hours">9:00 PM</td>
-                </tr>
-                <tr>
-                  <td data-label="Day">Friday</td>
-                  <td data-label="Opening">9:00 AM</td>
-                  <td data-label="Closing">9:00 PM</td>
-                  <td data-label="Peak hours">9:00 AM</td>
-                  <td data-label="Female hours">9:00 PM</td>
-                </tr>
-                <tr>
-                  <td data-label="Day">Saturday</td>
-                  <td data-label="Opening">9:00 AM</td>
-                  <td data-label="Closing">9:00 PM</td>
-                  <td data-label="Peak hours">9:00 AM</td>
-                  <td data-label="Female hours">9:00 PM</td>
-                </tr>
-                <tr>
-                  <td data-label="Day">Sunday</td>
-                  <td data-label="Opening">9:00 AM</td>
-                  <td data-label="Closing">9:00 PM</td>
-                  <td data-label="Peak hours">9:00 AM</td>
-                  <td data-label="Female hours">9:00 PM</td>
-                </tr>
+                {workingDays.map((day, index) => (
+                  <tr key={index}>
+                    <td data-label="Day" className="text-capitalize">
+                      {day}
+                    </td>
+                    <td data-label="Opening">
+                      {gymInfo?.branchInfo.workingTimes[day]?.opening || "---"}
+                    </td>
+                    <td data-label="Closing">
+                      {gymInfo?.branchInfo.workingTimes[day]?.closing || "---"}
+                    </td>
+                    <td data-label="Peak hours">
+                      {gymInfo?.branchInfo.workingTimes[day]?.peak || "---"}
+                    </td>
+                    <td data-label="Female hours">
+                      {gymInfo?.branchInfo.workingTimes[day]?.female || "---"}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -279,25 +361,34 @@ const GymProfile = () => {
         <div className="bigCard gymGallery">
           <div className="flexcenterbetween">
             <h3>Gallery</h3>
-            <button className="PrimaryButton">
-              <span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-pencil-square"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                  <path
-                    fill-rule="evenodd"
-                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-                  />
-                </svg>
-              </span>
-              <span>Edit</span>
-            </button>
+            <label htmlFor="changeGallery">
+              <div className="PrimaryButton">
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-pencil-square"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                    />
+                  </svg>
+                </span>
+                <span>Add</span>
+              </div>
+              <input
+                type="file"
+                multiple
+                id="changeGallery"
+                onChange={handleGalleryChange}
+                className="sr-only"
+              />
+            </label>
           </div>
           <div className="slider-container">
             <Swiper
@@ -332,7 +423,7 @@ const GymProfile = () => {
                 },
               }}
             >
-              {images.map((image, index) => (
+              {gymInfo?.branchInfo.images.map((image, index) => (
                 <SwiperSlide key={index}>
                   <div
                     className="bigImageContainer"
@@ -369,7 +460,10 @@ const GymProfile = () => {
             </button>
           </div>
           <div className="flexcenterstart websociallinks">
-            <div className="d-flex flex-column justify-content-center align-items-center">
+            <a
+              href={gymInfo?.links?.facebook}
+              className="d-flex flex-column justify-content-center align-items-center text-decoration-none"
+            >
               <span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -383,8 +477,11 @@ const GymProfile = () => {
                 </svg>
               </span>
               <span>Facebook</span>
-            </div>
-            <div className="d-flex flex-column justify-content-center align-items-center">
+            </a>
+            <a
+              href={gymInfo?.links?.instagram}
+              className="d-flex flex-column justify-content-center align-items-center text-decoration-none"
+            >
               <span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -398,8 +495,11 @@ const GymProfile = () => {
                 </svg>
               </span>
               <span>Instagram</span>
-            </div>
-            <div className="d-flex flex-column justify-content-center align-items-center">
+            </a>
+            <a
+              href={gymInfo?.links?.tiktok}
+              className="d-flex flex-column justify-content-center align-items-center text-decoration-none"
+            >
               <span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -413,7 +513,7 @@ const GymProfile = () => {
                 </svg>
               </span>
               <span>Tiktok</span>
-            </div>
+            </a>
             <div className="d-flex flex-column justify-content-center align-items-center">
               <span>
                 <svg
@@ -449,7 +549,7 @@ const GymProfile = () => {
             <Modal.Title>Link URL</Modal.Title>
           </Modal.Header>
           <Modal.Body className="modalOfLogout">
-            <Form>
+            <Form onSubmit={handleSubmitLinks}>
               <Form.Group controlId="formPhoneNumber" className="my-2">
                 <InputGroup>
                   <InputGroup.Text>
@@ -458,6 +558,9 @@ const GymProfile = () => {
                   <Form.Control
                     type="text"
                     placeholder="Add Your Phone Number"
+                    name="phones"
+                    value={gymInfo?.phones[0]}
+                    onChange={handleChangePhone}
                   />
                 </InputGroup>
               </Form.Group>
@@ -467,7 +570,13 @@ const GymProfile = () => {
                   <InputGroup.Text>
                     <FaTiktok />
                   </InputGroup.Text>
-                  <Form.Control type="text" placeholder="Paste Link" />
+                  <Form.Control
+                    type="text"
+                    placeholder="Paste Link"
+                    name="tiktok"
+                    value={gymInfo?.links?.tiktok}
+                    onChange={handleChangeLink}
+                  />
                 </InputGroup>
               </Form.Group>
 
@@ -476,7 +585,13 @@ const GymProfile = () => {
                   <InputGroup.Text>
                     <FaFacebook />
                   </InputGroup.Text>
-                  <Form.Control type="text" placeholder="Paste Link" />
+                  <Form.Control
+                    type="text"
+                    placeholder="Paste Link"
+                    name="facebook"
+                    value={gymInfo?.links?.facebook}
+                    onChange={handleChangeLink}
+                  />
                 </InputGroup>
               </Form.Group>
 
@@ -485,15 +600,25 @@ const GymProfile = () => {
                   <InputGroup.Text>
                     <FaInstagram />
                   </InputGroup.Text>
-                  <Form.Control type="text" placeholder="Paste Link" />
+                  <Form.Control
+                    type="text"
+                    placeholder="Paste Link"
+                    name="instagram"
+                    value={gymInfo?.links?.instagram}
+                    onChange={handleChangeLink}
+                  />
                 </InputGroup>
               </Form.Group>
+              <div className="flexcenterend gap-2">
+                <button
+                  type="submit"
+                  className="SecondaryButton w-100"
+                  onClick={handleClose}
+                >
+                  Add Link
+                </button>
+              </div>
             </Form>
-            <div className="flexcenterend gap-2">
-              <button className="SecondaryButton w-100" onClick={handleClose}>
-                Add Link
-              </button>
-            </div>
           </Modal.Body>
         </Modal>
       </div>

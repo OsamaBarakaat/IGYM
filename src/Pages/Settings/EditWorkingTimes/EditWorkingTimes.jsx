@@ -1,27 +1,93 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./EditWorkingTimes.css";
 import Heading from "../../../components/Heading/Heading";
-import { FloatingLabel, Form } from "react-bootstrap";
+import { FloatingLabel, Form, Button } from "react-bootstrap";
+import { toast } from "react-toastify";
+import axiosInstance, { privateAxiosInstance } from "../../../api/axios";
+import { useSelector } from "react-redux";
 
 const EditWorkingTimes = () => {
+  const [workingDays, setWorkingDays] = useState({
+    friday: null,
+    saturday: null,
+    sunday: null,
+    monday: null,
+    tuesday: null,
+    wednesday: null,
+    thursday: null,
+  });
+  const { gymId } = useSelector((state) => state.user);
+
   const days = [
-    "Saturday",
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
+    "friday",
+    "saturday",
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
   ];
 
+  const handleChange = (e, day) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    setWorkingDays((prev) => ({
+      ...prev,
+      [day]: {
+        ...prev[day],
+        [name]: value,
+      },
+    }));
+  };
+
+  const handleCloseDay = (day) => {
+    setWorkingDays((prev) => ({
+      ...prev,
+      [day]: null,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    console.log("Form submitted:", workingDays);
+
+    e.preventDefault();
+    try {
+      const response = await privateAxiosInstance.put(
+        `/gyms/${gymId}/branch`,
+        {workingTimes:workingDays}
+      );
+
+      console.log("data",response.data);
+      toast.success(response.data.message);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const fetchGymInfo = async () => {
+    try {
+      const response = await axiosInstance.get(`/gyms/${gymId}`);
+      console.log("gymInfo", response.data.data.branchInfo.workingTimes);
+      setWorkingDays(response.data.data.branchInfo.workingTimes);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchGymInfo();
+  }, []);
   return (
     <div>
       <Heading content={"Edit Working Times"} />
       <div className="bigCard">
-        <form>
+        <form onSubmit={handleSubmit}>
           {days.map((day) => (
             <div key={day} className="day-container">
-              <label htmlFor={day.toLowerCase()}>{day}</label>
+              <label className="w-100 text-capitalize d-flex align-items-center justify-content-between" htmlFor={day.toLowerCase()}>
+                {day}
+                <Button variant="danger" onClick={() => handleCloseDay(day)}>Close Day</Button>
+              </label>
               <div className="flexcenterbetween midCol gap-2">
                 <div className="w-100">
                   <FloatingLabel
@@ -33,6 +99,8 @@ const EditWorkingTimes = () => {
                       type="time"
                       placeholder="Opening"
                       name="opening"
+                      value={workingDays[day]?.opening || ""}
+                      onChange={(e) => handleChange(e, day)}
                     />
                   </FloatingLabel>
                 </div>
@@ -46,6 +114,8 @@ const EditWorkingTimes = () => {
                       type="time"
                       placeholder="Closing"
                       name="closing"
+                      value={workingDays[day]?.closing || ""}
+                      onChange={(e) => handleChange(e, day)}
                     />
                   </FloatingLabel>
                 </div>
@@ -75,7 +145,9 @@ const EditWorkingTimes = () => {
                     <Form.Control
                       type="time"
                       placeholder="Peak Hours"
-                      name="peakeHours"
+                      name="peak"
+                      value={workingDays[day]?.peak || ""}
+                      onChange={(e) => handleChange(e, day)}
                     />
                   </FloatingLabel>
                 </div>
@@ -107,13 +179,16 @@ const EditWorkingTimes = () => {
                     <Form.Control
                       type="time"
                       placeholder="Female Hours"
-                      name="femaleHours"
+                      name="female"
+                      value={workingDays[day]?.female || ""}
+                      onChange={(e) => handleChange(e, day)}
                     />
                   </FloatingLabel>
                 </div>
               </div>
             </div>
           ))}
+          <Button type="submit" className="w-100">Save</Button>
         </form>
       </div>
     </div>
