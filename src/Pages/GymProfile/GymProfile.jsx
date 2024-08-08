@@ -24,6 +24,7 @@ import {
 import axiosInstance, { privateAxiosInstance } from "../../api/axios";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { Trash2Icon } from "lucide-react";
 
 const GymProfile = () => {
   const [currentPage, setCurrentPage] = useState("info");
@@ -38,9 +39,12 @@ const GymProfile = () => {
   };
 
   const [show, setShow] = useState(false);
+  const [showEditDesc, setShowEditDesc] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleCloseEditDesc = () => setShowEditDesc(false);
+  const handleShowEditDesc = () => setShowEditDesc(true);
 
   const handleChangeImg = async (e, key) => {
     const img = e.target.files[0];
@@ -94,8 +98,8 @@ const GymProfile = () => {
       setGymInfo({ ...gymInfo, branchInfo: response.data.data });
       toast.success(response.data.message);
     } catch (error) {
-      console.error(error.response.data);
-      toast.error(error.response.data.message);
+      console.error(error?.response?.data);
+      toast.error(error?.response?.data?.message);
     }
   };
 
@@ -103,21 +107,21 @@ const GymProfile = () => {
     const { name, value } = e.target;
     const links = { ...gymInfo.links, [name]: value };
     setGymInfo({ ...gymInfo, links });
-  }
+  };
 
-    const handleChangePhone = (e) => {
-      const { value } = e.target;
-      const phones = [value];
-      setGymInfo({ ...gymInfo, phones });
-    };
+  const handleChangePhone = (e) => {
+    const { value } = e.target;
+    const phones = [value];
+    setGymInfo({ ...gymInfo, phones });
+  };
 
   const handleSubmitLinks = async (e) => {
     e.preventDefault();
     try {
-      const response = await privateAxiosInstance.put(
-        `/gyms/${gymId}`,
-        { links: gymInfo.links, phones: gymInfo.phones }
-      );
+      const response = await privateAxiosInstance.put(`/gyms/${gymId}`, {
+        links: gymInfo.links,
+        phones: gymInfo.phones,
+      });
       console.log("links", response.data.data);
       setGymInfo({ ...gymInfo, links: response.data.data.links });
       toast.success(response.data.message);
@@ -163,7 +167,7 @@ const GymProfile = () => {
           <p>Theme</p>
           <div className="themeContent">
             <div className="flexcenteraround themelogo">
-              <div className="themeLogo logo-small">
+              <div className="themeLogo logo-small overflow-hidden">
                 <img src={gymInfo?.logo} alt="gym logo" />
               </div>
               <div>
@@ -201,7 +205,7 @@ const GymProfile = () => {
             </div>
             <span className="divider"></span>
             <div className="flexcenteraround themeIcon">
-              <div className="themeLogo logo-small">
+              <div className="themeLogo logo-small overflow-hidden">
                 <img src={gymInfo?.icon} alt="gym Icon" />
               </div>
               <div>
@@ -237,7 +241,7 @@ const GymProfile = () => {
             <span className="divider"></span>
 
             <div className="flexcenteraround ">
-              <div className="themeColor p-3">
+              <div className="themeColor p-3 overflow-hidden">
                 <Form.Control
                   type="color"
                   id="exampleColorInput"
@@ -272,7 +276,35 @@ const GymProfile = () => {
           </div>
         </div>
         <div className="infoCard">
-          <h3>Gym Info</h3>
+          <div className="flexcenterbetween">
+            <h3>Gym Description</h3>
+            <span className="flexcenterbetween">
+              <button
+                className="PrimaryButton"
+                onClick={() => {
+                  handleShowEditDesc();
+                }}
+              >
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-pencil-square"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                    />
+                  </svg>
+                </span>
+                <span>Edit</span>
+              </button>
+            </span>
+          </div>
 
           <p name="info" className=" m-auto pOfGymInfo rounded-2">
             {gymInfo?.description}
@@ -409,22 +441,22 @@ const GymProfile = () => {
               onSwiper={(swiper) => console.log(swiper)}
               onSlideChange={() => console.log("slide change")}
               breakpoints={{
-                "@0.00": {
+                0: {
                   slidesPerView: 1,
                   spaceBetween: 10,
                 },
-                "@0.75": {
+                750: {
                   slidesPerView: 2,
                   spaceBetween: 20,
                 },
-                "@1.00": {
+                1000: {
                   slidesPerView: 3,
                   spaceBetween: 40,
                 },
               }}
             >
               {gymInfo?.branchInfo.images.map((image, index) => (
-                <SwiperSlide key={index}>
+                <SwiperSlide key={index} className="imgContRel">
                   <div
                     className="bigImageContainer"
                     onClick={() => handleImageClick(image)}
@@ -432,9 +464,17 @@ const GymProfile = () => {
                     <img
                       src={image}
                       alt={`imagee-${index}`}
-                      className="logoLarge rounded-2"
+                      className=" rounded-2"
                     />
                   </div>
+                  <button
+                    className="trashAbsImgCOnt"
+                    onClick={() => {
+                      toast.success("Image Deleted");
+                    }}
+                  >
+                    <Trash2Icon color="white" />
+                  </button>
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -616,6 +656,35 @@ const GymProfile = () => {
                   onClick={handleClose}
                 >
                   Add Link
+                </button>
+              </div>
+            </Form>
+          </Modal.Body>
+        </Modal>
+      </div>
+      <div className="EditDescriptionModal">
+        <Modal show={showEditDesc} onHide={handleCloseEditDesc}>
+          <Modal.Header closeButton className="modalOfLogout">
+            <Modal.Title>Edit Description</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="modalOfLogout">
+            <Form>
+              <Form.Group controlId="formDescription" className="my-2">
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  placeholder="Add Your Description"
+                  name="description"
+                  value={gymInfo?.description}
+                />
+              </Form.Group>
+              <div className="flexcenterend gap-2">
+                <button
+                  type="submit"
+                  className="SecondaryButton w-100"
+                  onClick={handleCloseEditDesc}
+                >
+                  Edit Description
                 </button>
               </div>
             </Form>

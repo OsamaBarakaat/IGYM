@@ -203,3 +203,36 @@
     white-space: nowrap;
     border-width: 0;
 }
+
+.imgContRel {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imgContRel img {
+    width: 100%;
+    height: 100%;
+}
+
+.trashAbsImgCOnt {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    background-color: red;
+    border-radius: 50%;
+    opacity: 0.4;
+    outline: none;
+    border: none;
+}
+
+
+
+.trashAbsImgCOnt:hover {
+    opacity: 1;
+}
