@@ -1,10 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "../../../components/Heading/Heading";
 import { FloatingLabel, Form } from "react-bootstrap";
-import "./AddNewRole.css";
+import "./EditRole.css";
+import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const AddNewRole = () => {
+const EditRole = () => {
   const [selectedItems, setSelectedItems] = useState([]);
+  const location = useLocation();
+  const role = location.state || {};
+  useEffect(() => {
+    toast.warning("Look at Console ya Fouad");
+    console.log(role);
+  }, []);
 
   const items = [
     { id: 1, name: "Home", icon: "🏠" },
@@ -17,19 +25,14 @@ const AddNewRole = () => {
     { id: 8, name: "Settings", icon: "📊" },
     { id: 9, name: "Profile", icon: "👤" },
   ];
-
-  const handleItemClick = (item) => {
+  const handleItemClick = (id) => {
     setSelectedItems((prev) =>
-      prev.some((selected) => selected.id === item.id)
-        ? prev.filter((selected) => selected.id !== item.id)
-        : [...prev, item]
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
-  console.log(selectedItems);
-
   return (
     <div>
-      <Heading content={"Add New Role"} />
+      <Heading content={"Edit Role"} />
       <div className="main-content">
         <div className="form bigCard">
           <form>
@@ -44,6 +47,7 @@ const AddNewRole = () => {
                   type="text"
                   placeholder="role name"
                   name="roleName"
+                  value={role?.role?.name}
                 />
               </FloatingLabel>
             </div>
@@ -54,24 +58,22 @@ const AddNewRole = () => {
                   <div
                     key={item.id}
                     className={`role-item ${
-                      selectedItems.some((selected) => selected.id === item.id)
-                        ? "selected"
-                        : ""
+                      selectedItems.includes(item.id) ? "selected" : ""
                     }`}
-                    onClick={() => handleItemClick(item)}
+                    onClick={() => handleItemClick(item.id)}
                   >
                     <div className="icon">{item.icon}</div>
                     <p>{item.name}</p>
-                    {selectedItems.some(
-                      (selected) => selected.id === item.id
-                    ) && <div className="check-mark">✔️</div>}
+                    {selectedItems.includes(item.id) && (
+                      <div className="check-mark">✔️</div>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
             <div className="w-100">
               <button type="submit" className="SecondaryButton">
-                Add Role
+                Edit Role
               </button>
             </div>
           </form>
@@ -81,4 +83,4 @@ const AddNewRole = () => {
   );
 };
 
-export default AddNewRole;
+export default EditRole;

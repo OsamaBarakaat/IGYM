@@ -50,6 +50,9 @@ const Roles = () => {
       name: "Manage payment",
     },
   ];
+  const handleEditRole = (role) => {
+    navigate("/editrole", { state: { role } });
+  };
   return (
     <div className="myInfo">
       <div className="myInfoHeading">
@@ -62,7 +65,10 @@ const Roles = () => {
             return (
               <div className="singleRole bigCard" key={index}>
                 <div className="d-flex justify-content-end align-items-center">
-                  <button className="PrimaryButton">
+                  <button
+                    className="PrimaryButton"
+                    onClick={() => handleEditRole(role)}
+                  >
                     <span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

@@ -28,6 +28,7 @@ import CoachProfile from "./Pages/Coaches/CoachProfile/CoachProfile";
 import Classes from "./Pages/Classes/Classes";
 import EditWorkingTimes from "./Pages/Settings/EditWorkingTimes/EditWorkingTimes";
 import RevenueExpenses from "./Pages/RevenuExpenses/RevenueExpenses";
+import EditRole from "./Pages/Roles/EditRoles/EditRole";
 function App() {
   const theme = useSelector((state) => {
     return state.theme;
@@ -53,6 +54,7 @@ function App() {
             <Route path="/coachprofile" element={<CoachProfile />} />
             <Route path="/classes" element={<Classes />} />
             <Route path="/addrole" element={<AddNewRole />} />
+            <Route path="/editrole" element={<EditRole />} />
             <Route path="/editworkingtimes" element={<EditWorkingTimes />} />
             <Route path="/revenueexpenses" element={<RevenueExpenses />} />
           </Route>

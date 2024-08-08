@@ -306,10 +306,15 @@
     height: 50px;
     border-radius: 2rem;
     margin: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
 }
 
 .logo-small img {
-    width: 100%;
+
+    width: fit-content;
     height: 100%;
     border-radius: 100%;
 }

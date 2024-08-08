@@ -420,7 +420,7 @@ const Settings = () => {
             <div
               className="myInfoSecondNav"
               onClick={() => {
-                setCurrentPage(2);
+                setCurrentPage(1);
               }}
             >
               Gym Profile

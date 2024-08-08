@@ -12,13 +12,8 @@
     overflow: auto;
 }
 
-@media (max-width: 768px) {
 
-    .singleRole,
-    .add-role-card {
-        width: 100%;
-    }
-}
+
 
 .spanSVGDanger svg {
     stroke: var(--danger);
@@ -27,19 +22,16 @@
 }
 
 .add-role-card {
-    width: 45%;
-    max-height: 50vh;
     overflow: auto;
     background-color: var(--main-background-color);
     padding: 1rem;
     border-radius: 0.5rem;
     opacity: 0.7;
-    margin: 1rem 0;
+    margin: 1rem;
     color: var(--main-text-color);
     position: relative;
     transition: all 0.3s ease;
     border: 3px dashed var(--main-color);
-    margin-left: 1.5rem;
 }
 
 .add-role-card:hover {
@@ -59,4 +51,19 @@
     width: 2rem;
     height: 2rem;
     color: var(--main-color);
+}
+
+@media (max-width: 768px) {
+
+    .singleRole,
+    .add-role-card {
+        width: 100%;
+    }
+}
+
+@media (min-width: 769px) {
+    .add-role-card {
+        margin-left: 1.5rem;
+    }
+
 }

@@ -10,3 +10,4 @@ const Loader = () => {
 };
 
 export default Loader;
+/* HTML: <div class="loader"></div> */
