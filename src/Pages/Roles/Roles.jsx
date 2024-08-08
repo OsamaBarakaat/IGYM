@@ -2,6 +2,7 @@ import React from "react";
 import Heading from "../../components/Heading/Heading";
 import "./Roles.css";
 import { useNavigate } from "react-router-dom";
+import { Trash2Icon } from "lucide-react";
 
 const Roles = () => {
   const navigate = useNavigate();
@@ -66,7 +67,7 @@ const Roles = () => {
               <div className="singleRole bigCard" key={index}>
                 <div className="d-flex justify-content-end align-items-center">
                   <button
-                    className="PrimaryButton"
+                    className="PrimaryButton mx-1"
                     onClick={() => handleEditRole(role)}
                   >
                     <span>
@@ -86,6 +87,12 @@ const Roles = () => {
                       </svg>
                     </span>
                     <span>Edit</span>
+                  </button>
+                  <button className="DangerButton">
+                    <span>
+                      <Trash2Icon size={16} />
+                    </span>
+                    <span>Delete</span>
                   </button>
                 </div>
                 <div className="roleName fontLarge text-center">
