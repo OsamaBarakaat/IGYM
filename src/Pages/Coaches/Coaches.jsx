@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Coaches.css";
 import Heading from "../../components/Heading/Heading";
 import avatar from "../../assetss/default/5856.jpg";
 import { FloatingLabel, Form, Modal } from "react-bootstrap";
 import OtpInput from "react-otp-input";
 import { useNavigate } from "react-router-dom";
+import axiosInstance, { privateAxiosInstance } from "../../api/axios";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const Coaches = () => {
+  const [coaches, setCoaches] = useState([]);
+  const inputRef = useRef(null);
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -15,31 +20,40 @@ const Coaches = () => {
   const handleCloseEdit = () => setShow(false);
   const [otp, setOtp] = useState("");
   const navigate = useNavigate();
-  const coachesLocal = [
-    {
-      name: "John Doe",
-      number: "+201100435756",
-      shift: "7 Pm - 2 Am",
-      Attendance: "Attend",
-      isActive: true,
-    },
-    {
-      name: "Jane Doe",
-      number: "+201100435756",
-      shift: "7 Pm - 2 Am",
-      Attendance: "Attend",
-      isActive: true,
-    },
-    {
-      name: "Anna Doe",
-      number: "+201100435756",
-      shift: "7 Pm - 2 Am",
-      Attendance: "Attend",
-      isActive: false,
-    },
-  ];
   const [sendInvite, setSendInvite] = useState(true);
   const [showVerify, setShowVerify] = useState(false);
+  const { gymId } = useSelector((state) => state.user);
+
+  const fetchCoaches = async () => {
+    try {
+      const { data } = await axiosInstance.get(`/gyms/${gymId}/coaches`);
+      setCoaches(data.data.documents);
+      console.log("coaches", data.data.documents);
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
+  };
+
+
+  const handleAddCoach = async (e) => {
+    e.preventDefault();
+    try {
+       await privateAxiosInstance.post(`/gyms/${gymId}/coaches`, {
+         userPhone: inputRef.current.value,
+       });
+      fetchCoaches();
+      handleClose();
+      toast.success("Coach added successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  }
+
+  useEffect(() => {
+    fetchCoaches();
+  }, []);
+
   return (
     <div className="myInfo">
       <div className="myInfoHeading">
@@ -62,7 +76,7 @@ const Coaches = () => {
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
                   </svg>
                 </span>
-                <span>Invite new</span>
+                <span>Add new</span>
               </button>
               <input
                 type="search"
@@ -73,22 +87,21 @@ const Coaches = () => {
             <table className="mainTableTwo">
               <thead>
                 <tr>
-                  <th>Coach name(12)</th>
+                  <th>Coach name</th>
                   <th>Number</th>
-                  <th>Shift</th>
-                  <th>Attendance</th>
+                  <th>Gender</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {coachesLocal.map((coach) => {
+                {coaches.map((coach) => {
                   return (
                     <tr>
                       <td>
                         <div className="d-flex align-items-center justify-content-start">
                           <div className="profilePic">
                             <img
-                              src={coach?.image || avatar}
+                              src={coach?.user.image || avatar}
                               alt="profilePic"
                               className="widthSmall cursor-pointer"
                               onClick={() => {
@@ -97,28 +110,19 @@ const Coaches = () => {
                             />
                           </div>
                           <div className="profileName mx-3">
-                            {coach?.isActive === false && (
-                              <span className="text-danger">Pending ...</span>
-                            )}
-                            {coach?.isActive === true && !coach?.name && (
-                              <span className="text-danger">no name</span>
-                            )}
-                            {coach?.isActive === true && coach?.name && (
-                              <span
-                                className="cursor-pointer"
-                                onClick={() => {
-                                  navigate("/coachprofile");
-                                }}
-                              >
-                                {coach?.name}
-                              </span>
-                            )}
+                            <span
+                              className="cursor-pointer"
+                              onClick={() => {
+                                navigate("/coachprofile");
+                              }}
+                            >
+                              {coach?.user.name || "No Name"}
+                            </span>
                           </div>
                         </div>
                       </td>
-                      <td data-label="Phone">{coach?.number}</td>
-                      <td data-label="Shift">{coach?.shift}</td>
-                      <td data-label="Attendance"> {coach?.Attendance}</td>
+                      <td data-label="Phone">{coach?.user.phone}</td>
+                      <td data-label="Gender">{coach?.user.gender}</td>
                       <td>
                         <div className="d-flex justify-content-center">
                           <button
@@ -196,7 +200,7 @@ const Coaches = () => {
               <Modal.Header className="modala">
                 <div className="d-flex justify-content-between w-100 align-items-center mt-2">
                   <Modal.Title className="modala">
-                    <span className="modalHeadTitle">Invite Coach</span>
+                    <span className="modalHeadTitle">Add Coach</span>
                   </Modal.Title>
                   <button
                     className="btn-close bg-secondary"
@@ -212,31 +216,13 @@ const Coaches = () => {
                     <div>
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Name"
-                        id={"floatingInput"}
-                        className="mb-3"
-                      >
-                        <Form.Control
-                          type="text"
-                          placeholder="Name"
-                          name="name"
-                        />
-                      </FloatingLabel>
-                      {/* {sendInvite.errors.email && sendInvite.touched.email && (
-                    <small className="error-message">
-                      {sendInvite.errors.email}
-                    </small>
-                  )} */}
-                    </div>
-                    <div>
-                      <FloatingLabel
-                        controlId="floatingInput"
                         label="Phone number"
                         id={"floatingInput"}
                         className="mb-3"
                       >
                         <Form.Control
                           type="number"
+                          ref={inputRef}
                           min={0}
                           placeholder="number"
                           name="number"
@@ -247,10 +233,7 @@ const Coaches = () => {
                       <button
                         className="SecondaryButton w-100"
                         type="submit"
-                        onClick={() => {
-                          setShowVerify(true);
-                          setSendInvite(false);
-                        }}
+                        onClick={handleAddCoach}
                       >
                         Verify
                       </button>
