@@ -103,6 +103,39 @@ const GymProfile = () => {
     }
   };
 
+  const handleUpdateDesc = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await privateAxiosInstance.put(`/gyms/${gymId}`, {
+        description: gymInfo.description,
+      });
+      setGymInfo({ ...gymInfo, description: response.data.data.description });
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error(error.response.data);
+      toast.error(error.response.data.message);
+    }finally{
+      setShowEditDesc(false);
+    }
+  }
+
+  const handleDeleteImage = async (image) => {
+    const filteredImages = gymInfo.branchInfo.images.filter(
+      (img) => img !== image
+    );
+
+    await privateAxiosInstance.put(`/gyms/${gymId}/branch`, {
+      filterImages: filteredImages,
+    });
+
+    toast.success("Image deleted successfully");
+
+    setGymInfo({
+      ...gymInfo,
+      branchInfo: { ...gymInfo.branchInfo, images: filteredImages },
+    });
+  }
+
   const handleChangeLink = (e) => {
     const { name, value } = e.target;
     const links = { ...gymInfo.links, [name]: value };
@@ -470,7 +503,7 @@ const GymProfile = () => {
                   <button
                     className="trashAbsImgCOnt"
                     onClick={() => {
-                      toast.success("Image Deleted");
+                      handleDeleteImage(image);
                     }}
                   >
                     <Trash2Icon color="white" />
@@ -496,11 +529,12 @@ const GymProfile = () => {
                   <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
                 </svg>
               </span>
-              <span>Add link</span>
+              <span>Edit link</span>
             </button>
           </div>
           <div className="flexcenterstart websociallinks">
             <a
+              target="_blank"
               href={gymInfo?.links?.facebook}
               className="d-flex flex-column justify-content-center align-items-center text-decoration-none"
             >
@@ -519,6 +553,7 @@ const GymProfile = () => {
               <span>Facebook</span>
             </a>
             <a
+              target="_blank"
               href={gymInfo?.links?.instagram}
               className="d-flex flex-column justify-content-center align-items-center text-decoration-none"
             >
@@ -537,6 +572,7 @@ const GymProfile = () => {
               <span>Instagram</span>
             </a>
             <a
+              target="_blank"
               href={gymInfo?.links?.tiktok}
               className="d-flex flex-column justify-content-center align-items-center text-decoration-none"
             >
@@ -554,7 +590,11 @@ const GymProfile = () => {
               </span>
               <span>Tiktok</span>
             </a>
-            <div className="d-flex flex-column justify-content-center align-items-center">
+            <a
+              target="_blank"
+              href={`https://wa.me/2${gymInfo?.links?.whatsapp}`}
+              className="d-flex flex-column justify-content-center align-items-center text-decoration-none"
+            >
               <span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -568,7 +608,7 @@ const GymProfile = () => {
                 </svg>
               </span>
               <span>Whatsapp</span>
-            </div>
+            </a>
           </div>
         </div>
       </div>
@@ -655,7 +695,7 @@ const GymProfile = () => {
                   className="SecondaryButton w-100"
                   onClick={handleClose}
                 >
-                  Add Link
+                  Edit Link
                 </button>
               </div>
             </Form>
@@ -676,13 +716,16 @@ const GymProfile = () => {
                   placeholder="Add Your Description"
                   name="description"
                   value={gymInfo?.description}
+                  onChange={(e) => {
+                    setGymInfo({ ...gymInfo, description: e.target.value });
+                  }}
                 />
               </Form.Group>
               <div className="flexcenterend gap-2">
                 <button
                   type="submit"
                   className="SecondaryButton w-100"
-                  onClick={handleCloseEditDesc}
+                  onClick={handleUpdateDesc}
                 >
                   Edit Description
                 </button>

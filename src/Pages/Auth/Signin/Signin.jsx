@@ -30,17 +30,25 @@ const Signin = () => {
     }, 1000);
 
     try {
-      const res = await axiosInstance.post("/owners/login", {
+      const { data } = await axiosInstance.post("/owners/login", {
         email: values.email,
         password: values.password,
       });
-      console.log(res.data);
+      console.log(data);
       dispatch(
-        setUser({ data: res.data.data.user, token: res.data.data.accessToken })
+        setUser({
+          data: data?.data?.userData,
+          gymId: data?.data?.gymId,
+          token: data.data.accessToken,
+        })
       );
+
+      // dispatch(
+      //   setUser({ data: res.data.data.user, token: res.data.data.accessToken })
+      // );
       setLoadingInput(false);
-      toast.success("user signed in successfully");
       navigate("/");
+      toast.success("user signed in successfully");
     } catch (error) {
       console.log(error);
       if (error.message === "timeout of 90000ms exceeded") {

@@ -39,7 +39,7 @@ const SetPass = () => {
       actions.setSubmitting(false);
     }, 1000);
     const { data } = await axiosInstance.patch(
-      `/admins/set-password/${invitToken}`,
+      `/owners/set-password/${invitToken}`,
       {
         password: values.newPassword,
         passwordConfirm: values.confirmPassword,

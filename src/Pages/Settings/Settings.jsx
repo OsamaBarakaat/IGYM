@@ -12,10 +12,10 @@ import avatar from "../../assetss/default/5856.jpg";
 import * as Yup from "yup";
 import { planValidationSchema } from "../../Validations/PlanValidation";
 import { Formik, ErrorMessage, useFormik } from "formik";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setTheme } from "../../Sotre/Action/Theme.action";
 import { SendInviteValidation } from "../../Validations/SendInviteValidation";
-import axiosInstance from "../../api/axios";
+import axiosInstance, { privateAxiosInstance } from "../../api/axios";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { convertToCreatedAtFormat } from "../../createdAt";
 import Loader from "../../components/Loader/Loader";
@@ -23,6 +23,7 @@ import { toast } from "react-toastify";
 import GymProfile from "../GymProfile/GymProfile";
 import Roles from "../Roles/Roles";
 const Settings = () => {
+  const [members, setMembers] = useState([]);
   const [toggled, setToggled] = React.useState(false);
   const axiosPrivate = useAxiosPrivate();
 
@@ -104,30 +105,10 @@ const Settings = () => {
 
   // get plans
   const [plans, setPlans] = useState([]);
-  useEffect(() => {
-    const fetchPlans = async () => {
-      const res = await axiosPrivate.get("/owner-plans");
-      setPlans(res?.data?.data?.documents);
-      console.log("plans", res?.data?.data?.documents);
-      setLoading(false);
-    };
-    fetchPlans();
-  }, []);
+
   const [selectedPlan, setSelectedPlan] = useState(null);
 
   // Update editPlan form when selectedPlan changes
-  useEffect(() => {
-    if (selectedPlan) {
-      editPlan.setValues({
-        name: selectedPlan.name || "",
-        maxTrainees: selectedPlan.maxTrainees || "",
-        cost: selectedPlan.cost || "",
-        branches: selectedPlan.branches || "",
-        duration: selectedPlan.duration || "",
-        description: selectedPlan.description || "",
-      });
-    }
-  }, [selectedPlan]);
 
   const handleShowEditPlan = async (plan) => {
     setSelectedPlan(plan);
@@ -193,24 +174,28 @@ const Settings = () => {
       toast.error("Something went wrong");
     }
   };
+  const { gymId } = useSelector((state) => state.user);
+
   // =========== Add Plan ===========
   const [inviteLink, setInviteLink] = useState(null);
   const handleSendInvite = async (values, actions) => {
-    console.log("Form submitted handleSendInvite:", values);
-    console.log("Form submitted handleSendInvite:", actions);
-    setTimeout(() => {
+    try {
+      const { data } = await privateAxiosInstance.post(
+        `gyms/${gymId}/members`,
+        {
+          email: values.email,
+          role: values.role,
+          clientUrl: "https://my-gym-panel.vercel.app/setpass/",
+        }
+      );
+      setInviteLink(data.data.inviteLink);
       actions.resetForm();
       actions.setSubmitting(false);
-    }, 1000);
-
-    const res = await axiosInstance.post("/admins/", {
-      email: values.email,
-      role: values.role,
-      clientUrl: "https://my-gym-panel.vercel.app/setpass/",
-    });
-    console.log("res", res);
-    toast.success("member incited succefully");
-    setInviteLink(res?.data?.data?.inviteLink);
+      toast.success("Invite sent successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
   };
   console.log(inviteLink);
   const sendInvite = useFormik({
@@ -221,59 +206,38 @@ const Settings = () => {
     validationSchema: SendInviteValidation,
     onSubmit: handleSendInvite,
   });
-  const adminsLocal = [
-    {
-      name: "John Doe",
-      role: "admin",
-      image: avatar,
-      createdAt: "2021-10-12T14:48:00.000Z",
-    },
-    {
-      name: "Jane Doe",
-      role: "subAdmin",
-      image: avatar,
-      createdAt: "2021-10-12T14:48:00.000Z",
-    },
-    {
-      name: "Jane Doe",
-      role: "subAdmin",
-      image: avatar,
-      createdAt: "2021-10-12T14:48:00.000Z",
-    },
-    {
-      name: "Jane Doe",
-      role: "subAdmin",
-      image: avatar,
-      createdAt: "2021-10-12T14:48:00.000Z",
-    },
-    {
-      name: "Jane Doe",
-      role: "subAdmin",
-      image: avatar,
-      createdAt: "2021-10-12T14:48:00.000Z",
-    },
-    {
-      name: "Jane Doe",
-      role: "subAdmin",
-      image: avatar,
-      createdAt: "2021-10-12T14:48:00.000Z",
-    },
-  ];
-  const [admins, setAdmins] = useState([]);
+
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
   const [numberOfPages, setNumberOfPages] = useState(0);
 
+  // Roles
+  const [roles, setRoles] = useState([]);
+  const fetchRoles = async () => {
+    try {
+      const { data } = await privateAxiosInstance.get(`/gyms/${gymId}/roles`);
+      setRoles(data.data.documents);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const fetchAdmins = async () => {
-      const res = await axiosPrivate.get(`/owners?page=${page}&limit=${limit}`);
-      setAdmins(res?.data?.data?.documents);
-      console.log("admins", res?.data?.data?.documents);
-      console.log(res);
-      setNumberOfPages(res?.data?.data?.paginationResult?.numberOfPages);
-      setLoading(false);
+    fetchRoles();
+  }, []);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const { data } = await privateAxiosInstance.get(
+          `/gyms/${gymId}/members?page=${page}&limit=${limit}`
+        );
+        console.log("members", data.data.documents);
+        setMembers(data.data.documents);
+        setLoading(false);
+      } catch (error) {}
     };
-    fetchAdmins();
+    fetchMembers();
   }, [page, limit]);
   console.log(numberOfPages);
   const pageArr = [];
@@ -282,14 +246,16 @@ const Settings = () => {
   }
   const [selectedAdmin, setSelectedAdmin] = useState(null);
   const handleShowEdit = (admin) => {
+    console.log("admin", admin);
     setSelectedAdmin(admin);
+    editMember.setValues({ role: admin.role._id });
     setShowEdit(true);
   };
 
   // <=======> Edit member <=======> //
   const editMember = useFormik({
     initialValues: {
-      role: selectedAdmin?.role || "admin",
+      role: "",
     },
     validationSchema: Yup.object({
       role: Yup.string().required("Required"),
@@ -297,10 +263,18 @@ const Settings = () => {
     onSubmit: async (values) => {
       try {
         console.log("values", values);
-        const res = await axiosPrivate.patch(`/admins/${selectedAdmin?._id}`, {
-          role: values.role,
-        });
+        const res = await axiosPrivate.patch(
+          `gyms/${gymId}/members/${selectedAdmin?._id}`,
+          {
+            role: values.role,
+          }
+        );
         console.log("res", res);
+        setMembers(
+          members.map((member) =>
+            member._id === res.data.data._id ? res.data.data : member
+          )
+        );
         toast.success("Member role updated successfully");
       } catch (error) {
         console.log(error);
@@ -310,14 +284,20 @@ const Settings = () => {
   });
   const suspendUser = async (id) => {
     try {
-      const res = await axiosPrivate.patch(`/admins/${id}`, {
-        isSuspended: true,
-      });
+      const res = await axiosPrivate.patch(
+        `gyms/${gymId}/members/${selectedAdmin?._id}`,
+        {
+          isSuspended: true,
+        }
+      );
       console.log("res", res);
+      setMembers(
+        members.map((member) =>
+          member._id === res.data.data._id ? res.data.data : member
+        )
+      );
+      setShowEdit(false);
       toast.success("Member suspended successfully");
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
@@ -326,14 +306,20 @@ const Settings = () => {
 
   const activateUser = async (id) => {
     try {
-      const res = await axiosPrivate.patch(`/admins/${id}`, {
-        isSuspended: false,
-      });
+      const res = await axiosPrivate.patch(
+        `gyms/${gymId}/members/${selectedAdmin?._id}`,
+        {
+          isSuspended: false,
+        }
+      );
       console.log("res", res);
+      setMembers(
+        members.map((member) =>
+          member._id === res.data.data._id ? res.data.data : member
+        )
+      );
+      setShowEdit(false);
       toast.success("Member activated successfully");
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
@@ -483,14 +469,14 @@ const Settings = () => {
                 <table className="mainTable">
                   <thead>
                     <tr>
-                      <th>Member name(12)</th>
+                      <th>Member name</th>
                       <th>Role</th>
                       <th>Join date</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {adminsLocal.map((admin) => {
+                    {members.map((admin) => {
                       return (
                         <tr>
                           <td>
@@ -503,25 +489,17 @@ const Settings = () => {
                                 />
                               </div>
                               <div className="profileName mx-3">
-                                {admin?.name}
-                                {admin?.isActive === false && (
-                                  <span className="text-danger">
-                                    Pending ...
-                                  </span>
-                                )}
-                                {admin?.isActive === true && !admin?.name && (
-                                  <span className="text-danger">no name</span>
-                                )}
+                                {admin?.name || "No Name"}
                               </div>
                             </div>
                           </td>
-                          <td>{admin?.role}</td>
+                          <td>{admin?.role.name}</td>
                           <td>{convertToCreatedAtFormat(admin?.createdAt)}</td>
                           <td>
                             <div className="d-flex justify-content-center">
                               <button
                                 className="PrimaryButton"
-                                onClick={() => handleShowEdit()}
+                                onClick={() => handleShowEdit(admin)}
                               >
                                 <span>
                                   <svg
@@ -726,8 +704,11 @@ const Settings = () => {
                         <option value="" disabled>
                           Select role
                         </option>
-                        <option value={"admin"}>Admin</option>
-                        <option value={"subAdmin"}>Sub admin</option>
+                        {roles.map((role) => (
+                          <option key={role} value={role._id}>
+                            {role.name}
+                          </option>
+                        ))}
                       </Form.Select>
                     </FloatingLabel>
                     {sendInvite.errors.role && sendInvite.touched.role && (
@@ -806,7 +787,7 @@ const Settings = () => {
                   <div className="profileName text-center fontLarge my-2">
                     {selectedAdmin?.name}
                     <p className="text-center text-small-opacity">
-                      <p>{selectedAdmin?.role}</p>
+                      <p>{selectedAdmin?.role.name}</p>
                       <p>{selectedAdmin?.email}</p>
                       <p>{selectedAdmin?.phones[0]}</p>
                     </p>
@@ -830,8 +811,12 @@ const Settings = () => {
                       onChange={editMember.handleChange}
                       onBlur={editMember.handleBlur}
                     >
-                      <option value={"subAdmin"}>sub-admin</option>
-                      <option value={"admin"}>Admin</option>
+                      <option value="">Select role</option>
+                      {roles.map((role) => (
+                        <option key={role} value={role._id}>
+                          {role.name}
+                        </option>
+                      ))}
                     </Form.Select>
                   </FloatingLabel>
                 </div>

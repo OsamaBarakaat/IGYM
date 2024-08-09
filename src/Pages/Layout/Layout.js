@@ -24,6 +24,7 @@ const Layout = () => {
       setLoading(false);
     }
   };
+  
   useEffect(() => {
     if (!user.data) {
       fetchUser();

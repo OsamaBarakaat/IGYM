@@ -23,7 +23,7 @@ const SetName = () => {
     }, 1000);
 
     try {
-      const res = await axiosPrivate.patch("/admins/update-my-profile", {
+      const res = await axiosPrivate.patch("/owners/update-my-profile", {
         name: values.name,
         phones: [values.phone],
       });

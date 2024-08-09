@@ -73,7 +73,7 @@ const Profile = () => {
       );
       console.log(res);
       toast.success("Image updated successfully");
-      dispatch(setUser(res.data.data));
+      dispatch(setUser({data: res.data.data}));
       setUserImage(null);
     } catch (error) {
       toast.error("Something went wrong");
