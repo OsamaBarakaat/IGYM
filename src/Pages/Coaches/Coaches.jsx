@@ -5,9 +5,10 @@ import avatar from "../../assetss/default/5856.jpg";
 import { FloatingLabel, Form, Modal } from "react-bootstrap";
 import OtpInput from "react-otp-input";
 import { useNavigate } from "react-router-dom";
-import axiosInstance, { privateAxiosInstance } from "../../api/axios";
+import axiosInstance from "../../api/axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const Coaches = () => {
   const [coaches, setCoaches] = useState([]);
@@ -23,6 +24,8 @@ const Coaches = () => {
   const [sendInvite, setSendInvite] = useState(true);
   const [showVerify, setShowVerify] = useState(false);
   const { gymId } = useSelector((state) => state.user);
+  const axiosPrivate = useAxiosPrivate();
+
 
   const fetchCoaches = async () => {
     try {
@@ -38,7 +41,7 @@ const Coaches = () => {
   const handleAddCoach = async (e) => {
     e.preventDefault();
     try {
-       await privateAxiosInstance.post(`/gyms/${gymId}/coaches`, {
+       await axiosPrivate.post(`/gyms/${gymId}/coaches`, {
          userPhone: inputRef.current.value,
        });
       fetchCoaches();

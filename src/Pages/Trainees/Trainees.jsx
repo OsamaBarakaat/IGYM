@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Trainees.css";
 import Heading from "../../components/Heading/Heading";
 import avatar from "../../assetss/default/5856.jpg";
 import { convertToCreatedAtFormat } from "../../createdAt";
 import { FloatingLabel, Form, Modal, Offcanvas } from "react-bootstrap";
 import OtpInput from "react-otp-input";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { privateAxiosInstance } from "../../api/axios";
 
 const Trainees = () => {
   const [show, setShow] = useState(false);
@@ -15,38 +19,59 @@ const Trainees = () => {
   const [showEditTrainee, setShowEditTrainee] = useState(false);
   const handleCloseEditTrainee = () => setShowEditTrainee(false);
   const [otp, setOtp] = useState("");
-
-  const traineesLocal = [
-    {
-      name: "John Doe",
-      number: "+201100435756",
-      gender: "Male",
-      plan: "Starter",
-      isActive: true,
-      joinDate: "2021-09-01",
-      expireDate: "2022-09-01",
-    },
-    {
-      name: "Jane Doe",
-      number: "+201100435756",
-      gender: "male",
-      plan: "Starter",
-      isActive: false,
-      joinDate: "2021-09-01",
-      expireDate: "2022-09-01",
-    },
-    {
-      name: "Anna Doe",
-      number: "+201100435756",
-      gender: "Female",
-      plan: "Starter",
-      isActive: true,
-      joinDate: "2021-09-01",
-      expireDate: "2022-09-01",
-    },
-  ];
   const [sendInvite, setSendInvite] = useState(true);
   const [showVerify, setShowVerify] = useState(false);
+  const [Trainees, setTrainees] = useState([]);
+  const [plans, setPlans] = useState([]);
+  const { gymId } = useSelector((state) => state.user);
+  const axiosPrivate = useAxiosPrivate();
+  const inputRef = useRef(null);
+  const planRef = useRef(null);
+
+
+  const fetchTrainees = async () => {
+    try {
+      const { data } = await axiosPrivate.get(`/gyms/${gymId}/trainees`);
+      setTrainees(data.data.documents);
+      console.log("trainees", data.data.documents);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
+  };
+
+  const fetchPlans = async () => {
+    try {
+      const { data } = await privateAxiosInstance.get(`/gyms/${gymId}/plans`);
+      setPlans(data.data.documents);
+      console.log("plans", data.data.documents);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
+  };
+
+  const handleAddTrainee = async (e) => {
+    e.preventDefault();
+    try {
+      await axiosPrivate.post(`/gyms/${gymId}/trainees`, {
+        userPhone: inputRef.current.value,
+        planId: planRef.current.value,
+      });
+      fetchTrainees();
+      handleClose();
+      toast.success("Trainee added successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchTrainees();
+    fetchPlans();
+  }, []);
+
   return (
     <div className="myInfo">
       <div className="myInfoHeading">
@@ -69,7 +94,7 @@ const Trainees = () => {
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
                   </svg>
                 </span>
-                <span>Invite new</span>
+                <span>Add New</span>
               </button>
               <input
                 type="search"
@@ -90,40 +115,28 @@ const Trainees = () => {
                 </tr>
               </thead>
               <tbody>
-                {traineesLocal.map((admin) => {
+                {Trainees.map((trainee) => {
                   return (
                     <tr>
                       <td>
                         <div className="d-flex align-items-center justify-content-start">
                           <div className="profilePic">
                             <img
-                              src={admin?.image || avatar}
+                              src={trainee?.user.image || avatar}
                               alt="profilePic"
                               className="widthSmall"
                             />
                           </div>
                           <div className="profileName mx-3">
-                            {admin?.isActive === false && (
-                              <span className="text-danger">Pending ...</span>
-                            )}
-                            {admin?.isActive === true && !admin?.name && (
-                              <span className="text-danger">no name</span>
-                            )}
-                            {admin?.isActive === true && admin?.name && (
-                              <span className="">{admin?.name}</span>
-                            )}
+                            {trainee?.user.name || "No Name"}
                           </div>
                         </div>
                       </td>
-                      <td data-label="Phone">{admin?.number}</td>
-                      <td data-label="Gender">{admin?.gender}</td>
-                      <td data-label="Plan"> {admin?.plan}</td>
-                      <td data-label="Join Date">
-                        {convertToCreatedAtFormat(admin?.joinDate)}
-                      </td>
-                      <td data-label="Expire Date">
-                        {convertToCreatedAtFormat(admin?.expireDate)}
-                      </td>
+                      <td data-label="Phone">{trainee?.user.phone}</td>
+                      <td data-label="Gender">{trainee?.user.gender}</td>
+                      <td data-label="Plan">{trainee?.plan.name}</td>
+                      <td data-label="Join Date">"Join"</td>
+                      <td data-label="Expire Date">"Expire"</td>
                       <td>
                         <div className="d-flex justify-content-center flex-column">
                           <button
@@ -220,7 +233,7 @@ const Trainees = () => {
               <Modal.Header className="modala">
                 <div className="d-flex justify-content-between w-100 align-items-center mt-2">
                   <Modal.Title className="modala">
-                    <span className="offCanvasHeadTitle">Invite member</span>
+                    <span className="offCanvasHeadTitle">Add member</span>
                   </Modal.Title>
                   <button
                     className="btn-close bg-secondary"
@@ -236,30 +249,12 @@ const Trainees = () => {
                     <div>
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Name"
-                        id={"floatingInput"}
-                        className="mb-3"
-                      >
-                        <Form.Control
-                          type="text"
-                          placeholder="Name"
-                          name="name"
-                        />
-                      </FloatingLabel>
-                      {/* {sendInvite.errors.email && sendInvite.touched.email && (
-                    <small className="error-message">
-                      {sendInvite.errors.email}
-                    </small>
-                  )} */}
-                    </div>
-                    <div>
-                      <FloatingLabel
-                        controlId="floatingInput"
                         label="Phone number"
                         id={"floatingInput"}
                         className="mb-3"
                       >
                         <Form.Control
+                          ref={inputRef}
                           type="number"
                           min={0}
                           placeholder="number"
@@ -273,12 +268,17 @@ const Trainees = () => {
                         label="Select plan"
                         id={"floatingInput"}
                       >
-                        <Form.Select name="plan">
+                        <Form.Select name="plan" ref={planRef}>
                           <option value="" disabled>
                             Select Plan
                           </option>
-                          <option value={"starter"}>Starter</option>
-                          <option value={"advanced"}>Advanced</option>
+                          {plans.map((plan) => {
+                            return (
+                              <option key={plan._id} value={plan._id}>
+                                {plan.name}
+                              </option>
+                            );
+                          })}
                         </Form.Select>
                       </FloatingLabel>
                       {/* {sendInvite.errors.role && sendInvite.touched.role && (
@@ -291,10 +291,7 @@ const Trainees = () => {
                       <button
                         className="SecondaryButton w-100"
                         type="submit"
-                        onClick={() => {
-                          setShowVerify(true);
-                          setSendInvite(false);
-                        }}
+                        onClick={handleAddTrainee}
                       >
                         Verify
                       </button>
