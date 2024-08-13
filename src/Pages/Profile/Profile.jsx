@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Heading from "../../components/Heading/Heading";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import "./Profile.css";
-import { FloatingLabel, Form, Modal } from "react-bootstrap";
+import { FloatingLabel, Form, Modal, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { reSetUser, setUser } from "../../Sotre/Action/User.action";
@@ -18,14 +18,12 @@ const Profile = () => {
   const handleShow = () => setShow(true);
 
   const [modalShow, setModalShow] = useState(false);
-  const [userName, setUserName] = useState("Osama Barakat");
-  const [userEmail, setUserEmail] = useState("osama@gmail.com");
-  const [userPhone, setUserPhone] = useState("01100435756");
   const [userImage, setUserImage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [showEye, setShowEye] = useState(false);
   const [showEyeOfConfirm, setShowEyeOfConfirm] = useState(false);
   const [showEyeOfReConfirm, setShowEyeOfReConfirm] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
 
   const navigate = useNavigate();
   const {data:userData} = useSelector((state) => state.user);
@@ -62,6 +60,7 @@ const Profile = () => {
   formData.append("image", userImage);
   const updateImage = async () => {
     try {
+      setImageLoading(true);
       const res = await axiosPrivate.patch(
         "/owners/update-my-profile",
         formData,
@@ -78,6 +77,8 @@ const Profile = () => {
     } catch (error) {
       toast.error("Something went wrong");
       console.log(error);
+    } finally {
+      setImageLoading(false);
     }
   };
   const onSubmit = async (values, actions) => {
@@ -170,6 +171,16 @@ const Profile = () => {
   useEffect(() => {
     console.log("sssssssss",updateProfile.handleSubmit);
   })
+
+   const Loader = (
+     <div
+       style={{ zIndex: 999 }}
+       className="position-absolute bg-light rounded p-3 d-flex justify-content-center align-items-center w-100 h-100"
+     >
+       <Spinner animation="border" />
+     </div>
+   );
+
   return (
     <div className="Profile" style={{ minHeight: "100vh" }}>
       <aside className="profileSide">
@@ -227,7 +238,9 @@ const Profile = () => {
                 <div className="h3OfimgContainer">
                   <p>Profile image</p>
                 </div>
-                <div className="imgContContainer">
+                <div className="imgContContainer position-relative">
+                  {imageLoading && Loader}
+
                   <div>
                     <img src={userData?.image || avatar} alt="profile img" />
                   </div>

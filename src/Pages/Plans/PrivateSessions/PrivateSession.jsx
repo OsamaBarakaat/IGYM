@@ -4,8 +4,12 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import axiosInstance from "../../../api/axios";
 import { useSelector } from "react-redux";
 import { useFormik } from "formik";
-import { psOfferValidationSchema, psValidationSchema } from "../../../Validations/PrivateSession";
+import {
+  psOfferValidationSchema,
+  psValidationSchema,
+} from "../../../Validations/PrivateSession";
 import { toast } from "react-toastify";
+import Loader from "../../../components/Loader/Loader";
 
 const PrivateSession = () => {
   const [modalShowAddPS, setModalShowAddPS] = useState(false);
@@ -16,6 +20,7 @@ const PrivateSession = () => {
   const [privateSessions, setPrivateSessions] = useState([]);
   const { gymId } = useSelector((state) => state.user);
   const axiosPrivate = useAxiosPrivate();
+  const [loading, setLoading] = useState(true);
 
   /************ formik *************/
   // Add PS
@@ -115,7 +120,7 @@ const PrivateSession = () => {
           privateSessions.map((session) =>
             session._id === values._id ? res.data.data : session
           )
-        )
+        );
       } catch (error) {
         console.log(error);
         toast.error("Something went wrong");
@@ -123,6 +128,31 @@ const PrivateSession = () => {
     },
   });
 
+  // delete offer
+  const handleDeleteOffer = async () => {
+    try {
+      const id = addOfferPS.values._id;
+      const res = await axiosPrivate.delete(
+        `gyms/${gymId}/private-sessions/${id}/offer`
+      );
+      console.log("res", res);
+      toast.success("Offer deleted successfully");
+      const newSessions = privateSessions.map((ps) => {
+        if (ps._id === id) {
+          return {
+            ...ps,
+            offer: { cost: null, duration: null, expireAt: null },
+          };
+        }
+        return ps;
+      });
+      setPrivateSessions(newSessions);
+      addOfferPS.resetForm();
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
+  };
 
   /************ Handle Functions *************/
   // delete PS
@@ -141,7 +171,7 @@ const PrivateSession = () => {
       console.log(error);
       toast.error("Something went wrong");
     }
-  }
+  };
   useEffect(() => {
     const fetchPrivateSessions = async () => {
       try {
@@ -149,12 +179,21 @@ const PrivateSession = () => {
           `/gyms/${gymId}/private-sessions/`
         );
         setPrivateSessions(response.data.data.documents);
+        setLoading(false);
       } catch (error) {
         console.error(error);
       }
     };
     fetchPrivateSessions();
   }, []);
+
+   if (loading) {
+     return (
+       <>
+         <Loader />
+       </>
+     );
+   }
 
   return (
     <div className="mainContent m-2 min-vh-100">
@@ -177,8 +216,8 @@ const PrivateSession = () => {
                         cost: session?.offer.cost,
                         sessions: session?.offer.sessions,
                         expireAt: session?.offer.expireAt,
-                      })
-                      setModalShowEditOfferPS(true)
+                      });
+                      setModalShowEditOfferPS(true);
                     }}
                   >
                     <span>
@@ -265,12 +304,35 @@ const PrivateSession = () => {
                 <div className="flexcenterbetween">
                   <p className="fontLarge">
                     {session.sessions} Sessions package
+                    <br />
+                    {(session?.offer.cost || session?.offer.sessions) &&
+                      new Date(session?.offer.expireAt) > new Date() && (
+                        <small className="offerEndIn opacityL d-block">
+                          Offer ends in{" "}
+                          {new Date(
+                            session?.offer.expireAt
+                          ).toLocaleDateString()}
+                        </small>
+                      )}
                   </p>
                   {new Date(session?.offer.expireAt) > new Date() ? (
                     <p>
-                      <span className="fontMid">
-                        {session.offer.cost || session.cost} <span>EGP</span>
-                      </span>{" "}
+                      {session.offer.cost ? (
+                        <span className="fontMid">
+                          <>
+                            <del className="opacityL mx-2">
+                              {session?.cost}EGP
+                            </del>
+                            <span className="midText primary-color">
+                              {session?.offer.cost}EGP
+                            </span>
+                          </>
+                        </span>
+                      ) : (
+                        <span className="fontMid">
+                          {session.cost} <span>EGP</span>
+                        </span>
+                      )}
                       / {session.offer.sessions || session.sessions} sessions
                     </p>
                   ) : (
@@ -284,7 +346,7 @@ const PrivateSession = () => {
                 </div>
                 <div className="flexcenterstart">
                   <p className="font-smaller opacitySmall">
-                    Expires in {`${session.expireIn} ${session.expireType}`} 
+                    Expires in {`${session.expireIn} ${session.expireType}`}
                   </p>
                 </div>
               </div>
@@ -582,7 +644,11 @@ const PrivateSession = () => {
                   <button className="SecondaryButton w-100" type="submit">
                     Edit Private Session
                   </button>
-                  <button type="button" onClick={() => handleDeletePS(editPS.values._id)} className="DangerButton w-100">
+                  <button
+                    type="button"
+                    onClick={() => handleDeletePS(editPS.values._id)}
+                    className="DangerButton w-100"
+                  >
                     Delete Private Session
                   </button>
                 </div>
@@ -735,11 +801,12 @@ const PrivateSession = () => {
                   <button
                     type="button"
                     onClick={() => {
+                      handleDeleteOffer();
                       setModalShowEditOfferPS(false);
                     }}
                     className="DangerButton w-100"
                   >
-                    Close
+                    Delete Offer
                   </button>
                 </div>
               </form>

@@ -12,7 +12,7 @@ import "swiper/css/scrollbar";
 import { Controller } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
-import { Button, Form, InputGroup, Modal } from "react-bootstrap";
+import { Button, Form, InputGroup, Modal, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import {
   FaPhone,
@@ -25,6 +25,7 @@ import axiosInstance, { privateAxiosInstance } from "../../api/axios";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Trash2Icon } from "lucide-react";
+import Loader from "../../components/Loader/Loader";
 
 const GymProfile = () => {
   const [currentPage, setCurrentPage] = useState("info");
@@ -33,6 +34,10 @@ const GymProfile = () => {
   const navigate = useNavigate();
   const [showImage, setShowImage] = useState(false);
   const [expandedImage, setExpandedImage] = useState(null);
+  const [logoLoading, setLogoLoading] = useState(false);
+  const [galleryLoading, setGalleryLoading] = useState(false);
+  const [editDesc, setEditDesc] = useState(null);
+
   const handleImageClick = (image) => {
     setExpandedImage(image);
     setShowImage(true);
@@ -55,6 +60,8 @@ const GymProfile = () => {
       const formData = new FormData();
       formData.append(key, img);
 
+      setLogoLoading(true);
+
       const response = await privateAxiosInstance.put(
         `/gyms/${gymId}`,
         formData,
@@ -70,6 +77,8 @@ const GymProfile = () => {
     } catch (error) {
       console.error(error.response.data);
       toast.error(error.response.data.message);
+    }finally{
+      setLogoLoading(false);
     }
   };
 
@@ -82,6 +91,8 @@ const GymProfile = () => {
       files.forEach((file) => {
         formData.append(`images`, file);
       });
+
+      setGalleryLoading(true);
 
       const response = await privateAxiosInstance.put(
         `/gyms/${gymId}/branch`,
@@ -100,6 +111,8 @@ const GymProfile = () => {
     } catch (error) {
       console.error(error?.response?.data);
       toast.error(error?.response?.data?.message);
+    }finally{
+      setGalleryLoading(false);
     }
   };
 
@@ -107,17 +120,17 @@ const GymProfile = () => {
     e.preventDefault();
     try {
       const response = await privateAxiosInstance.put(`/gyms/${gymId}`, {
-        description: gymInfo.description,
+        description: editDesc,
       });
       setGymInfo({ ...gymInfo, description: response.data.data.description });
       toast.success(response.data.message);
     } catch (error) {
       console.error(error.response.data);
       toast.error(error.response.data.message);
-    }finally{
+    } finally {
       setShowEditDesc(false);
     }
-  }
+  };
 
   const handleDeleteImage = async (image) => {
     const filteredImages = gymInfo.branchInfo.images.filter(
@@ -134,7 +147,7 @@ const GymProfile = () => {
       ...gymInfo,
       branchInfo: { ...gymInfo.branchInfo, images: filteredImages },
     });
-  }
+  };
 
   const handleChangeLink = (e) => {
     const { name, value } = e.target;
@@ -188,17 +201,22 @@ const GymProfile = () => {
     "thursday",
   ];
 
-  const valueOfText =
-    "Our gym, named 'Elite Fitness Haven,' is not just a place to work out; it's a community where health and well-being are prioritized. Nestled in the heart of the city, we boast state-of-the-art equipment, expert trainers, and a diverse range of classes catering to all fitness levels. What sets us apart is our personalized approach; every member is treated with individual attention, ensuring that their unique fitness goals are met. Our commitment to excellence, combined with a supportive environment, makes us the best choice for anyone serious about their fitness journey.";
+  const Loader = (
+    <div style={{zIndex: 999}} className="position-absolute bg-light rounded p-3 d-flex justify-content-center align-items-center w-100 h-100">
+      <Spinner animation="border" />
+    </div>
+  );
+
   return (
     <div className="myInfo">
       <div className="myInfoHeading">
         <Heading content={"Gym Profile"} />
       </div>
       <div className="myInfoContent m-5">
-        <div className="theme bigCard ">
+        <div className="theme bigCard">
           <p>Theme</p>
-          <div className="themeContent">
+          <div className="themeContent position-relative">
+            {logoLoading && Loader}
             <div className="flexcenteraround themelogo">
               <div className="themeLogo logo-small overflow-hidden">
                 <img src={gymInfo?.logo} alt="gym logo" />
@@ -423,7 +441,7 @@ const GymProfile = () => {
             </table>
           </div>
         </div>
-        <div className="bigCard gymGallery">
+        <div className="bigCard gymGallery ">
           <div className="flexcenterbetween">
             <h3>Gallery</h3>
             <label htmlFor="changeGallery">
@@ -455,7 +473,9 @@ const GymProfile = () => {
               />
             </label>
           </div>
-          <div className="slider-container">
+          <div className="slider-container position-relative">
+            {galleryLoading && Loader}
+
             <Swiper
               // install Swiper modules
               modules={[
@@ -592,7 +612,7 @@ const GymProfile = () => {
             </a>
             <a
               target="_blank"
-              href={`https://wa.me/2${gymInfo?.links?.whatsapp}`}
+              href={`https://wa.me/2${gymInfo?.phones[0]}`}
               className="d-flex flex-column justify-content-center align-items-center text-decoration-none"
             >
               <span>
@@ -715,9 +735,10 @@ const GymProfile = () => {
                   rows={3}
                   placeholder="Add Your Description"
                   name="description"
-                  value={gymInfo?.description}
+                  defaultValue={gymInfo?.description}
+                  value={editDesc}
                   onChange={(e) => {
-                    setGymInfo({ ...gymInfo, description: e.target.value });
+                    setEditDesc(e.target.value);
                   }}
                 />
               </Form.Group>

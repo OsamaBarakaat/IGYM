@@ -9,9 +9,11 @@ import axiosInstance from "../../api/axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import Loader from "../../components/Loader/Loader";
 
 const Coaches = () => {
   const [coaches, setCoaches] = useState([]);
+  const [keyWord, setKeyWord] = useState(null);
   const inputRef = useRef(null);
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
@@ -25,12 +27,17 @@ const Coaches = () => {
   const [showVerify, setShowVerify] = useState(false);
   const { gymId } = useSelector((state) => state.user);
   const axiosPrivate = useAxiosPrivate();
-
+  const [loading, setLoading] = useState(true);
 
   const fetchCoaches = async () => {
     try {
-      const { data } = await axiosInstance.get(`/gyms/${gymId}/coaches`);
+      let url = `/gyms/${gymId}/coaches`;
+      if (keyWord) {
+        url += `?keyword=${keyWord}`;
+      }
+      const { data } = await axiosInstance.get(url);
       setCoaches(data.data.documents);
+      setLoading(false);
       console.log("coaches", data.data.documents);
     } catch (error) {
       toast.error("Something went wrong");
@@ -55,7 +62,16 @@ const Coaches = () => {
 
   useEffect(() => {
     fetchCoaches();
-  }, []);
+  }, [keyWord]);
+
+
+   if (loading) {
+     return (
+       <>
+         <Loader />
+       </>
+     );
+   }
 
   return (
     <div className="myInfo">
@@ -84,7 +100,9 @@ const Coaches = () => {
               <input
                 type="search"
                 className="w-50 p-2 rounded-3 searchInput"
-                placeholder="Search ..."
+                placeholder="Search by name or number ..."
+                value={keyWord}
+                onChange={(e) => setKeyWord(e.target.value)}
               />
             </div>
             <table className="mainTableTwo">

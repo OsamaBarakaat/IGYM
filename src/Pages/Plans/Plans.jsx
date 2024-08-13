@@ -249,13 +249,37 @@ const Plans = () => {
       } catch (error) {
         if (error.response.status === 400) {
           toast.error(error.response.data.message);
-        }else{
-        toast.error("Something went wronggg");          
+        } else {
+          toast.error("Something went wronggg");
         }
         console.log(error);
       }
     },
   });
+
+  // delete offer
+  const handleDeleteOffer = async () => {
+    try {
+      const res = await axiosPrivate.delete(
+        `gyms/666ddfad7a0f09d99493d976/plans/${planId}/offer`
+      );
+      console.log("res", res);
+      toast.success("Offer deleted successfully");
+      const newPlans = plans.map((plan) => {
+        if (plan._id === planId) {
+          return {
+            ...plan,
+            offer: { cost: null, duration: null, expireAt: null },
+          };
+        }
+        return plan;
+      });
+      setPlans(newPlans);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
+  };
 
   //delete plan
   const handleDeletePlan = async (id) => {
@@ -275,65 +299,6 @@ const Plans = () => {
       toast.error("Something went wrong");
     }
   };
-
-  const plansArray = [
-    {
-      name: "Starter Plan",
-      cost: 500,
-      per: "month",
-      offer: true,
-      offerCost: 400,
-      offerEndIn: " 11 / 6 / 2024",
-    },
-    {
-      name: "Advanced Plan",
-      cost: 1200,
-      per: "quarter",
-      offer: false,
-    },
-    {
-      name: "Expert Plan",
-      cost: 2000,
-      per: "6 months",
-      offer: false,
-    },
-    {
-      name: "Master Plan",
-      cost: 3500,
-      per: "year",
-      offer: false,
-    },
-  ];
-
-  const planIncludes = [
-    {
-      name: "Access to fitness equipment",
-    },
-    {
-      name: "Free Wi-Fi",
-    },
-    {
-      name: "Nutritional guidance",
-    },
-    {
-      name: "Facility access",
-    },
-    {
-      name: "Guest passes",
-    },
-    {
-      name: "Fitness assessments",
-    },
-    {
-      name: "Group exercise classes",
-    },
-    {
-      name: "Flexible membership",
-    },
-    {
-      name: "Locker rooms",
-    },
-  ];
 
   if (loading) {
     return (
@@ -411,7 +376,6 @@ const Plans = () => {
                                     expireAt: "",
                                   });
                                 }}
-
                               >
                                 Add Offer
                               </button>
@@ -1332,7 +1296,9 @@ const Plans = () => {
                                   max="2030-12-31"
                                   placeholder="dd/mm/yyyy"
                                   name="expireAt"
-                                  value={editOffer.values.expireAt.split("T")[0]}
+                                  value={
+                                    editOffer.values.expireAt.split("T")[0]
+                                  }
                                   onChange={editOffer.handleChange}
                                   onBlur={editOffer.handleBlur}
                                 ></Form.Control>
@@ -1484,11 +1450,12 @@ const Plans = () => {
                             <button
                               type="button"
                               onClick={() => {
+                                handleDeleteOffer();
                                 setModalShowEditOffer(false);
                               }}
                               className="DangerButton w-100"
                             >
-                              Close
+                              Delete Offer
                             </button>
                           </div>
                         </form>

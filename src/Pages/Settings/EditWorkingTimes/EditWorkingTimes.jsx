@@ -5,6 +5,7 @@ import { FloatingLabel, Form, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import axiosInstance, { privateAxiosInstance } from "../../../api/axios";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const EditWorkingTimes = () => {
   const [workingDays, setWorkingDays] = useState({
@@ -17,6 +18,7 @@ const EditWorkingTimes = () => {
     thursday: null,
   });
   const { gymId } = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   const days = [
     "friday",
@@ -58,7 +60,8 @@ const EditWorkingTimes = () => {
       );
 
       console.log("data",response.data);
-      toast.success(response.data.message);
+      toast.success("Working times updated successfully");
+      navigate("/settings");
     } catch (error) {
       toast.error(error.response.data.message);
     }

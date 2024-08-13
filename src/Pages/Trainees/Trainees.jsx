@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { privateAxiosInstance } from "../../api/axios";
+import Loader from "../../components/Loader/Loader";
 
 const Trainees = () => {
   const [show, setShow] = useState(false);
@@ -27,12 +28,19 @@ const Trainees = () => {
   const axiosPrivate = useAxiosPrivate();
   const inputRef = useRef(null);
   const planRef = useRef(null);
+  const [keyWord, setKeyWord] = useState(null);
+  const [loading, setLoading] = useState(true);
 
 
   const fetchTrainees = async () => {
     try {
-      const { data } = await axiosPrivate.get(`/gyms/${gymId}/trainees`);
+      let url = `/gyms/${gymId}/trainees`;
+      if (keyWord) {
+        url += `?keyword=${keyWord}`;
+      }
+      const { data } = await axiosPrivate.get(url);
       setTrainees(data.data.documents);
+      setLoading(false);
       console.log("trainees", data.data.documents);
     } catch (error) {
       console.log(error);
@@ -68,9 +76,21 @@ const Trainees = () => {
   };
 
   useEffect(() => {
-    fetchTrainees();
     fetchPlans();
   }, []);
+
+  useEffect(() => {
+    fetchTrainees();
+    fetchPlans();
+  }, [keyWord]);
+
+  if (loading) {
+      return (
+        <>
+          <Loader />
+        </>
+      );
+  }
 
   return (
     <div className="myInfo">
@@ -99,7 +119,9 @@ const Trainees = () => {
               <input
                 type="search"
                 className="w-50 p-2 rounded-3 searchInput"
-                placeholder="Search ..."
+                placeholder="Search by name or number ..."
+                value={keyWord}
+                onChange={(e) => setKeyWord(e.target.value)}
               />
             </div>
             <table className="mainTableTwo">
