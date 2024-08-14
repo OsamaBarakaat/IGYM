@@ -1,0 +1,55 @@
+.role-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px;
+}
+
+.role-item {
+    width: 100px;
+    height: 130px;
+    background-color: #fff;
+    color: black;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.role-item:hover {
+    background-color: #b5fa89;
+}
+
+.role-item.selected {
+    background-color: #74c947;
+    color: white;
+}
+
+.role-item.selected .check-mark {
+    display: block;
+}
+
+.icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.check-mark {
+    position: absolute;
+    bottom: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #74c947;
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    padding: 2px 8px;
+    display: none;
+}

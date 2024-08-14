@@ -1,55 +1,72 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "../../components/Heading/Heading";
 import "./Roles.css";
 import { useNavigate } from "react-router-dom";
+import { Trash2Icon } from "lucide-react";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import Loader from "../../components/Loader/Loader";
 
 const Roles = () => {
+  const [roles, setRoles] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { gymId } = useSelector((state) => state.user);
+  const axiosPrivate = useAxiosPrivate();
   const rolesArray = [
-    {
-      name: "Admin",
-    },
-    {
-      name: "Manager",
-    },
-    {
-      name: "User",
-    },
-    {
-      name: "Guest",
-    },
+    "GYM_INFO",
+    "MEMBERS",
+    "TRAINEES",
+    "COACHES",
+    "CLASSES",
+    "PLANS",
+    "PRIVATE_SESSIONS",
+    "NOTIFICATIONS",
+    "ROLES",
+    "SUBSCRIPTION",
   ];
-  const roleIncludes = [
-    {
-      name: "Access plans",
-    },
-    {
-      name: "Manage users",
-    },
-    {
-      name: "Manage roles",
-    },
-    {
-      name: "Manage permissions",
-    },
-    {
-      name: "Manage groups",
-    },
-  ];
-  const roleExcludes = [
-    {
-      name: "Manage billing",
-    },
-    {
-      name: "Manage account",
-    },
-    {
-      name: "Manage subscription",
-    },
-    {
-      name: "Manage payment",
-    },
-  ];
+  
+  const handleEditRole = (roleId) => {
+    navigate(`/editrole/${roleId}`);
+  };
+
+  const handleDeleteRole = async (roleId) => {
+    try {
+      const { data } = await axiosPrivate.delete(`/gyms/${gymId}/roles/${roleId}`);
+      console.log(data);
+      toast.success("Role deleted successfully");
+      fetchRoles();
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const fetchRoles = async () => {
+    try {
+      const { data } = await axiosPrivate.get(`/gyms/${gymId}/roles`);
+      setRoles(data.data.documents);
+      setLoading(false);
+      console.log("roles", data);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchRoles();
+  }, []);
+
+   if (loading) {
+     return (
+       <>
+         <Loader />
+       </>
+     );
+   }
+
   return (
     <div className="myInfo">
       <div className="myInfoHeading">
@@ -58,11 +75,14 @@ const Roles = () => {
 
       <div className="myInfoContent">
         <div className="roles">
-          {rolesArray.map((role, index) => {
+          {roles.map((role, index) => {
             return (
               <div className="singleRole bigCard" key={index}>
                 <div className="d-flex justify-content-end align-items-center">
-                  <button className="PrimaryButton">
+                  <button
+                    className="PrimaryButton mx-1"
+                    onClick={() => handleEditRole(role._id)}
+                  >
                     <span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -81,15 +101,21 @@ const Roles = () => {
                     </span>
                     <span>Edit</span>
                   </button>
+                  <button onClick={() => handleDeleteRole(role._id)} className="DangerButton">
+                    <span>
+                      <Trash2Icon size={16} />
+                    </span>
+                    <span>Delete</span>
+                  </button>
                 </div>
                 <div className="roleName fontLarge text-center">
                   {role.name}
                 </div>
                 <p className="opacityL font-smaller">Access</p>
                 <div className="line2 flexcenterbetween flex-wrap">
-                  {roleIncludes.map((include) => {
+                  {role?.permissions.map((permission, index) => {
                     return (
-                      <div className=" w-40 m-1 p-1 flexcenterstart">
+                      <div key={index} className=" w-40 m-1 p-1 flexcenterstart">
                         <span className="spanSVGPrimary">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +128,7 @@ const Roles = () => {
                             <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
                           </svg>
                         </span>
-                        <span className="">{include?.name}</span>
+                        <span className="">{permission}</span>
                       </div>
                     );
                   })}
@@ -110,9 +136,9 @@ const Roles = () => {
                 <hr />
                 <p className="opacityL font-smaller">Not Access</p>
                 <div className="line2 flexcenterbetween flex-wrap">
-                  {roleExcludes.map((include) => {
+                  {rolesArray.filter((pr) => !role.permissions.includes(pr)).map((role, index) => {
                     return (
-                      <div className=" w-40 m-1 p-1 flexcenterstart">
+                      <div key={index} className=" w-40 m-1 p-1 flexcenterstart">
                         <span className="spanSVGDanger">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -125,7 +151,7 @@ const Roles = () => {
                             <path d="M15 8a6.97 6.97 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
                           </svg>
                         </span>
-                        <span className="">{include?.name}</span>
+                        <span className="">{role}</span>
                       </div>
                     );
                   })}

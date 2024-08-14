@@ -1,13 +1,18 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Heading from "../../../components/Heading/Heading";
 import { FloatingLabel, Form } from "react-bootstrap";
-import "./AddNewRole.css";
+import "./EditRole.css";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
 
-const AddNewRole = () => {
+const EditRole = () => {
   const [selectedItems, setSelectedItems] = useState([]);
+  const [roleData, setRoleData] = useState(null);
+  
+  const { roleId } = useParams();
+  
   const { gymId } = useSelector((state) => state.user);
   const axiosPrivate = useAxiosPrivate();
   const nameInputRef = useRef();
@@ -22,43 +27,49 @@ const AddNewRole = () => {
     { id: "GYM_INFO", name: "Gym Info", icon: "📊" },
     { id: "MEMBERS", name: "Members", icon: "👤" },
   ];
-
-  const handleItemClick = (item) => {
+  const handleItemClick = (id) => {
     setSelectedItems((prev) =>
-      prev.some((selected) => selected.id === item.id)
-        ? prev.filter((selected) => selected.id !== item.id)
-        : [...prev, item]
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
-  console.log(selectedItems);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const name = nameInputRef.current.value;
-    const permissions = selectedItems.map((item) => item.id);
-
-    if (!name || !permissions.length) {
-      toast.error("Please fill name and select permissions");
-      return;
-    }
+  const fetchRole = async () => {
     try {
-      const { data } = await axiosPrivate.post(`/gyms/${gymId}/roles`, {
-        name,
-        permissions,
-      });
-      console.log(data);
-      if (data) {
-        toast.success("Role added successfully");
-      }
+      const { data } = await axiosPrivate.get(`/gyms/${gymId}/roles/${roleId}`);
+      setRoleData(data.data);
+      setSelectedItems(data.data.permissions);
+      console.log("roleData", data);
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosPrivate.patch(
+        `/gyms/${gymId}/roles/${roleId}`,
+        {
+          name: nameInputRef.current.value,
+          permissions: selectedItems,
+        }
+      );
+      console.log(response.data);
+      toast.success(response.data.message);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchRole();
+  }, []);
+
   return (
     <div>
-      <Heading content={"Add New Role"} />
+      <Heading content={"Edit Role"} />
       <div className="main-content">
         <div className="form bigCard">
           <form onSubmit={handleSubmit}>
@@ -74,6 +85,7 @@ const AddNewRole = () => {
                   type="text"
                   placeholder="role name"
                   name="roleName"
+                  defaultValue={roleData?.name}
                 />
               </FloatingLabel>
             </div>
@@ -84,24 +96,22 @@ const AddNewRole = () => {
                   <div
                     key={item.id}
                     className={`role-item ${
-                      selectedItems.some((selected) => selected.id === item.id)
-                        ? "selected"
-                        : ""
+                      selectedItems.includes(item.id) ? "selected" : ""
                     }`}
-                    onClick={() => handleItemClick(item)}
+                    onClick={() => handleItemClick(item.id)}
                   >
                     <div className="icon">{item.icon}</div>
                     <p>{item.name}</p>
-                    {selectedItems.some(
-                      (selected) => selected.id === item.id
-                    ) && <div className="check-mark">✔️</div>}
+                    {selectedItems.includes(item.id) && (
+                      <div className="check-mark">✔️</div>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
             <div className="w-100">
               <button type="submit" className="SecondaryButton">
-                Add Role
+                Edit Role
               </button>
             </div>
           </form>
@@ -111,4 +121,4 @@ const AddNewRole = () => {
   );
 };
 
-export default AddNewRole;
+export default EditRole;
