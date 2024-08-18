@@ -17,7 +17,13 @@ const Layout = () => {
     try {
       const { data } = await axiosPrivate.get("/owners/me/");
       console.log(data.data);
-      dispatch(setUser({data: data?.data?.userData, gymId: data?.data?.gymId}));
+      dispatch(
+        setUser({
+          data: data?.data?.userData,
+          gymId: data?.data?.gymId,
+          plan: data?.data?.plan,
+        })
+      );
     } catch (error) {
       console.log(error);
     } finally {

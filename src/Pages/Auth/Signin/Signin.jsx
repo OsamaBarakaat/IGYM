@@ -39,6 +39,7 @@ const Signin = () => {
         setUser({
           data: data?.data?.userData,
           gymId: data?.data?.gymId,
+          plan: data?.data?.plan,
           token: data.data.accessToken,
         })
       );

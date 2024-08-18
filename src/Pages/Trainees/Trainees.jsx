@@ -163,8 +163,12 @@ const Trainees = () => {
                       <td data-label="Phone">{trainee?.user.phone}</td>
                       <td data-label="Gender">{trainee?.user.gender}</td>
                       <td data-label="Plan">{trainee?.plan.name}</td>
-                      <td data-label="Join Date">"Join"</td>
-                      <td data-label="Expire Date">"Expire"</td>
+                      <td data-label="Join Date">
+                        {convertToCreatedAtFormat(trainee?.createdAt)}
+                      </td>
+                      <td data-label="Expire Date">
+                        {convertToCreatedAtFormat(trainee?.plan.expiredAt)}
+                      </td>
                       <td>
                         <div className="d-flex justify-content-center flex-column">
                           <button
