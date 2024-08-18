@@ -29,14 +29,22 @@ const Coaches = () => {
   const axiosPrivate = useAxiosPrivate();
   const [loading, setLoading] = useState(true);
 
+   const [page, setPage] = useState(1);
+   const [limit, setLimit] = useState(1);
+
+   const pageArr = [];
+   for (let i = 0; i < coaches?.pagination?.numberOfPages; i++) {
+     pageArr.push(i);
+   }
+
   const fetchCoaches = async () => {
     try {
-      let url = `/gyms/${gymId}/coaches`;
+      let url = `/gyms/${gymId}/coaches?page=${page}&limit=${limit}`;
       if (keyWord) {
-        url += `?keyword=${keyWord}`;
+        url += `&keyword=${keyWord}`;
       }
       const { data } = await axiosInstance.get(url);
-      setCoaches(data.data.documents);
+      setCoaches(data.data);
       setLoading(false);
       console.log("coaches", data.data.documents);
     } catch (error) {
@@ -62,7 +70,7 @@ const Coaches = () => {
 
   useEffect(() => {
     fetchCoaches();
-  }, [keyWord]);
+  }, [keyWord, page, limit]);
 
 
    if (loading) {
@@ -115,7 +123,7 @@ const Coaches = () => {
                 </tr>
               </thead>
               <tbody>
-                {coaches.map((coach) => {
+                {coaches.documents.map((coach) => {
                   return (
                     <tr>
                       <td>
@@ -178,15 +186,20 @@ const Coaches = () => {
             <div className="d-flex justify-content-center align-items-center pagination my-2">
               <div className="w-50 d-flex justify-content-between align-items-center">
                 <button
-                  className={`PrimaryButtonTwo cursor-not-allowed `}
-                  // onClick={() => {
-                  //   setPage(page - 1);
-                  // }}
-                  disabled={true}
+                  className={`PrimaryButtonTwo`}
+                  style={{
+                    cursor: coaches?.pagination.prev
+                      ? "pointer"
+                      : "not-allowed",
+                  }}
+                  onClick={() => {
+                    setPage(page - 1);
+                  }}
+                  disabled={!coaches?.pagination.prev}
                 >
                   Previous
                 </button>
-                {/* <div className="pages">
+                <div className="pages">
                   {pageArr.map((page) => {
                     return (
                       <span
@@ -199,13 +212,18 @@ const Coaches = () => {
                       </span>
                     );
                   })}
-                </div> */}
+                </div>
                 <button
-                  className={`PrimaryButtonTwo cursor-not-allowed`}
-                  // onClick={() => {
-                  //   setPage(page + 1);
-                  // }}
-                  disabled={true}
+                  className={`PrimaryButtonTwo`}
+                  style={{
+                    cursor: coaches?.pagination.next
+                      ? "pointer"
+                      : "not-allowed",
+                  }}
+                  onClick={() => {
+                    setPage(page + 1);
+                  }}
+                  disabled={!coaches?.pagination.next}
                 >
                   Next
                 </button>

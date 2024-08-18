@@ -208,8 +208,7 @@ const Settings = () => {
   });
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
-  const [numberOfPages, setNumberOfPages] = useState(0);
+  const [limit, setLimit] = useState(1);
 
   // Roles
   const [roles, setRoles] = useState([]);
@@ -232,16 +231,15 @@ const Settings = () => {
         const { data } = await privateAxiosInstance.get(
           `/gyms/${gymId}/members?page=${page}&limit=${limit}`
         );
-        console.log("members", data.data.documents);
-        setMembers(data.data.documents);
+        console.log("members", data.data);
+        setMembers(data.data);
         setLoading(false);
       } catch (error) {}
     };
     fetchMembers();
   }, [page, limit]);
-  console.log(numberOfPages);
   const pageArr = [];
-  for (let i = 0; i < numberOfPages; i++) {
+  for (let i = 0; i < members?.pagination?.numberOfPages; i++) {
     pageArr.push(i);
   }
   const [selectedAdmin, setSelectedAdmin] = useState(null);
@@ -476,7 +474,7 @@ const Settings = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {members.map((admin) => {
+                    {members.documents.map((admin) => {
                       return (
                         <tr>
                           <td>
@@ -529,13 +527,16 @@ const Settings = () => {
                 <div className="d-flex justify-content-center align-items-center pagination my-2">
                   <div className="w-50 d-flex justify-content-between align-items-center">
                     <button
-                      className={`PrimaryButtonTwo cursor-not-allowed ${
-                        page === 1 && "cursor-not-allowed"
-                      }`}
+                      className={`PrimaryButtonTwo`}
+                      style={{
+                        cursor: members?.pagination.prev
+                          ? "pointer"
+                          : "not-allowed",
+                      }}
                       onClick={() => {
                         setPage(page - 1);
                       }}
-                      disabled={true}
+                      disabled={!members?.pagination.prev}
                     >
                       Previous
                     </button>
@@ -554,13 +555,16 @@ const Settings = () => {
                       })}
                     </div>
                     <button
-                      className={`PrimaryButtonTwo cursor-not-allowed ${
-                        page === numberOfPages && "cursor-not-allowed"
-                      }`}
+                      className={`PrimaryButtonTwo`}
+                      style={{
+                        cursor: members?.pagination.next
+                          ? "pointer"
+                          : "not-allowed",
+                      }}
                       onClick={() => {
                         setPage(page + 1);
                       }}
-                      disabled={true}
+                      disabled={!members?.pagination.next}
                     >
                       Next
                     </button>

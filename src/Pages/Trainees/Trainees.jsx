@@ -31,15 +31,22 @@ const Trainees = () => {
   const [keyWord, setKeyWord] = useState(null);
   const [loading, setLoading] = useState(true);
 
+   const [page, setPage] = useState(1);
+   const [limit, setLimit] = useState(1);
+
+   const pageArr = [];
+   for (let i = 0; i < Trainees?.pagination?.numberOfPages; i++) {
+     pageArr.push(i);
+   }
 
   const fetchTrainees = async () => {
     try {
-      let url = `/gyms/${gymId}/trainees`;
+      let url = `/gyms/${gymId}/trainees?page=${page}&limit=${limit}`;
       if (keyWord) {
-        url += `?keyword=${keyWord}`;
+        url += `&keyword=${keyWord}`;
       }
       const { data } = await axiosPrivate.get(url);
-      setTrainees(data.data.documents);
+      setTrainees(data.data);
       setLoading(false);
       console.log("trainees", data.data.documents);
     } catch (error) {
@@ -81,8 +88,7 @@ const Trainees = () => {
 
   useEffect(() => {
     fetchTrainees();
-    fetchPlans();
-  }, [keyWord]);
+  }, [keyWord, page, limit]);
 
   if (loading) {
       return (
@@ -137,7 +143,7 @@ const Trainees = () => {
                 </tr>
               </thead>
               <tbody>
-                {Trainees.map((trainee) => {
+                {Trainees.documents.map((trainee) => {
                   return (
                     <tr>
                       <td>
@@ -212,15 +218,20 @@ const Trainees = () => {
             <div className="d-flex justify-content-center align-items-center pagination my-2">
               <div className="w-50 d-flex justify-content-between align-items-center">
                 <button
-                  className={`PrimaryButtonTwo cursor-not-allowed `}
-                  // onClick={() => {
-                  //   setPage(page - 1);
-                  // }}
-                  disabled={true}
+                  className={`PrimaryButtonTwo`}
+                  style={{
+                    cursor: Trainees?.pagination.prev
+                      ? "pointer"
+                      : "not-allowed",
+                  }}
+                  onClick={() => {
+                    setPage(page - 1);
+                  }}
+                  disabled={!Trainees?.pagination.prev}
                 >
                   Previous
                 </button>
-                {/* <div className="pages">
+                <div className="pages">
                   {pageArr.map((page) => {
                     return (
                       <span
@@ -233,13 +244,18 @@ const Trainees = () => {
                       </span>
                     );
                   })}
-                </div> */}
+                </div>
                 <button
-                  className={`PrimaryButtonTwo cursor-not-allowed`}
-                  // onClick={() => {
-                  //   setPage(page + 1);
-                  // }}
-                  disabled={true}
+                  className={`PrimaryButtonTwo`}
+                  style={{
+                    cursor: Trainees?.pagination.next
+                      ? "pointer"
+                      : "not-allowed",
+                  }}
+                  onClick={() => {
+                    setPage(page + 1);
+                  }}
+                  disabled={!Trainees?.pagination.next}
                 >
                   Next
                 </button>
