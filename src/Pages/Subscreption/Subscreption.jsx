@@ -94,7 +94,7 @@ const Subscreption = () => {
                   </div>
                 </div>
               )}
-              <div className="capacity fontMid">{plan.maxTrainees}</div>
+              <div className="capacity fontMid">up to {plan.maxTrainees} Trainees</div>
               <hr />
               <div className="d-flex justify-content-center align-items-center">
                 {plan._id === myPlan.id ? (
