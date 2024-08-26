@@ -51,7 +51,7 @@ function App() {
             <Route path="/trainees" element={<Trainees />} />
             <Route path="/subscreptions" element={<Subscreption />} />
             <Route path="/addnewrole" element={<AddNewRole />} />
-            <Route path="/coachprofile" element={<CoachProfile />} />
+            <Route path="/coachprofile/:coachId" element={<CoachProfile />} />
             <Route path="/classes" element={<Classes />} />
             <Route path="/addrole" element={<AddNewRole />} />
             <Route path="/editrole/:roleId" element={<EditRole />} />

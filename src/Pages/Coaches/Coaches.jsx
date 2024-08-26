@@ -15,6 +15,7 @@ const Coaches = () => {
   const [coaches, setCoaches] = useState([]);
   const [keyWord, setKeyWord] = useState(null);
   const inputRef = useRef(null);
+  const nameRef = useRef(null);
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -29,13 +30,13 @@ const Coaches = () => {
   const axiosPrivate = useAxiosPrivate();
   const [loading, setLoading] = useState(true);
 
-   const [page, setPage] = useState(1);
-   const [limit, setLimit] = useState(1);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(1);
 
-   const pageArr = [];
-   for (let i = 0; i < coaches?.pagination?.numberOfPages; i++) {
-     pageArr.push(i);
-   }
+  const pageArr = [];
+  for (let i = 0; i < coaches?.pagination?.numberOfPages; i++) {
+    pageArr.push(i);
+  }
 
   const fetchCoaches = async () => {
     try {
@@ -52,13 +53,13 @@ const Coaches = () => {
     }
   };
 
-
   const handleAddCoach = async (e) => {
     e.preventDefault();
     try {
-       await axiosPrivate.post(`/gyms/${gymId}/coaches`, {
-         userPhone: inputRef.current.value,
-       });
+      await axiosPrivate.post(`/gyms/${gymId}/coaches`, {
+        userPhone: inputRef.current.value,
+        name: nameRef.current.value,
+      });
       fetchCoaches();
       handleClose();
       toast.success("Coach added successfully");
@@ -66,20 +67,20 @@ const Coaches = () => {
       console.log(error);
       toast.error(error.response.data.message);
     }
-  }
+  };
+
 
   useEffect(() => {
     fetchCoaches();
   }, [keyWord, page, limit]);
 
-
-   if (loading) {
-     return (
-       <>
-         <Loader />
-       </>
-     );
-   }
+  if (loading) {
+    return (
+      <>
+        <Loader />
+      </>
+    );
+  }
 
   return (
     <div className="myInfo">
@@ -110,7 +111,10 @@ const Coaches = () => {
                 className="w-50 p-2 rounded-3 searchInput"
                 placeholder="Search by name or number ..."
                 value={keyWord}
-                onChange={(e) => setKeyWord(e.target.value)}
+                onChange={(e) => {
+                  setPage(1);
+                  setKeyWord(e.target.value);
+                }}
               />
             </div>
             <table className="mainTableTwo">
@@ -134,7 +138,7 @@ const Coaches = () => {
                               alt="profilePic"
                               className="widthSmall cursor-pointer"
                               onClick={() => {
-                                navigate("/coachprofile");
+                                navigate(`/coachprofile/${coach?._id}`);
                               }}
                             />
                           </div>
@@ -142,10 +146,10 @@ const Coaches = () => {
                             <span
                               className="cursor-pointer"
                               onClick={() => {
-                                navigate("/coachprofile");
+                                navigate(`/coachprofile/${coach?._id}`);
                               }}
                             >
-                              {coach?.user.name || "No Name"}
+                              {coach?.name || "No Name"}
                             </span>
                           </div>
                         </div>
@@ -156,7 +160,9 @@ const Coaches = () => {
                         <div className="d-flex justify-content-center">
                           <button
                             className="PrimaryButton"
-                            onClick={() => handleShowEdit()}
+                            onClick={() => {
+                              navigate(`/coachprofile/${coach?._id}`);
+                            }}
                           >
                             <span>
                               <svg
@@ -255,6 +261,20 @@ const Coaches = () => {
                     <div>
                       <FloatingLabel
                         controlId="floatingInput"
+                        label="Name"
+                        id={"floatingInput"}
+                        className="mb-3"
+                      >
+                        <Form.Control
+                          type="text"
+                          placeholder="Name"
+                          ref={nameRef}
+                        />
+                      </FloatingLabel>
+                    </div>
+                    <div>
+                      <FloatingLabel
+                        controlId="floatingInput"
                         label="Phone number"
                         id={"floatingInput"}
                         className="mb-3"
@@ -274,7 +294,7 @@ const Coaches = () => {
                         type="submit"
                         onClick={handleAddCoach}
                       >
-                        Verify
+                        Add
                       </button>
                     </div>
                   </div>

@@ -225,17 +225,23 @@ const Settings = () => {
     fetchRoles();
   }, []);
 
+  const fetchMembers = async () => {
+    setLoading(true);
+    try {
+      const { data } = await privateAxiosInstance.get(
+        `/gyms/${gymId}/members?page=${page}&limit=${limit}`
+      );
+      console.log("members", data.data);
+      setMembers(data.data);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        const { data } = await privateAxiosInstance.get(
-          `/gyms/${gymId}/members?page=${page}&limit=${limit}`
-        );
-        console.log("members", data.data);
-        setMembers(data.data);
-        setLoading(false);
-      } catch (error) {}
-    };
     fetchMembers();
   }, [page, limit]);
   const pageArr = [];
@@ -267,12 +273,9 @@ const Settings = () => {
             role: values.role,
           }
         );
-        console.log("res", res);
-        setMembers(
-          members.map((member) =>
-            member._id === res.data.data._id ? res.data.data : member
-          )
-        );
+
+        fetchMembers();
+        setShowEdit(false);
         toast.success("Member role updated successfully");
       } catch (error) {
         console.log(error);
@@ -288,12 +291,8 @@ const Settings = () => {
           isSuspended: true,
         }
       );
-      console.log("res", res);
-      setMembers(
-        members.map((member) =>
-          member._id === res.data.data._id ? res.data.data : member
-        )
-      );
+
+      fetchMembers();
       setShowEdit(false);
       toast.success("Member suspended successfully");
     } catch (error) {
@@ -310,12 +309,8 @@ const Settings = () => {
           isSuspended: false,
         }
       );
-      console.log("res", res);
-      setMembers(
-        members.map((member) =>
-          member._id === res.data.data._id ? res.data.data : member
-        )
-      );
+      
+      fetchMembers();
       setShowEdit(false);
       toast.success("Member activated successfully");
     } catch (error) {
@@ -474,7 +469,7 @@ const Settings = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {members.documents.map((admin) => {
+                    {members?.documents?.map((admin) => {
                       return (
                         <tr>
                           <td>

@@ -127,7 +127,10 @@ const Trainees = () => {
                 className="w-50 p-2 rounded-3 searchInput"
                 placeholder="Search by name or number ..."
                 value={keyWord}
-                onChange={(e) => setKeyWord(e.target.value)}
+                onChange={(e) =>{
+                  setPage(1);
+                  setKeyWord(e.target.value);
+                }}
               />
             </div>
             <table className="mainTableTwo">
