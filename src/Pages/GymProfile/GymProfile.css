@@ -138,6 +138,10 @@
 
 }
 
+.w-fit {
+    width: fit-content;
+}
+
 .inputFoucs {
     width: 100%;
     height: max-content;

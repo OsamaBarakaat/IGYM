@@ -29,10 +29,20 @@ import Classes from "./Pages/Classes/Classes";
 import EditWorkingTimes from "./Pages/Settings/EditWorkingTimes/EditWorkingTimes";
 import RevenueExpenses from "./Pages/RevenuExpenses/RevenueExpenses";
 import EditRole from "./Pages/Roles/EditRoles/EditRole";
+import { useEffect } from "react";
 function App() {
   const theme = useSelector((state) => {
     return state.theme;
   });
+
+  useEffect(() => {
+    const lang = localStorage.getItem("language");
+    if (lang === "ar") {
+      document.documentElement.setAttribute("dir", "rtl");
+    } else {
+      document.documentElement.setAttribute("dir", "ltr");
+    }
+  })
 
   return (
     <Router>

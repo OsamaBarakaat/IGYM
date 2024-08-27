@@ -6,11 +6,13 @@ import { themeReducer } from "./Reducers/Theme.reducer";
 
 const reducer = combineReducers({ user: userReducer, theme: themeReducer })
 const theme = localStorage.getItem("theme")
+const lang = localStorage.getItem("language")
 const initState = {
     user: {
 
     },
-    theme: theme || "light"
+    theme: theme || "light",
+    lang: lang || "en"
 }
 
 const store = createStore(reducer, initState, composeWithDevTools())

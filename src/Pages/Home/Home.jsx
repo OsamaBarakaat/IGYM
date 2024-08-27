@@ -9,7 +9,9 @@ import avatar from "../../assetss/default/5856.jpg";
 import { CircularProgressbar } from "react-circular-progressbar";
 import { date } from "yup";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 const Home = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const percentage = 23;
   const upcomingPayments = [
@@ -79,7 +81,7 @@ const Home = () => {
   ];
   return (
     <div className="Home">
-      <Heading content="Home" />
+      <Heading content={t("Home")} />
       <div className="m-4 upperPart">
         <div className="card-home card-one">
           <div className="card-icon">
@@ -96,7 +98,7 @@ const Home = () => {
             </svg>
           </div>
           <div className="card-body">
-            <p className="card-title">My Balance</p>
+            <p className="card-title">{t("My Balance")}</p>
             <p className="card-details">$ 38,988</p>
           </div>
         </div>
@@ -119,7 +121,7 @@ const Home = () => {
             </svg>
           </div>
           <div className="card-body">
-            <p className="card-title">Revenue</p>
+            <p className="card-title">{t("Revenue")}</p>
             <p className="card-details">$ 3,700</p>
           </div>
         </div>
@@ -143,13 +145,13 @@ const Home = () => {
             </svg>
           </div>
           <div className="card-body">
-            <p className="card-title">Expenses</p>
+            <p className="card-title">{t("Expenses")}</p>
             <p className="card-details">$ 1,288</p>
           </div>
         </div>
         <div className="upcomingPayments">
           <div className="upcomingPaymentsTitle">
-            <p>Upcoming Payments</p>
+            <p>{t("Upcoming Payments")}</p>
           </div>
           <div className="upcomingPaymentsBody">
             {upcomingPayments.map((item) => (
@@ -191,7 +193,7 @@ const Home = () => {
           />
         </div>
         <div className="uncrowded">
-          <p className="upcomingPaymentsTitle">Gym Status</p>
+          <p className="upcomingPaymentsTitle">{t("Gym Status")}</p>
           <div className="uncrowdedProgress">
             <div className="uncrowdedProgressbar">
               <CircularProgressbar
@@ -233,7 +235,7 @@ const Home = () => {
       <div className="downPart">
         <div className="monthlyTrafic">
           <div className="flexcenterbetween opacity-75">
-            <p>Weekly Trafic</p>
+            <p>{t("Weekly Trafic")}</p>
             <p className="primary-color">+2.45%</p>
           </div>
           <Bar
@@ -241,7 +243,7 @@ const Home = () => {
               labels: sourceData.map((item) => item.label),
               datasets: [
                 {
-                  label: "Weekly Trafic",
+                  label: t("Weekly Trafic"),
                   data: sourceData.map((item) => item.sales),
                   backgroundColor: "#396AFF",
                   borderColor: "#396AFF",
@@ -256,7 +258,7 @@ const Home = () => {
           />
         </div>
         <div className="checkIn opacity-75">
-          <p>check in</p>
+          <p>{t("check in")}</p>
           <div className="checkInBody">
             {checkIn.map((item) => {
               return (
@@ -269,12 +271,12 @@ const Home = () => {
                     <p className="opacity-75">{item.date}</p>
                   </div>
                   <div>
-                    <p>Expiration Date</p>
+                    <p>{t("Expiration Date")}</p>
                     <p className="opacity-75">{item.expirationDate}</p>
                   </div>
 
                   <div>
-                    <button className="btn btn-primary">View</button>
+                    <button className="btn btn-primary">{t("View")}</button>
                   </div>
                 </div>
               );

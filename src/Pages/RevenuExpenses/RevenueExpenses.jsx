@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Button,
@@ -11,7 +11,12 @@ import {
 import { Bar } from "react-chartjs-2";
 import { FaDollarSign, FaHandHoldingUsd } from "react-icons/fa";
 import "./RevenueExpenses.css";
-import { Plus, Trash2Icon } from "lucide-react";
+import { Edit, Plus, Trash2Icon } from "lucide-react";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { all } from "axios";
+import SmallLoader from "../../components/SmallLoader/SmallLoader";
 
 const dummyData = {
   income: [
@@ -29,8 +34,9 @@ const dummyData = {
 };
 
 const RevenueExpenses = () => {
-  const [revenue, setRevenue] = useState(dummyData.income);
-  const [expenses, setExpenses] = useState(dummyData.expenses);
+  const [revenue, setRevenue] = useState([]);
+  const [expenses, setExpenses] = useState([]);
+  const [allTransactions, setAllTransaction] = useState([]);
   const [showModalRevenue, setShowModalRevenue] = useState(false);
   const [showModalExpense, setShowModalExpense] = useState(false);
   const [isRevenueModal, setIsRevenueModal] = useState(true);
@@ -44,24 +50,8 @@ const RevenueExpenses = () => {
   };
   const handleCloseModalRevenue = () => setShowModalRevenue(false);
   const handleCloseModalExpense = () => setShowModalExpense(false);
-
-  const addTransaction = (e) => {
-    e.preventDefault();
-    const { description, amount } = e.target.elements;
-    const newTransaction = {
-      description: description.value,
-      date: new Date().toDateString(),
-      amount: amount.value,
-    };
-    if (isRevenueModal) {
-      setRevenue([...revenue, newTransaction]);
-      handleCloseModalRevenue();
-    } else {
-      setExpenses([...expenses, newTransaction]);
-      handleCloseModalExpense();
-    }
-  };
-
+  const handleCloseModalEdit = () => setShowModalEdit(false);
+  const axiosPrivate = useAxiosPrivate();
   const data = {
     labels: ["Aug", "Sep", "Oct", "Nov", "Dec", "Jan"],
     datasets: [
@@ -79,16 +69,16 @@ const RevenueExpenses = () => {
     ],
   };
 
-  const expenseTitles = ["Rent", "Food", "Maintenance", "Bill", "Other"];
+  const expenseTitles = ["Rent", "Food", "Maintenance", "Bill"];
 
   const [selectedCards, setSelectedCards] = useState([]);
   const [formData, setFormData] = useState(
     expenseTitles.reduce(
       (acc, title) => {
-        acc[title] = { cost: "", rebete: "" };
+        acc[title] = { cost: "" };
         return acc;
       },
-      { extra: { title: "", cost: "", rebete: "" } }
+      { extra: { title: "", cost: "" } }
     )
   );
 
@@ -108,13 +98,183 @@ const RevenueExpenses = () => {
     }));
   };
 
-  const handleAddClick = () => {
-    const filledCards = Object.keys(formData)
-      .filter(
-        (card) =>
-          formData[card].title || formData[card].cost || formData[card].rebete
-      )
-      .map((card) => ({ card, ...formData[card] }));
+  const handleAddClick = async (which) => {
+    console.log(formData);
+    try {
+      // Map and format filledCards to match the API requirements
+      const formattedCards = Object.keys(formData)
+        .filter(
+          (card) =>
+            formData[card].title || formData[card].cost || formData[card].rebate
+        )
+        .map((card) => ({
+          title: formData[card].title || card,
+          amount: parseFloat(formData[card].cost),
+          type: which, // 'income' or 'expense' based on 'which'
+          repeat: {
+            type: "daily",
+            day: 1,
+            time: "12:00",
+          },
+        }));
+
+      console.log(formattedCards);
+
+      // Determine the URL based on the 'which' parameter
+      const url = `/gyms/${gymId}/transactions`;
+
+      // Send the data to the server
+      const response = await axiosPrivate.post(url, formattedCards);
+      console.log("Response:", response.data);
+
+      // Refetch the updated data
+      await refetchTransactions();
+      await refetchIncome();
+      await refetchExpenses();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const refetchTransactions = async () => {
+    try {
+      const { data } = await axiosPrivate.get(
+        `/gyms/${gymId}/transactions?limit=200`
+      );
+      setAllTransaction(data?.data?.documents); // Update your state with the fetched data
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
+  const refetchIncome = async () => {
+    try {
+      const { data } = await axiosPrivate.get(
+        `/gyms/${gymId}/transactions?type=income&limit=200`
+      );
+      setRevenue(data?.data?.documents); // Update your state with the fetched data
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
+
+  const refetchExpenses = async () => {
+    try {
+      const { data } = await axiosPrivate.get(
+        `/gyms/${gymId}/transactions?type=expense&limit=200`
+      );
+      setExpenses(data?.data?.documents); // Update your state with the fetched data
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
+  const { gymId } = useSelector((state) => state.user);
+  const [allTransactionsPagination, setAllTransactionsPagination] = useState();
+  const [allIncomePagination, setAllIncomePagination] = useState();
+  const [allExpensePagination, setAllExpensePagination] = useState();
+
+  const pageArrAllTransactions = [];
+  for (let i = 0; i < allTransactionsPagination?.numberOfPages; i++) {
+    pageArrAllTransactions.push(i);
+  }
+  const pageArrAllIncome = [];
+  for (let i = 0; i < allIncomePagination?.numberOfPages; i++) {
+    pageArrAllIncome.push(i);
+  }
+  const pageArrAllExpense = [];
+  for (let i = 0; i < allExpensePagination?.numberOfPages; i++) {
+    pageArrAllExpense.push(i);
+  }
+  const [loading, setLoading] = useState(false);
+  const fetchAllTransaction = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axiosPrivate.get(
+        `/gyms/${gymId}/transactions?limit=200`
+      );
+
+      setAllTransaction(data?.data?.documents);
+      setLoading(false);
+      setAllTransactionsPagination(data?.data?.pagination);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const fetchAllIncome = async () => {
+    try {
+      const { data } = await axiosPrivate.get(
+        `/gyms/${gymId}/transactions?type=income&limit=200`
+      );
+
+      setRevenue(data?.data?.documents);
+      setAllIncomePagination(data?.data?.pagination);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const fetchAllExpense = async () => {
+    try {
+      const { data } = await axiosPrivate.get(
+        `/gyms/${gymId}/transactions?type=expense&limit=200`
+      );
+
+      setExpenses(data?.data?.documents);
+      setAllExpensePagination(data?.data?.pagination);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+  const handleDelete = async (id) => {
+    try {
+      const response = await axiosPrivate.delete(
+        `/gyms/${gymId}/transactions/${id}`
+      );
+      toast.success(response.data.message);
+      setAllTransaction((prev) => prev.filter((item) => item._id !== id));
+      setRevenue((prev) => prev.filter((item) => item._id !== id));
+      setExpenses((prev) => prev.filter((item) => item._id !== id));
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+  useEffect(() => {
+    fetchAllTransaction();
+    fetchAllIncome();
+    fetchAllExpense();
+  }, []);
+  const [showModalEdit, setShowModalEdit] = useState(false);
+  const [editData, setEditData] = useState({});
+  const handleEdit = async (item) => {
+    console.log(item);
+    setEditData(item);
+    setShowModalEdit(true);
+  };
+  const handleEditSubmit = async (newData) => {
+    try {
+      const response = await axiosPrivate.patch(
+        `/gyms/${gymId}/transactions/${newData._id}`,
+        newData
+      );
+      toast.success(response.data.message);
+      setAllTransaction((prev) =>
+        prev.map((item) => (item._id === newData._id ? newData : item))
+      );
+      setRevenue((prev) =>
+        prev.map((item) => (item._id === newData._id ? newData : item))
+      );
+      setExpenses((prev) =>
+        prev.map((item) => (item._id === newData._id ? newData : item))
+      );
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
@@ -167,23 +327,41 @@ const RevenueExpenses = () => {
         </div>
       </div>
 
-      <p className="fontMid main-text-color">Recent Transactions</p>
-      <Tabs
-        activeKey={key}
-        onSelect={(k) => setKey(k)}
-        id="transaction-tabs"
-        className="mb-3 "
-      >
-        <Tab eventKey="all" title="All Transactions">
-          <TransactionTable data={[...revenue, ...expenses]} />
-        </Tab>
-        <Tab eventKey="income" title="Income">
-          <TransactionTable data={revenue} />
-        </Tab>
-        <Tab eventKey="expenses" title="Expenses">
-          <TransactionTable data={expenses} />
-        </Tab>
-      </Tabs>
+      {!loading ? (
+        <>
+          <p className="fontMid main-text-color">Recent Transactions</p>
+          <Tabs
+            activeKey={key}
+            onSelect={(k) => setKey(k)}
+            id="transaction-tabs"
+            className="mb-3"
+          >
+            <Tab eventKey="all" title="All Transactions">
+              <TransactionTable
+                data={allTransactions}
+                handleDelete={handleDelete}
+                handleEdit={handleEdit}
+              />
+            </Tab>
+            <Tab eventKey="income" title="Income">
+              <TransactionTable
+                data={revenue}
+                handleDelete={handleDelete}
+                handleEdit={handleEdit}
+              />
+            </Tab>
+            <Tab eventKey="expenses" title="Expenses">
+              <TransactionTable
+                data={expenses}
+                handleDelete={handleDelete}
+                handleEdit={handleEdit}
+              />
+            </Tab>
+          </Tabs>
+        </>
+      ) : (
+        <SmallLoader />
+      )}
 
       <Modal show={showModalRevenue} onHide={handleCloseModalRevenue} size="lg">
         <Modal.Header closeButton>
@@ -239,7 +417,7 @@ const RevenueExpenses = () => {
                       />
                     </FloatingLabel>
                   </div>
-                  <FloatingLabel
+                  {/* <FloatingLabel
                     controlId={`floatingRebate${index}`}
                     label="Rebate"
                     className="mt-3"
@@ -258,7 +436,7 @@ const RevenueExpenses = () => {
                       <option value={"monthly"}>Monthly</option>
                       <option value={""}>No Rebate</option>
                     </Form.Select>
-                  </FloatingLabel>
+                  </FloatingLabel> */}
                 </div>
               </div>
             ))}
@@ -268,7 +446,13 @@ const RevenueExpenses = () => {
           <Button variant="secondary" onClick={handleCloseModalRevenue}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleAddClick}>
+          <Button
+            variant="primary"
+            onClick={() => {
+              handleAddClick("income");
+              handleCloseModalRevenue();
+            }}
+          >
             Add Income
           </Button>
         </Modal.Footer>
@@ -283,8 +467,8 @@ const RevenueExpenses = () => {
             {Object.keys(formData).map((card, index) => (
               <div
                 key={index}
-                className={`card ${
-                  selectedCards.includes(card) ? "selected" : ""
+                className={`card-two-inside ${
+                  selectedCards.includes(card) ? "selected-two" : ""
                 }`}
                 onClick={() => handleCardClick(card)}
               >
@@ -301,18 +485,21 @@ const RevenueExpenses = () => {
                 </div>
                 <div className="cardBody">
                   {card === "extra" ? (
-                    <FloatingLabel
-                      controlId={`floatingInput${index}`}
-                      label="Title"
-                    >
-                      <Form.Control
-                        type="text"
-                        placeholder="Title"
-                        name="title"
-                        value={formData[card].title}
-                        onChange={(e) => handleInputChange(e, card)}
-                      />
-                    </FloatingLabel>
+                    <>
+                      <h5 className="card-title">Other</h5>
+                      <FloatingLabel
+                        controlId={`floatingInput${index}`}
+                        label="Title"
+                      >
+                        <Form.Control
+                          type="text"
+                          placeholder="Title"
+                          name="title"
+                          value={formData[card].title}
+                          onChange={(e) => handleInputChange(e, card)}
+                        />
+                      </FloatingLabel>
+                    </>
                   ) : (
                     <h5 className="card-title">{card}</h5>
                   )}
@@ -329,7 +516,7 @@ const RevenueExpenses = () => {
                       onChange={(e) => handleInputChange(e, card)}
                     />
                   </FloatingLabel>
-                  <FloatingLabel
+                  {/* <FloatingLabel
                     controlId={`floatingRebate${index}`}
                     label="Rebate"
                     className="mt-3"
@@ -348,7 +535,7 @@ const RevenueExpenses = () => {
                       <option value={"monthly"}>Monthly</option>
                       <option value={""}>No Rebate</option>
                     </Form.Select>
-                  </FloatingLabel>
+                  </FloatingLabel> */}
                 </div>
               </div>
             ))}
@@ -358,8 +545,67 @@ const RevenueExpenses = () => {
           <Button variant="secondary" onClick={handleCloseModalExpense}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleAddClick}>
+          <Button
+            variant="primary"
+            onClick={() => {
+              handleAddClick("expense");
+              handleCloseModalExpense();
+            }}
+          >
             Add Expense
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showModalEdit} onHide={handleCloseModalEdit}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="">
+            <div className="cardBody">
+              <div className="w-100 mb-3">
+                <FloatingLabel controlId={`floatingCost`} label="Title">
+                  <Form.Control
+                    type="text"
+                    placeholder="Title"
+                    name="title"
+                    value={editData.title}
+                    onChange={(e) => {
+                      setEditData({ ...editData, title: e.target.value });
+                    }}
+                  />
+                </FloatingLabel>
+              </div>
+              <div className="w-100 mb-3">
+                <FloatingLabel controlId={`floatingCost`} label="Cost">
+                  <Form.Control
+                    type="text"
+                    placeholder="Cost"
+                    name="cost"
+                    value={editData.amount}
+                    onChange={(e) => {
+                      setEditData({ ...editData, amount: e.target.value });
+                    }}
+                  />
+                </FloatingLabel>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="my-2">
+          <Button variant="secondary" onClick={handleCloseModalEdit}>
+            Close
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              console.log(editData);
+              handleCloseModalEdit();
+              handleEditSubmit(editData);
+            }}
+          >
+            Edit
           </Button>
         </Modal.Footer>
       </Modal>
@@ -367,26 +613,62 @@ const RevenueExpenses = () => {
   );
 };
 
-const TransactionTable = ({ data }) => (
+const TransactionTable = ({ data, handleDelete, handleEdit }) => (
   <Table striped bordered hover responsive>
     <thead>
       <tr>
-        <th>Description</th>
-        <th>Date</th>
+        <th>Title</th>
+        <th>Type</th>
         <th>Amount</th>
+        {/* <th>repeat</th> */}
         <th className="text-center">Actions</th>
       </tr>
     </thead>
     <tbody>
       {data.map((item, index) => (
-        <tr key={index}>
-          <td>{item.description}</td>
-          <td>{item.date}</td>
+        <tr key={index} className="tableOfRepeat">
+          <td>{item.title}</td>
+          <td>{item.type}</td>
           <td>{item.amount}</td>
-          <td className="d-flex justify-content-center">
-            <Button variant="danger">
+          {/* <td>
+            {item.repeat ? (
+              <Table>
+                <thead>
+                  <th>Type</th>
+                  <th>Day</th>
+                  <th>Time</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{item.repeat.type}</td>
+                    <td>{item.repeat.day}</td>
+                    <td>{item.repeat.time}</td>
+                  </tr>
+                </tbody>
+              </Table>
+            ) : (
+              "No Repeat"
+            )}
+          </td> */}
+          <td className="d-flex justify-content-center gap-2">
+            <Button
+              variant="danger"
+              title="Delete"
+              onClick={() => {
+                handleDelete(item._id);
+              }}
+            >
               <Trash2Icon size={20} />
             </Button>
+            <button
+              className="SecondaryButton"
+              title="Edit"
+              onClick={() => {
+                handleEdit(item);
+              }}
+            >
+              <Edit size={20} />
+            </button>
           </td>
         </tr>
       ))}

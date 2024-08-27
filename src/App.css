@@ -34,6 +34,10 @@
 
 }
 
+input {
+    direction: ltr;
+}
+
 @media (max-width: 400px) {
     body {
         font-size: 14px;

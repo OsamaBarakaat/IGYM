@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Settings.css";
 import Heading from "../../components/Heading/Heading";
+import Select from "react-select";
 import {
   FloatingLabel,
   Form,
@@ -22,7 +23,9 @@ import Loader from "../../components/Loader/Loader";
 import { toast } from "react-toastify";
 import GymProfile from "../GymProfile/GymProfile";
 import Roles from "../Roles/Roles";
+import { useTranslation } from "react-i18next";
 const Settings = () => {
+  const { t, i18n } = useTranslation();
   const [members, setMembers] = useState([]);
   const [toggled, setToggled] = React.useState(false);
   const axiosPrivate = useAxiosPrivate();
@@ -309,7 +312,7 @@ const Settings = () => {
           isSuspended: false,
         }
       );
-      
+
       fetchMembers();
       setShowEdit(false);
       toast.success("Member activated successfully");
@@ -335,19 +338,26 @@ const Settings = () => {
     }, 2000);
   };
 
-  const [selectedLanguage, setSelectedLanguage] = useState("en");
-
+  const handleChangeLanguage = (language) => {
+    i18n.changeLanguage(language);
+    localStorage.setItem("language", language);
+    // dispatch(setLanguage(language));
+    if (language === "ar") {
+      document.documentElement.setAttribute("dir", "rtl");
+    } else {
+      document.documentElement.setAttribute("dir", "ltr");
+    }
+  };
   const languages = [
     { code: "en", name: "English" },
-    { code: "fr", name: "French" },
-    { code: "es", name: "Spanish" },
+    { code: "ar", name: "Arabic" },
     // More languages
   ];
 
-  const handleChangeLanguage = (event) => {
-    setSelectedLanguage(event.target.value);
-    // You should put this into a context so the whole app will be able to access it and avoid prop drilling
-  };
+  const languageOptions = languages.map((language) => ({
+    value: language.code,
+    label: language.name,
+  }));
   if (loading) {
     return (
       <>
@@ -595,36 +605,28 @@ const Settings = () => {
                 </div>
               </div>
               <div className="bigCard m-3">
-                <p>change Language</p>
+                <p>{t("Change the Language")}</p>
                 <div className="d-flex justify-content-between">
-                  {/* <select
-                    value={selectedLanguage}
-                    onChange={handleChangeLanguage}
-                  >
-                    {languages.map((language) => (
-                      <option key={language.code} value={language.code}>
-                        {language.name}
-                      </option>
-                    ))}
-                  </select> */}
-                  <NavDropdown
-                    className="w-50"
-                    title="Choose Language"
-                    id="basic-nav-dropdown"
-                    value={selectedLanguage}
-                    onChange={handleChangeLanguage}
-                  >
-                    {languages.map((language) => (
-                      <React.Fragment>
-                        <NavDropdown.Item
-                          key={language.code}
-                          value={language.code}
-                        >
-                          {language.name}
-                        </NavDropdown.Item>
-                      </React.Fragment>
-                    ))}
-                  </NavDropdown>
+                  <Select
+                    value={localStorage.getItem("language") || "en"}
+                    onChange={(option) => handleChangeLanguage(option.value)}
+                    options={languageOptions}
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        padding: "5px",
+                        fontSize: "16px",
+                        borderRadius: "5px",
+                        borderColor: "#ccc",
+                        backgroundColor: "#f8f8f8",
+                        color: "#333",
+                      }),
+                      option: (base) => ({
+                        ...base,
+                        fontSize: "16px",
+                      }),
+                    }}
+                  />
                 </div>
               </div>
             </div>

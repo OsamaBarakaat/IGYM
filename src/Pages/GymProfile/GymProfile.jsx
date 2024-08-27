@@ -77,7 +77,7 @@ const GymProfile = () => {
     } catch (error) {
       console.error(error.response.data);
       toast.error(error.response.data.message);
-    }finally{
+    } finally {
       setLogoLoading(false);
     }
   };
@@ -111,7 +111,7 @@ const GymProfile = () => {
     } catch (error) {
       console.error(error?.response?.data);
       toast.error(error?.response?.data?.message);
-    }finally{
+    } finally {
       setGalleryLoading(false);
     }
   };
@@ -202,17 +202,20 @@ const GymProfile = () => {
   ];
 
   const Loader = (
-    <div style={{zIndex: 999}} className="position-absolute bg-light rounded p-3 d-flex justify-content-center align-items-center w-100 h-100">
+    <div
+      style={{ zIndex: 999 }}
+      className="position-absolute bg-light rounded p-3 d-flex justify-content-center align-items-center w-100 h-100"
+    >
       <Spinner animation="border" />
     </div>
   );
 
   return (
-    <div className="myInfo">
-      <div className="myInfoHeading">
+    <div className="myInfo ">
+      <div className="myInfoHeading ">
         <Heading content={"Gym Profile"} />
       </div>
-      <div className="myInfoContent m-5">
+      <div className="myInfoContent m-2">
         <div className="theme bigCard">
           <p>Theme</p>
           <div className="themeContent position-relative">
