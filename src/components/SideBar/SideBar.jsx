@@ -233,7 +233,7 @@ const SideBar = () => {
             delay={{ show: 25, hide: 150 }}
             overlay={Subscriptions}
           >
-            <Link to={"/Subscriptions"} className="Link">
+            <Link to={"/subscreptions"} className="Link">
               <li>
                 <span>
                   <svg
