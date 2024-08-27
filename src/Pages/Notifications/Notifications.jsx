@@ -37,6 +37,13 @@ const Notifications = () => {
             >
               Push Notifications
             </li>
+            <li
+              onClick={() => {
+                setCurrentPage(3);
+              }}
+            >
+              Subscriptions
+            </li>
           </ul>
         </nav>
       </aside>
@@ -59,6 +66,14 @@ const Notifications = () => {
               }}
             >
               Push Notifications
+            </div>
+            <div
+              className="myInfoSecondNav"
+              onClick={() => {
+                setCurrentPage(3);
+              }}
+            >
+              Subscriptions
             </div>
           </div>
         </div>
@@ -186,6 +201,11 @@ const Notifications = () => {
             <div>
               <PushNotifications />
             </div>
+          </>
+        )}
+        {currentPage === 3 && (
+          <>
+            <div>Subscriptions</div>
           </>
         )}
       </main>
