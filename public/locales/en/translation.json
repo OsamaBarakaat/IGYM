@@ -29,5 +29,19 @@
   "check in": "check in",
   "Expiration Date": "Expiration Date",
   "Payment Date": "Payment Date",
-  "View": "View"
+  "View": "View",
+  "Save": "Save",
+  "confirm new password": "Confirm New Password",
+  "new password": "New Password",
+  "Current Password": "Current Password",
+  "Old password": "Old Password",
+  "Change Password": "Change Password",
+  "Cancel": "Cancel",
+  "Edit your details": "Edit your details",
+  "Your name": "Your Name",
+  "Your details": "Your Details",
+  "Change image": "Change Image",
+  "Upload": "Upload",
+  "Profile image": "Profile Image",
+  "My info": "My Info"
 }

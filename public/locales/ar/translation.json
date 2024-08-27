@@ -29,5 +29,19 @@
   "check in": "تسجيل الدخول",
   "Expiration Date": "تاريخ الانتهاء",
   "Payment Date": "تاريخ الدفع",
-  "View": "عرض"
+  "View": "عرض",
+  "Save": "حفظ",
+  "confirm new password": "تأكيد كلمة المرور الجديدة",
+  "new password": "كلمة المرور الجديدة",
+  "Current Password": "كلمة المرور الحالية",
+  "Old password": "كلمة المرور القديمة",
+  "Change Password": "تغيير كلمة المرور",
+  "Cancel": "إلغاء",
+  "Edit your details": "تعديل تفاصيلك",
+  "Your name": "اسمك",
+  "Your details": "تفاصيلك",
+  "Change image": "تغيير الصورة",
+  "Upload": "رفع",
+  "Profile image": "صورة الملف الشخصي",
+  "My info": "معلوماتي"
 }

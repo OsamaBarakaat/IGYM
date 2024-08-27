@@ -12,11 +12,12 @@ import { toast } from "react-toastify";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import axiosInstance from "../../api/axios";
 import avatar from "../../assetss/default/5856.jpg";
+import { useTranslation } from "react-i18next";
 const Profile = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  const { t } = useTranslation();
   const [modalShow, setModalShow] = useState(false);
   const [userImage, setUserImage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,7 +27,7 @@ const Profile = () => {
   const [imageLoading, setImageLoading] = useState(false);
 
   const navigate = useNavigate();
-  const {data:userData} = useSelector((state) => state.user);
+  const { data: userData } = useSelector((state) => state.user);
   console.log(userData);
   const dispatch = useDispatch();
   const handleUpload = () => {
@@ -72,7 +73,7 @@ const Profile = () => {
       );
       console.log(res);
       toast.success("Image updated successfully");
-      dispatch(setUser({data: res.data.data}));
+      dispatch(setUser({ data: res.data.data }));
       setUserImage(null);
     } catch (error) {
       toast.error("Something went wrong");
@@ -169,22 +170,22 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    console.log("sssssssss",updateProfile.handleSubmit);
-  })
+    console.log("sssssssss", updateProfile.handleSubmit);
+  });
 
-   const Loader = (
-     <div
-       style={{ zIndex: 999 }}
-       className="position-absolute bg-light rounded p-3 d-flex justify-content-center align-items-center w-100 h-100"
-     >
-       <Spinner animation="border" />
-     </div>
-   );
+  const Loader = (
+    <div
+      style={{ zIndex: 999 }}
+      className="position-absolute bg-light rounded p-3 d-flex justify-content-center align-items-center w-100 h-100"
+    >
+      <Spinner animation="border" />
+    </div>
+  );
 
   return (
     <div className="Profile" style={{ minHeight: "100vh" }}>
       <aside className="profileSide">
-        <p className="cursor-pointer">Profile</p>
+        <p className="cursor-pointer">{t("Profile")}</p>
         <nav className="profileNav">
           <ul>
             <li
@@ -192,23 +193,23 @@ const Profile = () => {
                 setCurrentPage(1);
               }}
             >
-              My info
+              {t("My info")}
             </li>
             <li
               onClick={() => {
                 setCurrentPage(2);
               }}
             >
-              Chnage Password
+              {t("Change Password")}
             </li>
-            <li onClick={() => setModalShow(true)}>Logout</li>
+            <li onClick={() => setModalShow(true)}>{t("Logout")}</li>
           </ul>
         </nav>
       </aside>
 
       <main className="main-profile-content">
         <div className="secondNav">
-          <div className="head">Profile</div>
+          <div className="head">{t("Profile")}</div>
           <div className="secondNavItems">
             <div
               className="myInfoSecondNav"
@@ -216,7 +217,7 @@ const Profile = () => {
                 setCurrentPage(1);
               }}
             >
-              My info
+              {t("My info")}
             </div>
             <div
               className="myInfoSecondNav"
@@ -224,7 +225,7 @@ const Profile = () => {
                 setCurrentPage(2);
               }}
             >
-              Change Password
+              {t("Change Password")}
             </div>
           </div>
         </div>
@@ -236,7 +237,7 @@ const Profile = () => {
             <div className="myInfoContent">
               <div className="imgContainer">
                 <div className="h3OfimgContainer">
-                  <p>Profile image</p>
+                  <p>{t("Profile image")}</p>
                 </div>
                 <div className="imgContContainer position-relative">
                   {imageLoading && Loader}
@@ -252,7 +253,7 @@ const Profile = () => {
                             className="PrimaryButton"
                             onClick={updateImage}
                           >
-                            Upload
+                            {t("Upload")}
                           </button>
                           <button
                             className="SecondaryButton"
@@ -260,7 +261,7 @@ const Profile = () => {
                               setUserImage(null);
                             }}
                           >
-                            Cancel
+                            {t("Cancel")}
                           </button>
                         </div>
                       </>
@@ -275,7 +276,7 @@ const Profile = () => {
                         />
 
                         <label htmlFor="userImage" className="PrimaryButton">
-                          Change image
+                          {t("Change image")}
                         </label>
                       </>
                     )}
@@ -286,7 +287,7 @@ const Profile = () => {
               <div className="details">
                 <div className="detailsContainer">
                   <div className="titleAndEdit">
-                    <p>Your details</p>
+                    <p>{t("Your details")}</p>
                     <button className="PrimaryButton" onClick={handleShow}>
                       <span>
                         <svg
@@ -304,20 +305,20 @@ const Profile = () => {
                           />
                         </svg>
                       </span>
-                      <span>Edit</span>
+                      <span>{t("Edit")}</span>
                     </button>
                   </div>
                   <div className="detailsContainerdata">
                     <div>
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Your name"
+                        label={t("Your name")}
                         id="floatingInput"
                         className="mb-3"
                       >
                         <Form.Control
                           type="text"
-                          placeholder="name"
+                          placeholder={t("Your name")}
                           value={userData?.name}
                           readOnly
                         />
@@ -372,7 +373,7 @@ const Profile = () => {
                   <div className="d-flex justify-content-between w-100 align-items-center mt-2">
                     <Offcanvas.Title>
                       <span className="offCanvasHeadTitle">
-                        Edit your details
+                        {t("Edit your details")}
                       </span>
                     </Offcanvas.Title>
                     <button
@@ -426,7 +427,7 @@ const Profile = () => {
                           type="submit"
                           disabled={updateProfile.isSubmitting}
                         >
-                          Save
+                          {t("Save")}
                         </button>
                       </div>
                     </div>
@@ -440,20 +441,20 @@ const Profile = () => {
                 className="DangerButton"
                 onClick={() => setModalShow(true)}
               >
-                Logout
+                {t("Logout")}
               </button>
             </div>
           </div>
         )}
         {currentPage === 2 && (
           <div className="changePassword">
-            <Heading content={"Change password"} />
+            <Heading content={t("Change password")} />
             <form onSubmit={handleSubmit}>
               <div className="changePasswordContent">
                 <div className="mb-3">
                   <FloatingLabel
                     controlId="floatingInput"
-                    label="Old password"
+                    label={t("Old password")}
                     id={
                       errors.oldPassword && touched.oldPassword
                         ? "floatingError"
@@ -467,7 +468,7 @@ const Profile = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.oldPassword}
-                      placeholder="Current password"
+                      placeholder={t("Current password")}
                     />
                     {!showEye ? (
                       <span onClick={showPassword}>
@@ -514,7 +515,7 @@ const Profile = () => {
                 <div className="mb-3">
                   <FloatingLabel
                     controlId="floatingInput"
-                    label="New password"
+                    label={t("new password")}
                     id={
                       errors.newPassword && touched.newPassword
                         ? "floatingError"
@@ -523,7 +524,7 @@ const Profile = () => {
                   >
                     <Form.Control
                       type={typeOfConfirmPass}
-                      placeholder="new password"
+                      placeholder={t("new password")}
                       required
                       name="newPassword"
                       onChange={handleChange}
@@ -575,7 +576,7 @@ const Profile = () => {
                 <div>
                   <FloatingLabel
                     controlId="floatingInput"
-                    label="Confirm new password"
+                    label={t("confirm new password")}
                     id={
                       errors.confirmPassword && touched.confirmPassword
                         ? "floatingError"
@@ -589,7 +590,7 @@ const Profile = () => {
                       name="confirmPassword"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      placeholder="confirm new password"
+                      placeholder={t("confirm new password")}
                       value={values.confirmPassword}
                     />
                     {!showEyeOfReConfirm ? (
@@ -646,7 +647,7 @@ const Profile = () => {
                     disabled={isSubmitting}
                     type="submit"
                   >
-                    Save
+                    {t("Save")}
                   </button>
                 </div>
               </div>
