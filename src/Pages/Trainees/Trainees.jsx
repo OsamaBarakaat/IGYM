@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { privateAxiosInstance } from "../../api/axios";
 import Loader from "../../components/Loader/Loader";
+import { ArrowUpNarrowWideIcon } from "lucide-react";
 
 const Trainees = () => {
   const [show, setShow] = useState(false);
@@ -31,13 +32,13 @@ const Trainees = () => {
   const [keyWord, setKeyWord] = useState(null);
   const [loading, setLoading] = useState(true);
 
-   const [page, setPage] = useState(1);
-   const [limit, setLimit] = useState(1);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(1);
 
-   const pageArr = [];
-   for (let i = 0; i < Trainees?.pagination?.numberOfPages; i++) {
-     pageArr.push(i);
-   }
+  const pageArr = [];
+  for (let i = 0; i < Trainees?.pagination?.numberOfPages; i++) {
+    pageArr.push(i);
+  }
 
   const fetchTrainees = async () => {
     try {
@@ -91,11 +92,11 @@ const Trainees = () => {
   }, [keyWord, page, limit]);
 
   if (loading) {
-      return (
-        <>
-          <Loader />
-        </>
-      );
+    return (
+      <>
+        <Loader />
+      </>
+    );
   }
 
   return (
@@ -127,7 +128,7 @@ const Trainees = () => {
                 className="w-50 p-2 rounded-3 searchInput"
                 placeholder="Search by name or number ..."
                 value={keyWord}
-                onChange={(e) =>{
+                onChange={(e) => {
                   setPage(1);
                   setKeyWord(e.target.value);
                 }}
@@ -179,7 +180,7 @@ const Trainees = () => {
                             onClick={() => setShowEditTrainee(true)}
                           >
                             <span>
-                              <svg
+                              {/* <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
                                 height="16"
@@ -192,9 +193,10 @@ const Trainees = () => {
                                   fill-rule="evenodd"
                                   d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
                                 />
-                              </svg>
+                              </svg> */}
+                              <ArrowUpNarrowWideIcon size={16} />
                             </span>
-                            <span>Edit</span>
+                            <span>Renew</span>
                           </button>
                           <button
                             className="PrimaryButton"
@@ -416,7 +418,7 @@ const Trainees = () => {
             <Offcanvas.Body>
               <form>
                 <div>
-                  <div>
+                  {/* <div>
                     <FloatingLabel
                       controlId="floatingInput"
                       label="Name"
@@ -429,7 +431,7 @@ const Trainees = () => {
                         name="name"
                       />
                     </FloatingLabel>
-                  </div>
+                  </div> */}
                   <div>
                     <FloatingLabel
                       controlId="floatingInput"
@@ -452,7 +454,7 @@ const Trainees = () => {
                         setShowEditTrainee(false);
                       }}
                     >
-                      Save
+                      Edit / Save
                     </button>
                   </div>
                 </div>
