@@ -9,8 +9,10 @@ import { useFormik } from "formik";
 import { resetpassValidationSchema } from "../../../Validations/ForgetpassValidation";
 import axiosInstance from "../../../api/axios";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const LandedForgetpass = () => {
+  const { t, i18n } = useTranslation();
   const [showEye, setShowEye] = useState(false);
   const [typeOfPass, setTypeOfPass] = useState("password");
   const [showEyeOfConfirm, setShowEyeOfConfirm] = useState(false);
@@ -56,7 +58,7 @@ const LandedForgetpass = () => {
       // localStorage.setItem("accessToken", data?.data?.accessToken);
       // localStorage.setItem("jwt", data?.data?.refreshToken);
 
-      toast.success("Password has been set successfully");
+      toast.success(t("Password has been set successfully"));
       setTimeout(() => {
         navigate("/signin");
       }, 1000);
@@ -70,15 +72,15 @@ const LandedForgetpass = () => {
       if (error.response) {
         // Handle specific HTTP errors (e.g., 404, 500, etc.)
         console.error("HTTP Error:", error.response.status);
-        toast.error("An error occurred. Please try again later.");
+        toast.error(t("An error occurred. Please try again later."));
       } else if (error.request) {
         // Handle network errors (e.g., no response received)
         console.error("Network Error:", error.request);
-        toast.error("Network error. Please check your internet connection.");
+        toast.error(t("Network error. Please check your internet connection."));
       } else {
         // Handle other errors (e.g., client-side errors)
         console.error("Error:", error.message);
-        toast.error("An unexpected error occurred. Please try again.");
+        toast.error(t("An unexpected error occurred. Please try again."));
       }
     }
   };
@@ -105,15 +107,15 @@ const LandedForgetpass = () => {
       <div className="main-cont-signin">
         <div className="signin-header">
           <p>
-            Now you can set <strong>new password!</strong> don't forget it
-            again.
+            {t("Now you can set")} <strong>{t("new password!")}</strong>{" "}
+            {t("don't forget it again.")}
           </p>
         </div>
         <form action="" onSubmit={handleSubmit}>
           <div className="mb-3">
             <FloatingLabel
               controlId="floatingInput"
-              label="new password"
+              label={t("new password")}
               id={
                 errors.newPassword && touched.newPassword
                   ? "floatingError"
@@ -126,7 +128,7 @@ const LandedForgetpass = () => {
                 name="newPassword"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                placeholder="new password"
+                placeholder={t("new password")}
               />
               {!showEye ? (
                 <span onClick={showPassword}>
@@ -171,7 +173,7 @@ const LandedForgetpass = () => {
           <div className="mb-3">
             <FloatingLabel
               controlId="floatingInput"
-              label="confirm new password"
+              label={t("confirm password")}
               id={
                 errors.confirmPassword && touched.confirmPassword
                   ? "floatingError"
@@ -184,7 +186,7 @@ const LandedForgetpass = () => {
                 name="confirmPassword"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                placeholder="confirm new password"
+                placeholder={t("confirm password")}
               />
               {!showEyeOfConfirm ? (
                 <span onClick={showConfirmPassword}>
@@ -232,7 +234,7 @@ const LandedForgetpass = () => {
               disabled={isSubmitting}
               className="SecondaryButton w-100"
             >
-              Done
+              {t("Done")}
             </button>
           </div>
         </form>

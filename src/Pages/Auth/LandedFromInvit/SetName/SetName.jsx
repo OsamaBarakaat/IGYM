@@ -9,8 +9,10 @@ import { SetNameValidationSchema } from "../../../../Validations/SetNameValidati
 import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import { toast } from "react-toastify";
 import { setUser } from "../../../../Sotre/Action/User.action";
+import { useTranslation } from "react-i18next";
 
 const SetName = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const axiosPrivate = useAxiosPrivate();
@@ -28,7 +30,7 @@ const SetName = () => {
         phones: [values.phone],
       });
       console.log(res.data.data);
-      toast.success("name and phone set successfully");
+      toast.success(t("name and phone set successfully"));
       dispatch(setUser(res.data.data));
       setTimeout(() => {
         navigate("/");
@@ -57,13 +59,13 @@ const SetName = () => {
     <div className="signin">
       <div className="main-cont-signin">
         <div className="signin-header">
-          <p>finally set name and phone.</p>
+          <p>{t("finally set name and phone.")}</p>
         </div>
         <form action="" onSubmit={handleSubmit}>
           <div>
             <FloatingLabel
               controlId="floatingInput"
-              label="name"
+              label={t("name")}
               id={
                 errors.name && touched.name ? "floatingError" : "floatingInput"
               }
@@ -71,7 +73,7 @@ const SetName = () => {
             >
               <Form.Control
                 type="text"
-                placeholder="name"
+                placeholder={t("name")}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.name}
@@ -85,7 +87,7 @@ const SetName = () => {
           <div>
             <FloatingLabel
               controlId="floatingInput"
-              label="phone"
+              label={t("phone")}
               id={
                 errors.phone && touched.phone
                   ? "floatingError"
@@ -95,7 +97,7 @@ const SetName = () => {
             >
               <Form.Control
                 type="text"
-                placeholder="phone"
+                placeholder={t("phone")}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.phone}
@@ -113,7 +115,7 @@ const SetName = () => {
               disabled={isSubmitting}
               className="SecondaryButton w-100"
             >
-              Save
+              {t("Save")}
             </button>
           </div>
         </form>

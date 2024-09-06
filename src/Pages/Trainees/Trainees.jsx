@@ -11,8 +11,10 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { privateAxiosInstance } from "../../api/axios";
 import Loader from "../../components/Loader/Loader";
 import { ArrowUpNarrowWideIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Trainees = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -52,7 +54,7 @@ const Trainees = () => {
       console.log("trainees", data.data.documents);
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
     }
   };
 
@@ -63,7 +65,7 @@ const Trainees = () => {
       console.log("plans", data.data.documents);
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
     }
   };
 
@@ -76,7 +78,7 @@ const Trainees = () => {
       });
       fetchTrainees();
       handleClose();
-      toast.success("Trainee added successfully");
+      toast.success(t("Trainee added successfully"));
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
@@ -102,7 +104,7 @@ const Trainees = () => {
   return (
     <div className="myInfo">
       <div className="myInfoHeading">
-        <Heading content={"Staff members"} />
+        <Heading content={t("Trainees")} />
       </div>
       <div className="myInfoContent">
         <div className="bigCard">
@@ -121,12 +123,12 @@ const Trainees = () => {
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
                   </svg>
                 </span>
-                <span>Add New</span>
+                <span>{t("Add New Trainee")}</span>
               </button>
               <input
                 type="search"
                 className="w-50 p-2 rounded-3 searchInput"
-                placeholder="Search by name or number ..."
+                placeholder={t("Search by name or number ...")}
                 value={keyWord}
                 onChange={(e) => {
                   setPage(1);
@@ -137,13 +139,13 @@ const Trainees = () => {
             <table className="mainTableTwo">
               <thead>
                 <tr>
-                  <th>Member name(12)</th>
-                  <th>Number</th>
-                  <th>Gender</th>
-                  <th>Plan</th>
-                  <th>Join date</th>
-                  <th>Expire date</th>
-                  <th>Actions</th>
+                  <th>{t("Member name")}</th>
+                  <th>{t("Number")}</th>
+                  <th>{t("Gender")}</th>
+                  <th>{t("Plan")}</th>
+                  <th>{t("Join date")}</th>
+                  <th>{t("Expire date")}</th>
+                  <th>{t("Actions")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -164,13 +166,13 @@ const Trainees = () => {
                           </div>
                         </div>
                       </td>
-                      <td data-label="Phone">{trainee?.user.phone}</td>
-                      <td data-label="Gender">{trainee?.user.gender}</td>
-                      <td data-label="Plan">{trainee?.plan.name}</td>
-                      <td data-label="Join Date">
+                      <td data-label={t("Phone")}>{trainee?.user.phone}</td>
+                      <td data-label={t("Gender")}>{trainee?.user.gender}</td>
+                      <td data-label={t("Plan")}>{trainee?.plan.name}</td>
+                      <td data-label={t("Join Date")}>
                         {convertToCreatedAtFormat(trainee?.createdAt)}
                       </td>
-                      <td data-label="Expire Date">
+                      <td data-label={t("Expire Date")}>
                         {convertToCreatedAtFormat(trainee?.plan.expiredAt)}
                       </td>
                       <td>
@@ -196,7 +198,7 @@ const Trainees = () => {
                               </svg> */}
                               <ArrowUpNarrowWideIcon size={16} />
                             </span>
-                            <span>Renew</span>
+                            <span>{t("Renew")}</span>
                           </button>
                           <button
                             className="PrimaryButton"
@@ -215,7 +217,7 @@ const Trainees = () => {
                                 <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9 9 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.4 10.4 0 0 1-.524 2.318l-.003.011a11 11 0 0 1-.244.637c-.079.186.074.394.273.362a22 22 0 0 0 .693-.125m.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8 8 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a11 11 0 0 0 .398-2" />
                               </svg>
                             </span>
-                            <span>Send Message</span>
+                            <span>{t("Send Message")}</span>
                           </button>
                         </div>
                       </td>
@@ -238,7 +240,7 @@ const Trainees = () => {
                   }}
                   disabled={!Trainees?.pagination.prev}
                 >
-                  Previous
+                  {t("Previous")}
                 </button>
                 <div className="pages">
                   {pageArr.map((page) => {
@@ -266,7 +268,7 @@ const Trainees = () => {
                   }}
                   disabled={!Trainees?.pagination.next}
                 >
-                  Next
+                  {t("Next")}
                 </button>
               </div>
             </div>
@@ -280,7 +282,9 @@ const Trainees = () => {
               <Modal.Header className="modala">
                 <div className="d-flex justify-content-between w-100 align-items-center mt-2">
                   <Modal.Title className="modala">
-                    <span className="offCanvasHeadTitle">Add member</span>
+                    <span className="offCanvasHeadTitle">
+                      {t("Add member")}
+                    </span>
                   </Modal.Title>
                   <button
                     className="btn-close bg-secondary"
@@ -296,7 +300,7 @@ const Trainees = () => {
                     <div>
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Phone number"
+                        label={t("Phone number")}
                         id={"floatingInput"}
                         className="mb-3"
                       >
@@ -304,7 +308,7 @@ const Trainees = () => {
                           ref={inputRef}
                           type="number"
                           min={0}
-                          placeholder="number"
+                          placeholder={t("Phone number")}
                           name="number"
                         />
                       </FloatingLabel>
@@ -312,12 +316,12 @@ const Trainees = () => {
                     <div className="mb-3">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Select plan"
+                        label={t("Select Plan")}
                         id={"floatingInput"}
                       >
                         <Form.Select name="plan" ref={planRef}>
                           <option value="" disabled>
-                            Select Plan
+                            {t("Select Plan")}
                           </option>
                           {plans.map((plan) => {
                             return (
@@ -340,7 +344,7 @@ const Trainees = () => {
                         type="submit"
                         onClick={handleAddTrainee}
                       >
-                        Verify
+                        {t("Verify")}
                       </button>
                     </div>
                   </div>
@@ -353,7 +357,7 @@ const Trainees = () => {
               <Modal.Header className="modala">
                 <div className="d-flex justify-content-between w-100 align-items-center mt-2">
                   <Modal.Title className="modala">
-                    <span className="offCanvasHeadTitle">Set OTP</span>
+                    <span className="offCanvasHeadTitle">{t("Send OTP")}</span>
                   </Modal.Title>
                   <button
                     className="btn-close bg-secondary"
@@ -384,7 +388,7 @@ const Trainees = () => {
                           setShow(false);
                         }}
                       >
-                        Confirm
+                        {t("Confirm")}
                       </button>
                     </div>
                   </div>
@@ -404,7 +408,7 @@ const Trainees = () => {
               <div className="d-flex justify-content-between w-100 align-items-center mt-2">
                 <Offcanvas.Title>
                   <span className="offCanvasHeadTitle">
-                    Edit Trainee details
+                    {t("Edit Trainee details")}
                   </span>
                 </Offcanvas.Title>
                 <button
@@ -435,7 +439,7 @@ const Trainees = () => {
                   <div>
                     <FloatingLabel
                       controlId="floatingInput"
-                      label="Select plan"
+                      label={t("Select plan")}
                       id={"floatingInput"}
                     >
                       <Form.Select name="plan">
@@ -454,7 +458,7 @@ const Trainees = () => {
                         setShowEditTrainee(false);
                       }}
                     >
-                      Edit / Save
+                      {t("Renew")}
                     </button>
                   </div>
                 </div>
@@ -469,7 +473,7 @@ const Trainees = () => {
                 <div className="d-flex justify-content-between w-100 align-items-center mt-2">
                   <Modal.Title className="modala">
                     <span className="offCanvasHeadTitle">
-                      Send Single Message
+                      {t("Send Single Message")}
                     </span>
                   </Modal.Title>
                   <button
@@ -486,13 +490,13 @@ const Trainees = () => {
                     <div>
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Name"
+                        label={t("Name")}
                         id={"floatingInput"}
                         className="mb-3"
                       >
                         <Form.Control
                           type="text"
-                          placeholder="Name"
+                          placeholder={t("Name")}
                           name="name"
                         />
                       </FloatingLabel>
@@ -500,14 +504,14 @@ const Trainees = () => {
                     <div>
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Message"
+                        label={t("Message")}
                         id={"floatingInput"}
                         className="mb-3"
                       >
                         <Form.Control
                           type="text"
                           min={0}
-                          placeholder="type your message here ..."
+                          placeholder={t("type your message here ...")}
                           name="message"
                         />
                       </FloatingLabel>
@@ -521,7 +525,7 @@ const Trainees = () => {
                           setShowSignleMessage(false);
                         }}
                       >
-                        Send Message
+                        {t("Send Message")}
                       </button>
                     </div>
                   </div>

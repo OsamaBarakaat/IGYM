@@ -10,8 +10,10 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Loader from "../../components/Loader/Loader";
+import { useTranslation } from "react-i18next";
 
 const Coaches = () => {
+  const { t } = useTranslation();
   const [coaches, setCoaches] = useState([]);
   const [keyWord, setKeyWord] = useState(null);
   const inputRef = useRef(null);
@@ -49,7 +51,7 @@ const Coaches = () => {
       setLoading(false);
       console.log("coaches", data.data.documents);
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
     }
   };
 
@@ -62,13 +64,12 @@ const Coaches = () => {
       });
       fetchCoaches();
       handleClose();
-      toast.success("Coach added successfully");
+      toast.success(t("Coach added successfully"));
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
     }
   };
-
 
   useEffect(() => {
     fetchCoaches();
@@ -85,7 +86,7 @@ const Coaches = () => {
   return (
     <div className="myInfo">
       <div className="myInfoHeading">
-        <Heading content={"Staff members"} />
+        <Heading content={t("Coaches")} />
       </div>
       <div className="myInfoContent">
         <div className="bigCard">
@@ -104,12 +105,12 @@ const Coaches = () => {
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
                   </svg>
                 </span>
-                <span>Add new</span>
+                <span>{t("Add new Coach")}</span>
               </button>
               <input
                 type="search"
                 className="w-50 p-2 rounded-3 searchInput"
-                placeholder="Search by name or number ..."
+                placeholder={t("Search by name or number ...")}
                 value={keyWord}
                 onChange={(e) => {
                   setPage(1);
@@ -120,10 +121,10 @@ const Coaches = () => {
             <table className="mainTableTwo">
               <thead>
                 <tr>
-                  <th>Coach name</th>
-                  <th>Number</th>
-                  <th>Gender</th>
-                  <th>Actions</th>
+                  <th>{t("Coach name")}</th>
+                  <th>{t("Number")}</th>
+                  <th>{t("Gender")}</th>
+                  <th>{t("Actions")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -180,7 +181,7 @@ const Coaches = () => {
                                 />
                               </svg>
                             </span>
-                            <span>Edit</span>
+                            <span>{t("Edit Coach details")}</span>
                           </button>
                         </div>
                       </td>
@@ -203,7 +204,7 @@ const Coaches = () => {
                   }}
                   disabled={!coaches?.pagination.prev}
                 >
-                  Previous
+                  {t("Previous")}
                 </button>
                 <div className="pages">
                   {pageArr.map((page) => {
@@ -231,7 +232,7 @@ const Coaches = () => {
                   }}
                   disabled={!coaches?.pagination.next}
                 >
-                  Next
+                  {t("Next")}
                 </button>
               </div>
             </div>
@@ -245,7 +246,7 @@ const Coaches = () => {
               <Modal.Header className="modala">
                 <div className="d-flex justify-content-between w-100 align-items-center mt-2">
                   <Modal.Title className="modala">
-                    <span className="modalHeadTitle">Add Coach</span>
+                    <span className="modalHeadTitle">{t("Add Coach")}</span>
                   </Modal.Title>
                   <button
                     className="btn-close bg-secondary"
@@ -261,13 +262,13 @@ const Coaches = () => {
                     <div>
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Name"
+                        label={t("Name")}
                         id={"floatingInput"}
                         className="mb-3"
                       >
                         <Form.Control
                           type="text"
-                          placeholder="Name"
+                          placeholder={t("Name")}
                           ref={nameRef}
                         />
                       </FloatingLabel>
@@ -275,7 +276,7 @@ const Coaches = () => {
                     <div>
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Phone number"
+                        label={t("Phone number")}
                         id={"floatingInput"}
                         className="mb-3"
                       >
@@ -283,7 +284,7 @@ const Coaches = () => {
                           type="number"
                           ref={inputRef}
                           min={0}
-                          placeholder="number"
+                          placeholder={t("Phone number")}
                           name="number"
                         />
                       </FloatingLabel>
@@ -294,7 +295,7 @@ const Coaches = () => {
                         type="submit"
                         onClick={handleAddCoach}
                       >
-                        Add
+                        {t("Add Coach")}
                       </button>
                     </div>
                   </div>
@@ -307,7 +308,7 @@ const Coaches = () => {
               <Modal.Header className="modala">
                 <div className="d-flex justify-content-between w-100 align-items-center mt-2">
                   <Modal.Title className="modala">
-                    <span className="offCanvasHeadTitle">Set OTP</span>
+                    <span className="offCanvasHeadTitle">{t("Send OTP")}</span>
                   </Modal.Title>
                   <button
                     className="btn-close bg-secondary"
@@ -338,7 +339,7 @@ const Coaches = () => {
                           setShow(false);
                         }}
                       >
-                        Confirm
+                        {t("Verify")}
                       </button>
                     </div>
                   </div>
@@ -354,7 +355,7 @@ const Coaches = () => {
             <Modal.Header className="modala">
               <div className="d-flex justify-content-between w-100 align-items-center mt-2">
                 <Modal.Title className="modala">
-                  <span className="modalHeadTitle">Edit Coach</span>
+                  <span className="modalHeadTitle">{t("Edit Coach")}</span>
                 </Modal.Title>
                 <button
                   className="btn-close bg-secondary"
@@ -370,13 +371,13 @@ const Coaches = () => {
                   <div>
                     <FloatingLabel
                       controlId="floatingInput"
-                      label="Name"
+                      label={t("Name")}
                       id={"floatingInput"}
                       className="mb-3"
                     >
                       <Form.Control
                         type="text"
-                        placeholder="Name"
+                        placeholder={t("Name")}
                         name="name"
                       />
                     </FloatingLabel>
@@ -384,23 +385,25 @@ const Coaches = () => {
                   <div>
                     <FloatingLabel
                       controlId="floatingInput"
-                      label="Phone number"
+                      label={t("Phone number")}
                       id={"floatingInput"}
                       className="mb-3"
                     >
                       <Form.Control
                         type="number"
                         min={0}
-                        placeholder="number"
+                        placeholder={t("Phone number")}
                         name="number"
                       />
                     </FloatingLabel>
                   </div>
                   <div className="my-2 flexcenterbetween gap-2">
                     <button className="SecondaryButton w-100" type="submit">
-                      Edit
+                      {t("Update Coach")}
                     </button>
-                    <button className="DangerButton w-100">Delete Coach</button>
+                    <button className="DangerButton w-100">
+                      {t("Delete Coach")}{" "}
+                    </button>
                   </div>
                 </div>
               </form>

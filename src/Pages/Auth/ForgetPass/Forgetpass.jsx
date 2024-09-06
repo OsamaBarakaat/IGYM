@@ -10,8 +10,10 @@ import { forgetpassValidationSchema } from "../../../Validations/ForgetpassValid
 import { useFormik } from "formik";
 import axiosInstance from "../../../api/axios";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const Forgetpass = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const onSubmit = async (values, actions) => {
     console.log("user signed in : ", values);
@@ -22,7 +24,7 @@ const Forgetpass = () => {
         clientUrl: "https://my-gym-panel.vercel.app/resetpassword/",
       });
       console.log(res);
-      toast.success("Email sent successfully");
+      toast.success(t("Email sent successfully"));
       if (res.status === 200) {
         navigate("/wesent");
       }
@@ -33,7 +35,7 @@ const Forgetpass = () => {
       } else if (error.response.data.message) {
         toast.error(error.response.data.message);
       } else {
-        toast.error("Something went wrong");
+        toast.error(t("Something went wrong"));
       }
     }
     setTimeout(() => {
@@ -85,15 +87,15 @@ const Forgetpass = () => {
 
         <div className="signin-header">
           <p>
-            Please <strong>enter your email address</strong>, and we'll send you
-            a link to reset your password.
+            {t("Please")} <strong>{t("enter your email address")}</strong>,{" "}
+            {t("and we'll send you a link to reset your password.")}
           </p>
         </div>
         <form action="" onSubmit={handleSubmit}>
           <div>
             <FloatingLabel
               controlId="floatingInput"
-              label="Email"
+              label={t("Email")}
               id={
                 errors.email && touched.email
                   ? "floatingError"
@@ -103,7 +105,7 @@ const Forgetpass = () => {
             >
               <Form.Control
                 type="email"
-                placeholder="Email"
+                placeholder={t("Email")}
                 name="email"
                 value={values.email}
                 onChange={handleChange}
@@ -124,7 +126,7 @@ const Forgetpass = () => {
               type="submit"
               disabled={isSubmitting}
             >
-              Continue
+              {t("Continue")}
             </button>
           </div>
         </form>
