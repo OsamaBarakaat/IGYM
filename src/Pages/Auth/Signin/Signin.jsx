@@ -9,8 +9,10 @@ import { signinValidationSchema } from "../../../Validations/SigninValidation";
 import { useFormik } from "formik";
 import axiosInstance from "../../../api/axios";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const Signin = () => {
+  const { t, i18n } = useTranslation();
   const [showEye, setShowEye] = useState(false);
   const [typeOfPass, setTypeOfPass] = useState("password");
   const [loadingInput, setLoadingInput] = useState(false);
@@ -49,7 +51,7 @@ const Signin = () => {
       // );
       setLoadingInput(false);
       navigate("/");
-      toast.success("user signed in successfully");
+      toast.success(t("user signed in successfully"));
     } catch (error) {
       console.log(error);
       if (error.message === "timeout of 90000ms exceeded") {
@@ -57,7 +59,7 @@ const Signin = () => {
       } else if (error.response.data.message) {
         toast.error(error.response.data.message);
       } else {
-        toast.error("Something went wrong");
+        toast.error(t("Something went wrong"));
       }
       setLoadingInput(false);
     }
@@ -83,15 +85,15 @@ const Signin = () => {
       <div className="main-cont-signin">
         <div className="signin-header">
           <p>
-            Track metrics and boost performance. <strong>Sign in</strong> to
-            your gym dashboard.
+            {t("Track metrics and boost performance.")}{" "}
+            <strong>{t("Sign in")}</strong> {t("to your gym dashboard.")}
           </p>
         </div>
         <form onSubmit={handleSubmit}>
           <div>
             <FloatingLabel
               controlId="floatingInput"
-              label="Email"
+              label={t("Email")}
               id={
                 errors.email && touched.email
                   ? "floatingError"
@@ -101,7 +103,7 @@ const Signin = () => {
             >
               <Form.Control
                 type="text"
-                placeholder="Email"
+                placeholder={t("Email")}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.email}
@@ -115,7 +117,7 @@ const Signin = () => {
           <div>
             <FloatingLabel
               controlId="floatingInput"
-              label="password"
+              label={t("password")}
               id={
                 errors.password && touched.password
                   ? "floatingError"
@@ -130,7 +132,7 @@ const Signin = () => {
                 onBlur={handleBlur}
                 value={values.password}
                 name="password"
-                placeholder="password"
+                placeholder={t("password")}
               />
               {!showEye ? (
                 <span onClick={showPassword}>
@@ -179,7 +181,7 @@ const Signin = () => {
               }}
               className="main-color font-wheight cursor-pointer font-smaller my-2"
             >
-              Forget Password ?
+              {t("Forget Password?")}
             </p>
           </div>
           <div className="my-3">
@@ -187,7 +189,7 @@ const Signin = () => {
               type="submit"
               className="SecondaryButton w-100 flexcentercenter"
             >
-              <span>Sign in </span>
+              <span>{t("Sign in")}</span>
               {loadingInput && (
                 <Spinner
                   as="span"
@@ -196,7 +198,7 @@ const Signin = () => {
                   role="status"
                   aria-hidden="true"
                 >
-                  <span className="visually-hidden">Loading...</span>
+                  <span className="visually-hidden">{t("Loading...")}</span>
                 </Spinner>
               )}
             </button>

@@ -12,8 +12,10 @@ import { classValidationSchema } from "../../Validations/ClassValidation";
 import DaySelector from "../../components/DaySelector";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Loader from "../../components/Loader/Loader";
+import { useTranslation } from "react-i18next";
 
 const Classes = () => {
+  const { t, i18n } = useTranslation();
   const [currentPage, setCurrentPage] = useState("Classes");
   const [modalShowAddClass, setModalShowAddClass] = useState(false);
   const [modalShowEditClass, setModalShowEditClass] = useState(false);
@@ -57,7 +59,6 @@ const Classes = () => {
 
   const [plans, setPlans] = useState([]);
 
-
   function calculateEndTime(startTime, durationMinutes) {
     const [hours, minutes] = startTime.split(":").map(Number);
 
@@ -72,7 +73,6 @@ const Classes = () => {
 
     return `${endHours}:${endMinutes}`;
   }
-
 
   /************ formik *************/
   // Add Class
@@ -94,12 +94,12 @@ const Classes = () => {
       console.log("selectedCoaches", selectedCoaches);
       console.log("inputs", inputs);
       if (selectedCoaches.length === 0) {
-        toast.error("Please select at least one coach");
+        toast.error(t("Please select at least one coach"));
         return;
       }
 
       if (inputs[0] === "") {
-        toast.error("Please add at least one feature");
+        toast.error(t("Please add at least one feature"));
         return;
       }
 
@@ -119,7 +119,7 @@ const Classes = () => {
           coaches: selectedCoaches.map((coach) => coach.value),
           features: inputs,
         });
-        toast.success("Class added successfully");
+        toast.success(t("Class added successfully"));
         fetchClasses();
         actions.resetForm();
         setSelectedCoaches([]);
@@ -163,7 +163,7 @@ const Classes = () => {
           coaches: selectedCoaches.map((coach) => coach.value),
           features: inputs,
         });
-        toast.success("Class edited successfully");
+        toast.success(t("Class edited successfully"));
         fetchClasses();
         actions.resetForm();
         setSelectedCoaches([]);
@@ -176,12 +176,13 @@ const Classes = () => {
     },
   });
 
-
   // Delete Class
   const deleteClass = async () => {
     try {
-      await axiosPrivate.delete(`/gyms/${gymId}/classes/${editClass.values.id}`);
-      toast.success("Class deleted successfully");
+      await axiosPrivate.delete(
+        `/gyms/${gymId}/classes/${editClass.values.id}`
+      );
+      toast.success(t("Class deleted successfully"));
       setModalShowEditClass(false);
       fetchClasses();
     } catch (error) {
@@ -253,7 +254,7 @@ const Classes = () => {
           }`}
           onClick={() => setCurrentPage("Classes")}
         >
-          Classes
+          {t("Classes")}
         </div>
         <div
           className={`cursor-pointer p-3 ${

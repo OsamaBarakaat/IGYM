@@ -2,8 +2,20 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Roboto", sans-serif;
     scroll-behavior: smooth;
+}
+
+@font-face {
+    font-family: "arabic-font";
+    src: url("../public/font/Beiruti-VariableFont_wght.ttf") format("truetype");
+}
+
+
+body {
+    font-family: "arabic-font" !important;
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+
 }
 
 :root {

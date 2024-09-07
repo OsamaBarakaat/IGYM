@@ -6,8 +6,10 @@ import { Button, FloatingLabel, Form, Modal } from "react-bootstrap";
 import "./WeSent.css";
 import "../Signin/Signin.css";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const WeSent = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [currentStyle, setCurrentStyle] = useState("send-email");
   const showWeSent = () => setCurrentStyle("we-sent");
@@ -38,8 +40,8 @@ const WeSent = () => {
 
         <div className="signin-header">
           <p>
-            We've sent an email with a link
-            to reset your password.
+            {t("We sent you an email")}{" "}
+            <strong>{t("check your inbox!")}</strong>
           </p>
         </div>
 

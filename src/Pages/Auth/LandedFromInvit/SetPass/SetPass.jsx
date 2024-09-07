@@ -9,8 +9,10 @@ import { useFormik } from "formik";
 import { resetpassValidationSchema } from "../../../../Validations/ForgetpassValidation";
 import axiosInstance from "../../../../api/axios";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const SetPass = () => {
+  const { t, i18n } = useTranslation();
   const { invitToken } = useParams();
   console.log(invitToken);
   const [showEye, setShowEye] = useState(false);
@@ -49,7 +51,7 @@ const SetPass = () => {
     dispatch(setUser(data.data.user));
     localStorage.setItem("accessToken", data.data.accessToken);
     localStorage.setItem("jwt", data.data.refreshToken);
-    toast.success("password has been set successfully");
+    toast.success(t("password set successfully"));
     navigate("/setname");
   };
   const {
@@ -74,15 +76,15 @@ const SetPass = () => {
       <div className="main-cont-signin">
         <div className="signin-header">
           <p>
-            Time to set <strong>new password!</strong> go ahead and create new
-            one.
+            {t("Time to set")} <strong>{t("new password!")}</strong>{" "}
+            {t("go ahead and create new one.")}
           </p>
         </div>
         <form action="" onSubmit={handleSubmit}>
           <div className="mb-3">
             <FloatingLabel
               controlId="floatingInput"
-              label="new password"
+              label={t("new password")}
               id={
                 errors.newPassword && touched.newPassword
                   ? "floatingError"
@@ -96,7 +98,7 @@ const SetPass = () => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.newPassword}
-                placeholder="new password"
+                placeholder={t("new password")}
               />
               {!showEye ? (
                 <span onClick={showPassword}>
@@ -141,7 +143,7 @@ const SetPass = () => {
           <div className="mb-3">
             <FloatingLabel
               controlId="floatingInput"
-              label="confirm new password"
+              label={t("confirm password")}
               id={
                 errors.confirmPassword && touched.confirmPassword
                   ? "floatingError"
@@ -155,7 +157,7 @@ const SetPass = () => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.confirmPassword}
-                placeholder="confirm new password"
+                placeholder={t("confirm password")}
               />
               {!showEyeOfConfirm ? (
                 <span onClick={showConfirmPassword}>
@@ -203,7 +205,7 @@ const SetPass = () => {
               disabled={isSubmitting}
               className="SecondaryButton w-100"
             >
-              Done
+              {t("Done")}
             </button>
           </div>
         </form>
