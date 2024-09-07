@@ -264,7 +264,7 @@ const Classes = () => {
           }`}
           onClick={() => setCurrentPage("History")}
         >
-          {t("History")}
+          History
         </div>
       </div>
       <div className="myInfoContent m-2">
@@ -285,7 +285,10 @@ const Classes = () => {
                         description: classItem.description,
                         repeatType: classItem.repeat.type,
                         repeatTime: classItem.repeat.time,
-                        repeatDay: classItem.repeat.day,
+                        repeatDay:
+                          classItem.repeat.type === "one time"
+                            ? classItem.repeat.day.split("T")[0]
+                            : classItem.repeat.day,
                         plan: classItem.plan?._id,
                       });
 
@@ -316,14 +319,14 @@ const Classes = () => {
                         />
                       </svg>
                     </span>
-                    <span>{t("Edit")}</span>
+                    <span>Edit</span>
                   </button>
                 </div>
                 <div className="flexcenterbetween my-2">
                   <p className="fontMid">{classItem.name}</p>
                   <p>
                     <span className="fontMid">{classItem.cost}</span>
-                    <span>{t("/class")}</span>
+                    <span>/class</span>
                   </p>
                 </div>
                 <p className="opacitySmall font-smaller d-flex justify-content-start align-items-center">
@@ -354,7 +357,7 @@ const Classes = () => {
                   <div className="mins">{classItem?.duration} mins</div>
                   <div className="includedIn">{classItem?.plan?.name}</div>
                 </div>
-                <p className="opacitySmall font-smaller my-2">{t("Coaches")}</p>
+                <p className="opacitySmall font-smaller my-2">Coaches</p>
                 <div className="flexcenterstart">
                   {classItem?.coaches?.map((coach, index) => {
                     return (
@@ -371,9 +374,7 @@ const Classes = () => {
                     );
                   })}
                 </div>
-                <p className="opacitySmall font-smaller my-2">
-                  {t("About Class")}
-                </p>
+                <p className="opacitySmall font-smaller my-2">About Class</p>
                 <p className="font-smaller">
                   <span>
                     <svg
@@ -403,9 +404,7 @@ const Classes = () => {
                     </svg>
                   </span>
                 </p>
-                <p className="opacitySmall font-smaller my-2">
-                  {t("Class Included")}
-                </p>
+                <p className="opacitySmall font-smaller my-2">Class Included</p>
                 <div className="flexcenterstart flex-wrap">
                   {classItem?.features?.map((feature, index) => {
                     return (
@@ -452,7 +451,7 @@ const Classes = () => {
                   />
                 </svg>
               </span>
-              <p className="main-color">{t("Add New Class")}</p>
+              <p className="main-color">Add New Class</p>
             </div>
           </div>
         </div>
@@ -467,7 +466,7 @@ const Classes = () => {
         >
           <Modal.Header closeButton id="modal">
             <Modal.Title id="contained-modal-title-vcenter">
-              {t("Add Class")}
+              Add Class
             </Modal.Title>
           </Modal.Header>
           <Modal.Body id="modal">
@@ -478,7 +477,7 @@ const Classes = () => {
                     <div className="w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label={t("Class Name")}
+                        label="Class Name"
                         id={
                           addClass.errors.name && addClass.touched.name
                             ? "floatingError"
@@ -487,7 +486,7 @@ const Classes = () => {
                       >
                         <Form.Control
                           type="text"
-                          placeholder={t("Class Name")}
+                          placeholder="Class Name"
                           name="name"
                           value={addClass.values.name}
                           onChange={addClass.handleChange}
@@ -503,7 +502,7 @@ const Classes = () => {
                     <div className="w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label={t("Cost")}
+                        label="Cost"
                         id={
                           addClass.errors.cost && addClass.touched.cost
                             ? "floatingError"
@@ -512,7 +511,7 @@ const Classes = () => {
                       >
                         <Form.Control
                           type="text"
-                          placeholder={t("Cost")}
+                          placeholder="Cost"
                           name="cost"
                           value={addClass.values.cost}
                           onChange={addClass.handleChange}
@@ -530,7 +529,7 @@ const Classes = () => {
                     <div className="w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label={t("Capacity")}
+                        label="Capacity"
                         id={
                           addClass.errors.capacity && addClass.touched.capacity
                             ? "floatingError"
@@ -539,7 +538,7 @@ const Classes = () => {
                       >
                         <Form.Control
                           type="text"
-                          placeholder={t("Capacity")}
+                          placeholder="Capacity"
                           name="capacity"
                           value={addClass.values.capacity}
                           onChange={addClass.handleChange}
@@ -558,7 +557,7 @@ const Classes = () => {
                         htmlFor="coaches"
                         className="flexcenterstart font-smaller"
                       >
-                        {t("Coaches")}
+                        Coaches
                       </label>
                       <MultiSelect
                         id="coaches"
@@ -600,7 +599,7 @@ const Classes = () => {
                     <div className="w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label={t("Included In")}
+                        label="Included In"
                         id={
                           addClass.errors.plan && addClass.touched.plan
                             ? "floatingError"
@@ -614,7 +613,7 @@ const Classes = () => {
                           onBlur={addClass.handleBlur}
                         >
                           <option value="" disabled selected>
-                            {t("Not included")}
+                            Not included
                           </option>
                           {plans.map((plan) => {
                             return (
@@ -634,7 +633,7 @@ const Classes = () => {
                     <div className="w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label={t("Repeat")}
+                        label="Repeat"
                         id={
                           addClass.errors.repeatType &&
                           addClass.touched.repeatType
@@ -649,12 +648,12 @@ const Classes = () => {
                           onBlur={addClass.handleBlur}
                         >
                           <option value="" disabled selected>
-                            {t("select value")}
+                            select value
                           </option>
-                          <option value="daily">{t("Daily")}</option>
-                          <option value="weekly">{t("Weekly")}</option>
-                          <option value="monthly">{t("Monthly")}</option>
-                          <option value="onTime">{t("One Time")}</option>
+                          <option value="daily">Daily</option>
+                          <option value="weekly">Weekly</option>
+                          <option value="monthly">Monthly</option>
+                          <option value="one time">One Time</option>
                         </Form.Select>
                       </FloatingLabel>
                       {addClass.errors.repeatType &&
@@ -665,36 +664,39 @@ const Classes = () => {
                         )}
                     </div>
                   </div>
-                  {addClass.values.repeatType === "onTime" && (
+                  {addClass.values.repeatType === "one time" && (
                     <div className="flexcenterbetween midCol gap-2 my-2">
                       <div className="w-100">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label={t("Date")}
+                          label="Date"
                           id={"floatingInput"}
                         >
                           <Form.Control
                             type="date"
-                            placeholder={t("Date")}
-                            name="date"
+                            placeholder="Date"
+                            name="repeatDay"
+                            value={addClass.values.repeatDay.split("T")[0]}
+                            onChange={addClass.handleChange}
+                            onBlur={addClass.handleBlur}
                           />
                         </FloatingLabel>
-                        {addClass.errors.repeatTime &&
-                          addClass.touched.repeatTime && (
+                        {addClass.errors.repeatDay &&
+                          addClass.touched.repeatDay && (
                             <small className="error-message">
-                              {addClass.errors.repeatTime}
+                              {addClass.errors.repeatDay}
                             </small>
                           )}
                       </div>
                       <div className="w-100">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label={t("Time")}
+                          label="Time"
                           id={"floatingInput"}
                         >
                           <Form.Control
                             type="time"
-                            placeholder={t("From")}
+                            placeholder="From"
                             name="repeatTime"
                             value={addClass.values.repeatTime}
                             onChange={addClass.handleChange}
@@ -722,12 +724,12 @@ const Classes = () => {
                       <div className="w-100">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label={t("Time")}
+                          label="Time"
                           id={"floatingInput"}
                         >
                           <Form.Control
                             type="time"
-                            placeholder={t("From")}
+                            placeholder="From"
                             name="repeatTime"
                             value={addClass.values.repeatTime}
                             onChange={addClass.handleChange}
@@ -749,12 +751,12 @@ const Classes = () => {
                       <div className="w-100">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label={t("Time")}
+                          label="Time"
                           id={"floatingInput"}
                         >
                           <Form.Control
                             type="time"
-                            placeholder={t("From")}
+                            placeholder="From"
                             name="repeatTime"
                             value={addClass.values.repeatTime}
                             onChange={addClass.handleChange}
@@ -774,7 +776,7 @@ const Classes = () => {
                   <div className="mb-2 w-100">
                     <FloatingLabel
                       controlId="floatingInput"
-                      label={t("Description")}
+                      label="Description"
                       id={
                         addClass.errors.description &&
                         addClass.touched.description
@@ -784,7 +786,7 @@ const Classes = () => {
                     >
                       <Form.Control
                         type="text"
-                        placeholder={t("Description")}
+                        placeholder="description"
                         name="description"
                         value={addClass.values.description}
                         onChange={addClass.handleChange}
@@ -799,20 +801,20 @@ const Classes = () => {
                       )}
                   </div>
                   <div className="mb-2 w-100 includedFitures">
-                    <p className="font-bold">{t("Class Includes")}</p>
+                    <p className="font-bold">Class Includes</p>
                     {inputs.map((input, index) => (
                       <Row key={index} className="mb-3 w-100">
                         <Col>
                           <FloatingLabel
                             className="w-100"
                             controlId="floatingInput"
-                            label={t("Feature")}
+                            label="Featurs"
                             id={"floatingInput"}
                           >
                             <Form.Control
                               className="w-100"
                               type="text"
-                              placeholder={t("Enter feature")}
+                              placeholder="Enter feature"
                               value={input}
                               onChange={(event) =>
                                 handleChangeOfPlans(index, event)
@@ -843,7 +845,7 @@ const Classes = () => {
                 </div>
                 <div className="flexcenterbetween gap-2">
                   <button className="SecondaryButton w-100" type="submit">
-                    {t("Add")}
+                    Add
                   </button>
                   <button
                     type="button"
@@ -852,7 +854,7 @@ const Classes = () => {
                     }}
                     className="DangerButton w-100"
                   >
-                    {t("Close")}
+                    Close
                   </button>
                 </div>
               </form>
@@ -871,7 +873,7 @@ const Classes = () => {
         >
           <Modal.Header closeButton id="modal">
             <Modal.Title id="contained-modal-title-vcenter">
-              {t("Edit Class")}
+              Edit Class
             </Modal.Title>
           </Modal.Header>
           <Modal.Body id="modal">
@@ -882,7 +884,7 @@ const Classes = () => {
                     <div className="w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label={t("Class Name")}
+                        label="Class Name"
                         id={
                           editClass.errors.name && editClass.touched.name
                             ? "floatingError"
@@ -891,7 +893,7 @@ const Classes = () => {
                       >
                         <Form.Control
                           type="text"
-                          placeholder={t("Class Name")}
+                          placeholder="Class Name"
                           name="name"
                           value={editClass.values.name}
                           onChange={editClass.handleChange}
@@ -907,7 +909,7 @@ const Classes = () => {
                     <div className="w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label={t("Cost")}
+                        label="Cost"
                         id={
                           editClass.errors.cost && editClass.touched.cost
                             ? "floatingError"
@@ -916,7 +918,7 @@ const Classes = () => {
                       >
                         <Form.Control
                           type="text"
-                          placeholder={t("Cost")}
+                          placeholder="Cost"
                           name="cost"
                           value={editClass.values.cost}
                           onChange={editClass.handleChange}
@@ -934,7 +936,7 @@ const Classes = () => {
                     <div className="w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label={t("Capacity")}
+                        label="Capacity"
                         id={
                           editClass.errors.capacity &&
                           editClass.touched.capacity
@@ -944,7 +946,7 @@ const Classes = () => {
                       >
                         <Form.Control
                           type="text"
-                          placeholder={t("Capacity")}
+                          placeholder="Capacity"
                           name="capacity"
                           value={editClass.values.capacity}
                           onChange={editClass.handleChange}
@@ -963,7 +965,7 @@ const Classes = () => {
                         htmlFor="coaches"
                         className="flexcenterstart font-smaller"
                       >
-                        {t("Coaches")}
+                        Coaches
                       </label>
                       <MultiSelect
                         id="coaches"
@@ -971,7 +973,7 @@ const Classes = () => {
                         options={coachesOptions}
                         value={selectedCoaches}
                         onChange={setSelectedCoaches}
-                        labelledBy={t("Select Coaches")}
+                        labelledBy="Select Coaches"
                       />
                     </div>
                   </div>
@@ -979,7 +981,7 @@ const Classes = () => {
                     <div className="w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label={t("Duration (in mintus)")}
+                        label="Duration (in mintus)"
                         id={
                           editClass.errors.duration &&
                           editClass.touched.duration
@@ -989,7 +991,7 @@ const Classes = () => {
                       >
                         <Form.Control
                           type="text"
-                          placeholder={t("Duration")}
+                          placeholder="Duration"
                           name="duration"
                           value={editClass.values.duration}
                           onChange={editClass.handleChange}
@@ -1006,7 +1008,7 @@ const Classes = () => {
                     <div className="w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label={t("Included In")}
+                        label="Included In"
                         id={
                           editClass.errors.plan && editClass.touched.plan
                             ? "floatingError"
@@ -1020,7 +1022,7 @@ const Classes = () => {
                           onBlur={editClass.handleBlur}
                         >
                           <option value="" disabled selected>
-                            {t("Not included")}
+                            Not included
                           </option>
                           {plans.map((plan) => {
                             return (
@@ -1040,7 +1042,7 @@ const Classes = () => {
                     <div className="w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label={t("Repeat")}
+                        label="Repeat"
                         id={
                           editClass.errors.repeatType &&
                           editClass.touched.repeatType
@@ -1055,12 +1057,12 @@ const Classes = () => {
                           onBlur={editClass.handleBlur}
                         >
                           <option value="" disabled selected>
-                            {t("select value")}
+                            select value
                           </option>
-                          <option value="daily">{t("Daily")}</option>
-                          <option value="weekly">{t("Weekly")}</option>
-                          <option value="monthly">{t("Monthly")}</option>
-                          <option value="onTime">{t("One Time")}</option>
+                          <option value="daily">Daily</option>
+                          <option value="weekly">Weekly</option>
+                          <option value="monthly">Monthly</option>
+                          <option value="one time">One Time</option>
                         </Form.Select>
                       </FloatingLabel>
                       {editClass.errors.repeatType &&
@@ -1071,36 +1073,39 @@ const Classes = () => {
                         )}
                     </div>
                   </div>
-                  {editClass.values.repeatType === "onTime" && (
+                  {editClass.values.repeatType === "one time" && (
                     <div className="flexcenterbetween midCol gap-2 my-2">
                       <div className="w-100">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label={t("Date")}
+                          label="Date"
                           id={"floatingInput"}
                         >
                           <Form.Control
                             type="date"
-                            placeholder={t("Date")}
-                            name="date"
+                            placeholder="Date"
+                            name="repeatDay"
+                            value={editClass.values.repeatDay.split("T")[0]}
+                            onChange={editClass.handleChange}
+                            onBlur={editClass.handleBlur}
                           />
                         </FloatingLabel>
-                        {editClass.errors.repeatTime &&
-                          editClass.touched.repeatTime && (
+                        {editClass.errors.repeatDay &&
+                          editClass.touched.repeatDay && (
                             <small className="error-message">
-                              {editClass.errors.repeatTime}
+                              {editClass.errors.repeatDay}
                             </small>
                           )}
                       </div>
                       <div className="w-100">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label={t("Time")}
+                          label="Time"
                           id={"floatingInput"}
                         >
                           <Form.Control
                             type="time"
-                            placeholder={t("From")}
+                            placeholder="From"
                             name="repeatTime"
                             value={editClass.values.repeatTime}
                             onChange={editClass.handleChange}
@@ -1128,12 +1133,12 @@ const Classes = () => {
                       <div className="w-100">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label={t("Time")}
+                          label="Time"
                           id={"floatingInput"}
                         >
                           <Form.Control
                             type="time"
-                            placeholder={t("From")}
+                            placeholder="From"
                             name="repeatTime"
                             value={editClass.values.repeatTime}
                             onChange={editClass.handleChange}
@@ -1155,12 +1160,12 @@ const Classes = () => {
                       <div className="w-100">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label={t("Time")}
+                          label="Time"
                           id={"floatingInput"}
                         >
                           <Form.Control
                             type="time"
-                            placeholder={t("From")}
+                            placeholder="From"
                             name="repeatTime"
                             value={editClass.values.repeatTime}
                             onChange={editClass.handleChange}
@@ -1180,7 +1185,7 @@ const Classes = () => {
                   <div className="mb-2 w-100">
                     <FloatingLabel
                       controlId="floatingInput"
-                      label={t("Description")}
+                      label="Description"
                       id={
                         editClass.errors.description &&
                         editClass.touched.description
@@ -1190,7 +1195,7 @@ const Classes = () => {
                     >
                       <Form.Control
                         type="text"
-                        placeholder={t("Description")}
+                        placeholder="description"
                         name="description"
                         value={editClass.values.description}
                         onChange={editClass.handleChange}
@@ -1205,20 +1210,20 @@ const Classes = () => {
                       )}
                   </div>
                   <div className="mb-2 w-100 includedFitures">
-                    <p className="font-bold">{t("Class Includes")}</p>
+                    <p className="font-bold">Class Includes</p>
                     {inputs.map((input, index) => (
                       <Row key={index} className="mb-3 w-100">
                         <Col>
                           <FloatingLabel
                             className="w-100"
                             controlId="floatingInput"
-                            label={t("Feature")}
+                            label="Featurs"
                             id={"floatingInput"}
                           >
                             <Form.Control
                               className="w-100"
                               type="text"
-                              placeholder={t("Enter feature")}
+                              placeholder="Enter feature"
                               value={input}
                               onChange={(event) =>
                                 handleChangeOfPlans(index, event)
@@ -1249,7 +1254,7 @@ const Classes = () => {
                 </div>
                 <div className="flexcenterbetween gap-2">
                   <button className="SecondaryButton w-100" type="submit">
-                    {t("Edit")}
+                    Edit
                   </button>
                   <button
                     type="button"
@@ -1258,7 +1263,7 @@ const Classes = () => {
                     }}
                     className="DangerButton w-100"
                   >
-                    {t("Delete")}
+                    Delete
                   </button>
                 </div>
               </form>
