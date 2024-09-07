@@ -189,7 +189,7 @@ const Signin = () => {
               type="submit"
               className="SecondaryButton w-100 flexcentercenter"
             >
-              <span>{t("Sign in")}</span>
+              <span className="mx-1">{t("Sign in")}</span>
               {loadingInput && (
                 <Spinner
                   as="span"
