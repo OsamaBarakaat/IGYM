@@ -284,14 +284,19 @@ const Classes = () => {
                         description: classItem.description,
                         repeatType: classItem.repeat.type,
                         repeatTime: classItem.repeat.time,
-                        repeatDay: classItem.repeat.day,
+                        repeatDay:
+                          classItem.repeat.type === "one time"
+                            ? classItem.repeat.day.split("T")[0]
+                            : classItem.repeat.day,
                         plan: classItem.plan?._id,
                       });
 
-                      const selectedCoaches = classItem.coaches?.map((coach) => ({
-                        label: coach.name,
-                        value: coach._id,
-                      }))
+                      const selectedCoaches = classItem.coaches?.map(
+                        (coach) => ({
+                          label: coach.name,
+                          value: coach._id,
+                        })
+                      );
                       setSelectedCoaches(selectedCoaches);
                       setInputs(classItem.features);
                       setModalShowEditClass(true);
@@ -647,7 +652,7 @@ const Classes = () => {
                           <option value="daily">Daily</option>
                           <option value="weekly">Weekly</option>
                           <option value="monthly">Monthly</option>
-                          <option value="onTime">One Time</option>
+                          <option value="one time">One Time</option>
                         </Form.Select>
                       </FloatingLabel>
                       {addClass.errors.repeatType &&
@@ -658,7 +663,7 @@ const Classes = () => {
                         )}
                     </div>
                   </div>
-                  {addClass.values.repeatType === "onTime" && (
+                  {addClass.values.repeatType === "one time" && (
                     <div className="flexcenterbetween midCol gap-2 my-2">
                       <div className="w-100">
                         <FloatingLabel
@@ -669,13 +674,16 @@ const Classes = () => {
                           <Form.Control
                             type="date"
                             placeholder="Date"
-                            name="date"
+                            name="repeatDay"
+                            value={addClass.values.repeatDay.split("T")[0]}
+                            onChange={addClass.handleChange}
+                            onBlur={addClass.handleBlur}
                           />
                         </FloatingLabel>
-                        {addClass.errors.repeatTime &&
-                          addClass.touched.repeatTime && (
+                        {addClass.errors.repeatDay &&
+                          addClass.touched.repeatDay && (
                             <small className="error-message">
-                              {addClass.errors.repeatTime}
+                              {addClass.errors.repeatDay}
                             </small>
                           )}
                       </div>
@@ -1053,7 +1061,7 @@ const Classes = () => {
                           <option value="daily">Daily</option>
                           <option value="weekly">Weekly</option>
                           <option value="monthly">Monthly</option>
-                          <option value="onTime">One Time</option>
+                          <option value="one time">One Time</option>
                         </Form.Select>
                       </FloatingLabel>
                       {editClass.errors.repeatType &&
@@ -1064,7 +1072,7 @@ const Classes = () => {
                         )}
                     </div>
                   </div>
-                  {editClass.values.repeatType === "onTime" && (
+                  {editClass.values.repeatType === "one time" && (
                     <div className="flexcenterbetween midCol gap-2 my-2">
                       <div className="w-100">
                         <FloatingLabel
@@ -1075,13 +1083,16 @@ const Classes = () => {
                           <Form.Control
                             type="date"
                             placeholder="Date"
-                            name="date"
+                            name="repeatDay"
+                            value={editClass.values.repeatDay.split("T")[0]}
+                            onChange={editClass.handleChange}
+                            onBlur={editClass.handleBlur}
                           />
                         </FloatingLabel>
-                        {editClass.errors.repeatTime &&
-                          editClass.touched.repeatTime && (
+                        {editClass.errors.repeatDay &&
+                          editClass.touched.repeatDay && (
                             <small className="error-message">
-                              {editClass.errors.repeatTime}
+                              {editClass.errors.repeatDay}
                             </small>
                           )}
                       </div>
