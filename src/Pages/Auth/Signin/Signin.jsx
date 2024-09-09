@@ -102,6 +102,8 @@ const Signin = () => {
               className="mb-3"
             >
               <Form.Control
+                style={{ fontSize: "16px" }}
+                className="inputSignIn"
                 type="text"
                 placeholder={t("Email")}
                 onChange={handleChange}
