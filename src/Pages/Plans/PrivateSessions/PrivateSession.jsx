@@ -10,8 +10,10 @@ import {
 } from "../../../Validations/PrivateSession";
 import { toast } from "react-toastify";
 import Loader from "../../../components/Loader/Loader";
+import { useTranslation } from "react-i18next";
 
 const PrivateSession = () => {
+  const { t } = useTranslation();
   const [modalShowAddPS, setModalShowAddPS] = useState(false);
   const [modalShowEditPS, setModalShowEditPS] = useState(false);
   const [modalShowAddOfferPS, setModalShowAddOfferPS] = useState(false);
@@ -43,13 +45,13 @@ const PrivateSession = () => {
           expireType: values.durationType,
         });
         console.log(res);
-        toast.success("Private Session created successfully");
+        toast.success(t("Private Session created successfully"));
         actions.resetForm();
         setPrivateSessions([res.data.data, ...privateSessions]);
         setModalShowAddPS(false);
       } catch (error) {
         console.log(error);
-        toast.error("Something went wrong");
+        toast.error(t("Something went wrong"));
       }
     },
   });
@@ -77,7 +79,7 @@ const PrivateSession = () => {
           }
         );
         console.log(res);
-        toast.success("Private Session updated successfully");
+        toast.success(t("Private Session updated successfully"));
         actions.resetForm();
         setModalShowEditPS(false);
         setPrivateSessions(
@@ -87,7 +89,7 @@ const PrivateSession = () => {
         );
       } catch (error) {
         console.log(error);
-        toast.error("Something went wrong");
+        toast.error(t("Something went wrong"));
       }
     },
   });
@@ -113,7 +115,7 @@ const PrivateSession = () => {
           }
         );
         console.log(res);
-        toast.success("Private Session Offer created successfully");
+        toast.success(t("Private Session Offer created successfully"));
         actions.resetForm();
         setModalShowAddOfferPS(false);
         setPrivateSessions(
@@ -123,7 +125,7 @@ const PrivateSession = () => {
         );
       } catch (error) {
         console.log(error);
-        toast.error("Something went wrong");
+        toast.error(t("Something went wrong"));
       }
     },
   });
@@ -136,7 +138,7 @@ const PrivateSession = () => {
         `gyms/${gymId}/private-sessions/${id}/offer`
       );
       console.log("res", res);
-      toast.success("Offer deleted successfully");
+      toast.success(t("Offer deleted successfully"));
       const newSessions = privateSessions.map((ps) => {
         if (ps._id === id) {
           return {
@@ -150,7 +152,7 @@ const PrivateSession = () => {
       addOfferPS.resetForm();
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
     }
   };
 
@@ -162,14 +164,14 @@ const PrivateSession = () => {
         `/gyms/${gymId}/private-sessions/${id}`
       );
       console.log("res", res);
-      toast.success("Private Session deleted successfully");
+      toast.success(t("Private Session deleted successfully"));
       setPrivateSessions(
         privateSessions.filter((session) => session._id !== id)
       );
       setModalShowEditPS(false);
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
     }
   };
   useEffect(() => {
@@ -187,13 +189,13 @@ const PrivateSession = () => {
     fetchPrivateSessions();
   }, []);
 
-   if (loading) {
-     return (
-       <>
-         <Loader />
-       </>
-     );
-   }
+  if (loading) {
+    return (
+      <>
+        <Loader />
+      </>
+    );
+  }
 
   return (
     <div className="mainContent m-2 min-vh-100">
@@ -203,7 +205,7 @@ const PrivateSession = () => {
             <div className="plans-details">
               {(session?.offer.cost || session?.offer.duration) &&
                 new Date(session?.offer.expireAt) > new Date() && (
-                  <div className="offerDesign">Offer</div>
+                  <div className="offerDesign">{t("Offer")}</div>
                 )}
               <div className="flexcenterend gap-2">
                 {(session?.offer.cost || session?.offer.duration) &&
@@ -236,7 +238,7 @@ const PrivateSession = () => {
                         />
                       </svg>
                     </span>
-                    <span>Edit Offer</span>
+                    <span>{t("Edit Offer")}</span>
                   </button>
                 ) : (
                   <button
@@ -265,7 +267,7 @@ const PrivateSession = () => {
                         />
                       </svg>
                     </span>
-                    <span>Add Offer</span>
+                    <span>{t("Add Offer")}</span>
                   </button>
                 )}
                 <button
@@ -297,7 +299,7 @@ const PrivateSession = () => {
                       />
                     </svg>
                   </span>
-                  <span>Edit</span>
+                  <span>{t("Edit")}</span>
                 </button>
               </div>
               <div className="privateSessionBody my-3">
@@ -308,7 +310,7 @@ const PrivateSession = () => {
                     {(session?.offer.cost || session?.offer.sessions) &&
                       new Date(session?.offer.expireAt) > new Date() && (
                         <small className="offerEndIn opacityL d-block">
-                          Offer ends in{" "}
+                          {t("Offer ends in")}{" "}
                           {new Date(
                             session?.offer.expireAt
                           ).toLocaleDateString()}
@@ -321,32 +323,36 @@ const PrivateSession = () => {
                         <span className="fontMid">
                           <>
                             <del className="opacityL mx-2">
-                              {session?.cost}EGP
+                              {session?.cost}
+                              {t("EGP")}
                             </del>
                             <span className="midText primary-color">
-                              {session?.offer.cost}EGP
+                              {session?.offer.cost}
+                              {t("EGP")}
                             </span>
                           </>
                         </span>
                       ) : (
                         <span className="fontMid">
-                          {session.cost} <span>EGP</span>
+                          {session.cost} <span>{t("EGP")}</span>
                         </span>
                       )}
-                      / {session.offer.sessions || session.sessions} sessions
+                      / {session.offer.sessions || session.sessions}{" "}
+                      {t("Sessions")}
                     </p>
                   ) : (
                     <p>
                       <span className="fontMid">
-                        {session.cost} <span>EGP</span>{" "}
+                        {session.cost} <span>{t("EGP")}</span>{" "}
                       </span>
-                      / {session.sessions} sessions
+                      / {session.sessions} {t("Sessions")}
                     </p>
                   )}
                 </div>
                 <div className="flexcenterstart">
                   <p className="font-smaller opacitySmall">
-                    Expires in {`${session.expireIn} ${session.expireType}`}
+                    {t("Expires in")}{" "}
+                    {`${session.expireIn} ${session.expireType}`}
                   </p>
                 </div>
               </div>
@@ -375,7 +381,7 @@ const PrivateSession = () => {
                 />
               </svg>
             </span>
-            <p className="main-color">Add Private Session</p>
+            <p className="main-color">{t("Add Private Session")}</p>
           </div>
         </div>
       </div>
@@ -389,7 +395,7 @@ const PrivateSession = () => {
         >
           <Modal.Header closeButton id="modal">
             <Modal.Title id="contained-modal-title-vcenter">
-              Add Private Session
+              {t("Add Private Session")}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body id="modal">
@@ -400,7 +406,7 @@ const PrivateSession = () => {
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Cost"
+                        label={t("Cost")}
                         id={
                           addPS.errors.cost && addPS.touched.cost
                             ? "floatingError"
@@ -409,7 +415,7 @@ const PrivateSession = () => {
                       >
                         <Form.Control
                           type="text"
-                          placeholder="Cost"
+                          placeholder={t("Cost")}
                           name="cost"
                           value={addPS.values.cost}
                           onChange={addPS.handleChange}
@@ -426,7 +432,7 @@ const PrivateSession = () => {
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Sessions Number"
+                        label={t("Sessions Number")}
                         id={
                           addPS.errors.sessions && addPS.touched.sessions
                             ? "floatingError"
@@ -435,7 +441,7 @@ const PrivateSession = () => {
                       >
                         <Form.Control
                           type="number"
-                          placeholder="Sessions Number"
+                          placeholder={t("Sessions Number")}
                           name="sessions"
                           value={addPS.values.sessions}
                           onChange={addPS.handleChange}
@@ -449,12 +455,12 @@ const PrivateSession = () => {
                       )}
                     </div>
                   </div>
-                  <p className="opacitySmall font-small"> Expires In</p>
+                  <p className="opacitySmall font-small">{t("Expires In")}</p>
                   <div className="flexcenterbetween gap-2">
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Number"
+                        label={t("Number")}
                         id={
                           addPS.errors.expireIn && addPS.touched.expireIn
                             ? "floatingError"
@@ -463,7 +469,7 @@ const PrivateSession = () => {
                       >
                         <Form.Control
                           type="number"
-                          placeholder="Number"
+                          placeholder={t("Number")}
                           name="expireIn"
                           value={addPS.values.expireIn}
                           onChange={addPS.handleChange}
@@ -479,7 +485,7 @@ const PrivateSession = () => {
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="duration type"
+                        label={t("Duration type")}
                         id={
                           addPS.errors.durationType &&
                           addPS.touched.durationType
@@ -494,11 +500,11 @@ const PrivateSession = () => {
                           onBlur={addPS.handleBlur}
                         >
                           <option value="" disabled selected>
-                            Select Duration type
+                            {t("Select Duration type")}
                           </option>
-                          <option value={"days"}>days</option>
-                          <option value={"weeks"}>weeks</option>
-                          <option value={"months"}>months</option>
+                          <option value={"days"}>{t("days")}</option>
+                          <option value={"weeks"}>{t("weeks")}</option>
+                          <option value={"months"}>{t("months")}</option>
                         </Form.Select>
                       </FloatingLabel>
                       {addPS.errors.durationType &&
@@ -513,7 +519,7 @@ const PrivateSession = () => {
 
                 <div className="flexcenterbetween  gap-2">
                   <button className="SecondaryButton w-100" type="submit">
-                    Add Private Session
+                    {t("Add Private Session")}
                   </button>
                   <button
                     onClick={() => {
@@ -521,7 +527,7 @@ const PrivateSession = () => {
                     }}
                     className="DangerButton w-100"
                   >
-                    Close
+                    {t("Cancel")}
                   </button>
                 </div>
               </form>
@@ -539,7 +545,7 @@ const PrivateSession = () => {
         >
           <Modal.Header closeButton id="modal">
             <Modal.Title id="contained-modal-title-vcenter">
-              Edit Private Session
+              {t("Edit Private Session")}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body id="modal">
@@ -550,7 +556,7 @@ const PrivateSession = () => {
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Cost"
+                        label={t("Cost")}
                         id={
                           editPS.errors.cost && editPS.touched.cost
                             ? "floatingError"
@@ -559,7 +565,7 @@ const PrivateSession = () => {
                       >
                         <Form.Control
                           type="text"
-                          placeholder="Cost"
+                          placeholder={t("Cost")}
                           name="cost"
                           value={editPS.values.cost}
                           onChange={editPS.handleChange}
@@ -571,7 +577,7 @@ const PrivateSession = () => {
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Sessions Number"
+                        label={t("Sessions Number")}
                         id={
                           editPS.errors.sessions && editPS.touched.sessions
                             ? "floatingError"
@@ -580,7 +586,7 @@ const PrivateSession = () => {
                       >
                         <Form.Control
                           type="number"
-                          placeholder="Sessions Number"
+                          placeholder={t("Sessions Number")}
                           name="sessions"
                           value={editPS.values.sessions}
                           onChange={editPS.handleChange}
@@ -589,12 +595,12 @@ const PrivateSession = () => {
                       </FloatingLabel>
                     </div>
                   </div>
-                  <p className="opacitySmall font-small"> Expires In</p>
+                  <p className="opacitySmall font-small">{t("Expires in")}</p>
                   <div className="flexcenterbetween gap-2">
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Number"
+                        label={t("Number")}
                         id={
                           editPS.errors.expireIn && editPS.touched.expireIn
                             ? "floatingError"
@@ -603,7 +609,7 @@ const PrivateSession = () => {
                       >
                         <Form.Control
                           type="number"
-                          placeholder="Number"
+                          placeholder={t("Number")}
                           name="expireIn"
                           value={editPS.values.expireIn}
                           onChange={editPS.handleChange}
@@ -614,7 +620,7 @@ const PrivateSession = () => {
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="duration type"
+                        label={t("Duration type")}
                         id={
                           editPS.errors.durationType &&
                           editPS.touched.durationType
@@ -629,11 +635,11 @@ const PrivateSession = () => {
                           onBlur={editPS.handleBlur}
                         >
                           <option value="" disabled selected>
-                            Select Duration type
+                            {t("Select Duration type")}
                           </option>
-                          <option value={"days"}>days</option>
-                          <option value={"weeks"}>weeks</option>
-                          <option value={"months"}>months</option>
+                          <option value={"days"}>{t("days")}</option>
+                          <option value={"weeks"}>{t("weeks")}</option>
+                          <option value={"months"}>{t("months")}</option>
                         </Form.Select>
                       </FloatingLabel>
                     </div>
@@ -642,14 +648,14 @@ const PrivateSession = () => {
 
                 <div className="flexcenterbetween  gap-2">
                   <button className="SecondaryButton w-100" type="submit">
-                    Edit Private Session
+                    {t("Edit Private Session")}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDeletePS(editPS.values._id)}
                     className="DangerButton w-100"
                   >
-                    Delete Private Session
+                    {t("Delete Private Session")}
                   </button>
                 </div>
               </form>
@@ -667,7 +673,7 @@ const PrivateSession = () => {
         >
           <Modal.Header closeButton id="modal">
             <Modal.Title id="contained-modal-title-vcenter">
-              Edit Offer on private session
+              {t("Edit Offer on private session")}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body id="modal">
@@ -678,7 +684,7 @@ const PrivateSession = () => {
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Offer Price"
+                        label={t("Offer Price")}
                         id={
                           addOfferPS.errors.cost && addOfferPS.touched.cost
                             ? "floatingError"
@@ -688,7 +694,7 @@ const PrivateSession = () => {
                         <Form.Control
                           type="number"
                           min={0}
-                          placeholder="Offer Price"
+                          placeholder={t("Offer Price")}
                           name="cost"
                           value={addOfferPS.values.cost}
                           onChange={addOfferPS.handleChange}
@@ -706,7 +712,7 @@ const PrivateSession = () => {
                       <FloatingLabel
                         controlId="floatingInput"
                         min={0}
-                        label="Sessions Number"
+                        label={t("Sessions Number")}
                         id={
                           addOfferPS.errors.sessions &&
                           addOfferPS.touched.sessions
@@ -716,7 +722,7 @@ const PrivateSession = () => {
                       >
                         <Form.Control
                           type="number"
-                          placeholder="Sessions Number"
+                          placeholder={t("Sessions Number")}
                           name="sessions"
                           value={addOfferPS.values.sessions}
                           onChange={addOfferPS.handleChange}
@@ -734,7 +740,7 @@ const PrivateSession = () => {
                   <div className="mb-2 w-100">
                     <FloatingLabel
                       controlId="floatingInput"
-                      label="End Date to the Offer"
+                      label={t("End Date to the Offer")}
                       id={
                         addOfferPS.errors.expireAt &&
                         addOfferPS.touched.expireAt
@@ -796,7 +802,7 @@ const PrivateSession = () => {
 
                 <div className="flexcenterbetween gap-2">
                   <button className="SecondaryButton w-100" type="submit">
-                    Edit Offer
+                    {t("Edit Offer")}
                   </button>
                   <button
                     type="button"
@@ -806,7 +812,7 @@ const PrivateSession = () => {
                     }}
                     className="DangerButton w-100"
                   >
-                    Delete Offer
+                    {t("Delete Offer")}
                   </button>
                 </div>
               </form>
@@ -824,7 +830,7 @@ const PrivateSession = () => {
         >
           <Modal.Header closeButton id="modal">
             <Modal.Title id="contained-modal-title-vcenter">
-              Add Offer on private session
+              {t("Add Offer on private session")}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body id="modal">
@@ -835,7 +841,7 @@ const PrivateSession = () => {
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Offer Price"
+                        label={t("Offer Price")}
                         id={
                           addOfferPS.errors.cost && addOfferPS.touched.cost
                             ? "floatingError"
@@ -845,7 +851,7 @@ const PrivateSession = () => {
                         <Form.Control
                           type="number"
                           min={0}
-                          placeholder="Offer Price"
+                          placeholder={t("Offer Price")}
                           name="cost"
                           value={addOfferPS.values.cost}
                           onChange={addOfferPS.handleChange}
@@ -863,7 +869,7 @@ const PrivateSession = () => {
                       <FloatingLabel
                         controlId="floatingInput"
                         min={0}
-                        label="Sessions Number"
+                        label={t("Sessions Number")}
                         id={
                           addOfferPS.errors.sessions &&
                           addOfferPS.touched.sessions
@@ -873,7 +879,7 @@ const PrivateSession = () => {
                       >
                         <Form.Control
                           type="number"
-                          placeholder="Sessions Number"
+                          placeholder={t("Sessions Number")}
                           name="sessions"
                           value={addOfferPS.values.sessions}
                           onChange={addOfferPS.handleChange}
@@ -891,7 +897,7 @@ const PrivateSession = () => {
                   <div className="mb-2 w-100">
                     <FloatingLabel
                       controlId="floatingInput"
-                      label="End Date to the Offer"
+                      label={t("End Date to the Offer")}
                       id={
                         addOfferPS.errors.expireAt &&
                         addOfferPS.touched.expireAt
@@ -953,7 +959,7 @@ const PrivateSession = () => {
 
                 <div className="flexcenterbetween gap-2">
                   <button className="SecondaryButton w-100" type="submit">
-                    Add Offer
+                    {t("Add Offer")}
                   </button>
                   <button
                     type="button"
@@ -962,7 +968,7 @@ const PrivateSession = () => {
                     }}
                     className="DangerButton w-100"
                   >
-                    Close
+                    {t("Cancel")}
                   </button>
                 </div>
               </form>

@@ -19,3 +19,17 @@
     border-bottom-right-radius: 1rem;
 
 }
+
+.realtive {
+    position: relative;
+}
+
+.absoluteright-0 {
+    position: absolute;
+    right: 0;
+}
+
+.absoluteleft-0 {
+    position: absolute;
+    left: 0;
+}

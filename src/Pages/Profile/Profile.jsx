@@ -41,13 +41,13 @@ const Profile = () => {
   const LogOut = async () => {
     try {
       await axiosInstance.post("/owners/logout");
-      toast.success("Logged out successfully");
+      toast.success(t("Logged out successfully"));
       localStorage.removeItem("accessToken");
       localStorage.removeItem("jwt");
       dispatch(reSetUser());
       navigate("/signin");
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
       console.log(error);
     }
   };
@@ -72,11 +72,11 @@ const Profile = () => {
         }
       );
       console.log(res);
-      toast.success("Image updated successfully");
+      toast.success(t("Image updated successfully"));
       dispatch(setUser({ data: res.data.data }));
       setUserImage(null);
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
       console.log(error);
     } finally {
       setImageLoading(false);
@@ -93,14 +93,14 @@ const Profile = () => {
         passwordConfirm: values.confirmPassword,
       });
       console.log(res);
-      toast.success("Password changed successfully");
+      toast.success(t("Password changed successfully"));
       setTimeout(() => {
         actions.resetForm();
         actions.setSubmitting(false);
       }, 1000);
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
       actions.setSubmitting(false);
     }
   };
@@ -139,11 +139,11 @@ const Profile = () => {
           phones: [values?.phones],
         });
         console.log(res.data.data);
-        toast.success("Profile updated successfully");
+        toast.success(t("Profile updated successfully"));
         dispatch(setUser({ data: res.data.data }));
       } catch (error) {
         console.log(error);
-        toast.error("Something went wrong");
+        toast.error(t("Something went wrong"));
       }
     },
   });
@@ -232,7 +232,7 @@ const Profile = () => {
         {currentPage === 1 && (
           <div className="myInfo">
             <div className="myInfoHeading">
-              <Heading content={"My info"} />
+              <Heading content={t("My info")} />
             </div>
             <div className="myInfoContent">
               <div className="imgContainer">
@@ -342,7 +342,7 @@ const Profile = () => {
                     <div>
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Phone"
+                        label={t("Phone")}
                         id="floatingInput"
                         className="mb-3"
                       >
@@ -390,13 +390,13 @@ const Profile = () => {
                       <div>
                         <FloatingLabel
                           controlId="floatingInput"
-                          label="Your name"
+                          label={t("Your name")}
                           id="floatingInput"
                           className="mb-3"
                         >
                           <Form.Control
                             type="text"
-                            placeholder="name"
+                            placeholder={t("Your name")}
                             name="name"
                             value={updateProfile.values.name}
                             onChange={updateProfile.handleChange}
@@ -407,14 +407,14 @@ const Profile = () => {
                       <div>
                         <FloatingLabel
                           controlId="floatingInput"
-                          label="Phone"
+                          label={t("Phone")}
                           id="floatingInput"
                           className="mb-3"
                         >
                           <Form.Control
                             type="text"
                             name="phones"
-                            placeholder="phone number"
+                            placeholder={t("phone number")}
                             value={updateProfile.values.phones}
                             onChange={updateProfile.handleChange}
                             onBlur={updateProfile.handleBlur}
@@ -468,7 +468,7 @@ const Profile = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.oldPassword}
-                      placeholder={t("Current password")}
+                      placeholder={t("Old password")}
                     />
                     {!showEye ? (
                       <span onClick={showPassword}>
@@ -663,7 +663,7 @@ const Profile = () => {
             centered
           >
             <Modal.Body className="modalOfLogout">
-              <p>Are you sure you want to logout ?</p>
+              <p>{t("Are you sure you want to logout ?")}</p>
             </Modal.Body>
             <div className="modalOfLogout">
               <Modal.Footer>
@@ -674,7 +674,7 @@ const Profile = () => {
                       LogOut();
                     }}
                   >
-                    Logout
+                    {t("Logout")}
                   </button>
                   <button
                     className="SecondaryButton flex-grow-1"
@@ -682,7 +682,7 @@ const Profile = () => {
                       setModalShow(false);
                     }}
                   >
-                    Keep me in
+                    {t("Keep me in")}
                   </button>
                 </div>
               </Modal.Footer>

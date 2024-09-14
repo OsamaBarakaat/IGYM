@@ -10,9 +10,11 @@ import Loader from "../../components/Loader/Loader";
 import { toast } from "react-toastify";
 import "./Plans.css";
 import PrivateSession from "./PrivateSessions/PrivateSession";
+import { useTranslation } from "react-i18next";
 
 let planId;
 const Plans = () => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [modalAddPlan, setModalShowAddPlan] = useState(false);
   const [modalEditPlan, setModalShowEditPlan] = useState(false);
@@ -41,14 +43,14 @@ const Plans = () => {
         }
       );
       console.log("res", data);
-      toast.success("Plan added successfully");
+      toast.success(t("Plan added successfully"));
       setPlans([data?.data, ...plans]);
       setTimeout(() => {
         setModalShowAddPlan(false);
       }, 500);
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
     }
 
     setTimeout(() => {
@@ -188,7 +190,7 @@ const Plans = () => {
           }
         );
         console.log("res", data);
-        toast.success("Plan updated successfullyyy");
+        toast.success(t("Plan updated successfully"));
         const editedPlans = plans.map((plan) => {
           if (selectedPlan?._id === plan._id) {
             return data?.data;
@@ -199,7 +201,7 @@ const Plans = () => {
         setPlans(editedPlans);
       } catch (error) {
         console.log(error);
-        toast.error("Something went wronggg");
+        toast.error(t("Something went wrong"));
       }
     },
   });
@@ -241,7 +243,7 @@ const Plans = () => {
           }
         );
         console.log("res", data);
-        toast.success("Offer updated successfullyyy");
+        toast.success(t("Offer updated successfully"));
         const editedPlans = plans.map((plan) => {
           if (data?.data?._id === plan._id) {
             return data?.data;
@@ -254,7 +256,7 @@ const Plans = () => {
         if (error.response.status === 400) {
           toast.error(error.response.data.message);
         } else {
-          toast.error("Something went wronggg");
+          toast.error(t("Something went wrong"));
         }
         console.log(error);
       }
@@ -268,7 +270,7 @@ const Plans = () => {
         `gyms/666ddfad7a0f09d99493d976/plans/${planId}/offer`
       );
       console.log("res", res);
-      toast.success("Offer deleted successfully");
+      toast.success(t("Offer deleted successfully"));
       const newPlans = plans.map((plan) => {
         if (plan._id === planId) {
           return {
@@ -281,7 +283,7 @@ const Plans = () => {
       setPlans(newPlans);
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
     }
   };
 
@@ -292,7 +294,7 @@ const Plans = () => {
         `/gyms/666ddfad7a0f09d99493d976/plans/${id}`
       );
       console.log("res", res);
-      toast.success("Plan deleted successfully");
+      toast.success(t("Plan deleted successfully"));
       const newPlans = plans.filter((plan) => {
         return plan._id !== id;
       });
@@ -300,10 +302,13 @@ const Plans = () => {
       setModalShowEditPlan(false);
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
     }
   };
-
+  const [langType, setLangType] = useState("en");
+  useEffect(() => {
+    setLangType(localStorage.getItem("i18nextLng"));
+  }, []);
   if (loading) {
     return (
       <>
@@ -317,7 +322,7 @@ const Plans = () => {
         <div className="myInfo">
           <div className="myInfoHeading">
             <div className="titleContainer">
-              <h2 className="title">Plans</h2>
+              <h2 className="title">{t("Plans")}</h2>
             </div>
           </div>
           <div className="flexcenterstart bigCardTwo p-2 gap-4">
@@ -329,7 +334,7 @@ const Plans = () => {
               }`}
               onClick={() => setCurrentPage("Memberships")}
             >
-              Memberships
+              {t("Memberships")}
             </div>
             <div
               className={`cursor-pointer p-3 ${
@@ -339,7 +344,7 @@ const Plans = () => {
               }`}
               onClick={() => setCurrentPage("Private sessions")}
             >
-              Private sessions
+              {t("Private sessions")}
             </div>
           </div>
           {currentPage === "Memberships" ? (
@@ -348,10 +353,12 @@ const Plans = () => {
                 {plans.map((plan) => {
                   return (
                     <div className={"plans-details"}>
-                      {(plan?.offer.cost || plan?.offer.duration) &&
-                        new Date(plan?.offer.expireAt) > new Date() && (
-                          <div className="offerDesign">Offer</div>
-                        )}
+                      <div>
+                        {(plan?.offer.cost || plan?.offer.duration) &&
+                          new Date(plan?.offer.expireAt) > new Date() && (
+                            <div className="offerDesign">{t("Offer")}</div>
+                          )}
+                      </div>
                       <div className="main-of-pd">
                         <div className="my-2 mx-0 addEditDeletePlan d-flex justify-content-end align-items-center">
                           {(plan?.offer.cost || plan?.offer.duration) &&
@@ -364,7 +371,7 @@ const Plans = () => {
                                   planId = plan?._id;
                                 }}
                               >
-                                Edit Offer
+                                {t("Edit Offer")}
                               </button>
                             </>
                           ) : (
@@ -381,7 +388,7 @@ const Plans = () => {
                                   });
                                 }}
                               >
-                                Add Offer
+                                {t("Add Offer")}
                               </button>
                             </>
                           )}
@@ -392,7 +399,7 @@ const Plans = () => {
                               handleShowEditPlan(plan);
                             }}
                           >
-                            Edit
+                            {t("Edit")}
                           </button>
                         </div>
                         <div className="line1 flexcenterbetween">
@@ -401,7 +408,7 @@ const Plans = () => {
                             {(plan?.offer.cost || plan?.offer.duration) &&
                               new Date(plan?.offer.expireAt) > new Date() && (
                                 <small className="offerEndIn opacityL d-block">
-                                  Offer ends in{" "}
+                                  {t("Offer ends in")}{" "}
                                   {new Date(
                                     plan?.offer.expireAt
                                   ).toLocaleDateString()}
@@ -414,29 +421,37 @@ const Plans = () => {
                             new Date(plan?.offer.expireAt) > new Date() ? (
                               <>
                                 <del className="opacityL mx-2">
-                                  {plan?.cost}EGP
+                                  {plan?.cost}
+                                  {t("EGP")}
                                 </del>
                                 <span className="midText primary-color">
-                                  {plan?.offer.cost}EGP
+                                  {plan?.offer.cost}
+                                  {t("EGP")}
                                 </span>
                               </>
                             ) : (
                               <>
-                                <span className="midText">{plan?.cost}EGP</span>
+                                <span className="midText">
+                                  {plan?.cost}
+                                  {t("EGP")}
+                                </span>
                               </>
                             )}
                             /
                             {plan?.offer.duration &&
                             new Date(plan?.offer.expireAt) > new Date() ? (
                               <>
-                                <span>{plan?.offer.duration}</span> Months
+                                <span>{plan?.offer.duration}</span>{" "}
+                                {t("Months")}
                               </>
                             ) : (
-                              <span>{plan?.duration} Months</span>
+                              <span>
+                                {plan?.duration} {t("Months")}
+                              </span>
                             )}
                           </span>
                         </div>
-                        <p className="opacitySmall">Plan Includes</p>
+                        <p className="opacitySmall">{t("Plan Includes")}</p>
                         <div className="line2 flexcenterbetween flex-wrap">
                           {plan.features.map((feature) => {
                             return (
@@ -535,7 +550,7 @@ const Plans = () => {
                         />
                       </svg>
                     </span>
-                    <p className="main-color">Add New Plan</p>
+                    <p className="main-color">{t("Add New Plan")}</p>
                   </div>
                 </div>
               </div>
@@ -549,7 +564,7 @@ const Plans = () => {
                 >
                   <Modal.Header closeButton id="modal">
                     <Modal.Title id="contained-modal-title-vcenter">
-                      Add Plan
+                      {t("Add Plan")}
                     </Modal.Title>
                   </Modal.Header>
                   <Modal.Body id="modal">
@@ -559,7 +574,7 @@ const Plans = () => {
                           <div className="mb-2">
                             <FloatingLabel
                               controlId="floatingInput"
-                              label="Plan Name"
+                              label={t("Plan Name")}
                               id={
                                 errors.name && touched.name
                                   ? "floatingError"
@@ -568,7 +583,7 @@ const Plans = () => {
                             >
                               <Form.Control
                                 type="text"
-                                placeholder="Plan Name"
+                                placeholder={t("Plan Name")}
                                 name="name"
                                 value={values.name}
                                 onChange={handleChange}
@@ -586,7 +601,7 @@ const Plans = () => {
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="Cost"
+                                label={t("Cost")}
                                 id={
                                   errors.cost && touched.cost
                                     ? "floatingError"
@@ -595,7 +610,7 @@ const Plans = () => {
                               >
                                 <Form.Control
                                   type="number"
-                                  placeholder="Cost"
+                                  placeholder={t("Cost")}
                                   name="cost"
                                   value={values.cost}
                                   onChange={handleChange}
@@ -608,11 +623,11 @@ const Plans = () => {
                                 </small>
                               )}
                             </div>
-                            <p>Per</p>
+                            <p>{t("Per")}</p>
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="Duration(months)"
+                                label={t("Duration(months)")}
                                 id={
                                   errors.duration && touched.duration
                                     ? "floatingError"
@@ -621,7 +636,7 @@ const Plans = () => {
                               >
                                 <Form.Control
                                   type="number"
-                                  placeholder="Duration"
+                                  placeholder={t("Duration(months)")}
                                   value={values.duration}
                                   onChange={handleChange}
                                   onBlur={handleBlur}
@@ -639,7 +654,7 @@ const Plans = () => {
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="freezeDays"
+                                label={t("Freeze Days")}
                                 id={
                                   errors.freezeDays && touched.freezeDays
                                     ? "floatingError"
@@ -648,7 +663,7 @@ const Plans = () => {
                               >
                                 <Form.Control
                                   type="number"
-                                  placeholder="freezeDays"
+                                  placeholder={t("Freeze Days")}
                                   name="freezeDays"
                                   value={values.freezeDays}
                                   onChange={handleChange}
@@ -664,7 +679,7 @@ const Plans = () => {
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="minFreezeDays"
+                                label={t("Min Freeze Days")}
                                 id={
                                   errors.minFreezeDays && touched.minFreezeDays
                                     ? "floatingError"
@@ -673,7 +688,7 @@ const Plans = () => {
                               >
                                 <Form.Control
                                   type="number"
-                                  placeholder="minFreezeDays"
+                                  placeholder={t("Min Freeze Days")}
                                   value={values.minFreezeDays}
                                   onChange={handleChange}
                                   onBlur={handleBlur}
@@ -718,7 +733,7 @@ const Plans = () => {
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="invitationsNumber"
+                                label={t("Invitations Number")}
                                 id={
                                   errors.invitationsNumber &&
                                   touched.invitationsNumber
@@ -728,7 +743,7 @@ const Plans = () => {
                               >
                                 <Form.Control
                                   type="number"
-                                  placeholder="freezeDays"
+                                  placeholder={t("Invitations Number")}
                                   name="invitationsNumber"
                                   value={values.invitationsNumber}
                                   onChange={handleChange}
@@ -745,7 +760,7 @@ const Plans = () => {
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="privateSessionsNumber"
+                                label={t("Private Sessions Number")}
                                 id={
                                   errors.privateSessionsNumber &&
                                   touched.privateSessionsNumber
@@ -755,7 +770,7 @@ const Plans = () => {
                               >
                                 <Form.Control
                                   type="number"
-                                  placeholder="privateSessionsNumber"
+                                  placeholder={t("Private Sessions Number")}
                                   value={values.privateSessionsNumber}
                                   onChange={handleChange}
                                   onBlur={handleBlur}
@@ -772,7 +787,7 @@ const Plans = () => {
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="nutritionSessionsNumber"
+                                label={t("Nutrition Sessions Number")}
                                 id={
                                   errors.nutritionSessionsNumber &&
                                   touched.nutritionSessionsNumber
@@ -782,7 +797,7 @@ const Plans = () => {
                               >
                                 <Form.Control
                                   type="number"
-                                  placeholder="nutritionSessionsNumber"
+                                  placeholder={t("Nutrition Sessions Number")}
                                   value={values.nutritionSessionsNumber}
                                   onChange={handleChange}
                                   onBlur={handleBlur}
@@ -805,13 +820,13 @@ const Plans = () => {
                                   <FloatingLabel
                                     className="w-100"
                                     controlId="floatingInput"
-                                    label="Featurs"
+                                    label={t("Featurs")}
                                     id={"floatingInput"}
                                   >
                                     <Form.Control
                                       className="w-100"
                                       type="text"
-                                      placeholder="Enter feature"
+                                      placeholder={t("Enter feature")}
                                       value={input}
                                       onChange={(event) =>
                                         handleChangeOfPlans(index, event)
@@ -848,7 +863,7 @@ const Plans = () => {
                           <div className="mb-2 w-100">
                             <FloatingLabel
                               controlId="floatingInput"
-                              label="Description"
+                              label={t("Description")}
                               id={
                                 errors.description && touched.description
                                   ? "floatingError"
@@ -857,7 +872,7 @@ const Plans = () => {
                             >
                               <Form.Control
                                 type="text"
-                                placeholder="description"
+                                placeholder={t("Description")}
                                 name="description"
                                 value={values.description}
                                 onChange={handleChange}
@@ -877,7 +892,7 @@ const Plans = () => {
                             type="submit"
                             disabled={isSubmitting}
                           >
-                            Add
+                            {t("Add Plan")}
                           </button>
                           <button
                             type="button"
@@ -887,7 +902,7 @@ const Plans = () => {
                             className="DangerButton w-100"
                             w-100
                           >
-                            Close
+                            {t("Cancel")}
                           </button>
                         </div>
                       </form>
@@ -905,7 +920,7 @@ const Plans = () => {
                 >
                   <Modal.Header closeButton id="modal">
                     <Modal.Title id="contained-modal-title-vcenter">
-                      Edit Plan
+                      {t("Edit Plan")}
                     </Modal.Title>
                   </Modal.Header>
                   <Modal.Body id="modal">
@@ -915,7 +930,7 @@ const Plans = () => {
                           <div className="mb-2">
                             <FloatingLabel
                               controlId="floatingInput"
-                              label="Plan Name"
+                              label={t("Plan Name")}
                               id={
                                 editPlan.errors.name && editPlan.touched.name
                                   ? "floatingError"
@@ -924,7 +939,7 @@ const Plans = () => {
                             >
                               <Form.Control
                                 type="text"
-                                placeholder="Plan Name"
+                                placeholder={t("Plan Name")}
                                 name="name"
                                 value={editPlan.values.name}
                                 onChange={editPlan.handleChange}
@@ -942,7 +957,7 @@ const Plans = () => {
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="Cost"
+                                label={t("Cost")}
                                 id={
                                   editPlan.errors.cost && editPlan.touched.cost
                                     ? "floatingError"
@@ -951,7 +966,7 @@ const Plans = () => {
                               >
                                 <Form.Control
                                   type="number"
-                                  placeholder="Cost"
+                                  placeholder={t("Cost")}
                                   name="cost"
                                   value={editPlan.values.cost}
                                   onChange={editPlan.handleChange}
@@ -965,11 +980,11 @@ const Plans = () => {
                                   </small>
                                 )}
                             </div>
-                            <p>Per</p>
+                            <p>{t("Per")} </p>
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="Duration(months)"
+                                label={t("Duration(months)")}
                                 id={
                                   editPlan.errors.duration &&
                                   editPlan.touched.duration
@@ -979,7 +994,7 @@ const Plans = () => {
                               >
                                 <Form.Control
                                   type="number"
-                                  placeholder="Duration"
+                                  placeholder={t("Duration(months)")}
                                   value={editPlan.values.duration}
                                   onChange={editPlan.handleChange}
                                   onBlur={editPlan.handleBlur}
@@ -998,7 +1013,7 @@ const Plans = () => {
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="Freeze Days"
+                                label={t("Freeze Days")}
                                 id={
                                   editPlan.errors.freezeDays &&
                                   editPlan.touched.freezeDays
@@ -1008,7 +1023,7 @@ const Plans = () => {
                               >
                                 <Form.Control
                                   type="number"
-                                  placeholder="Freeze Days"
+                                  placeholder={t("Freeze Days")}
                                   name="freezeDays"
                                   value={editPlan.values.freezeDays}
                                   onChange={editPlan.handleChange}
@@ -1025,7 +1040,7 @@ const Plans = () => {
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="Minimum Freeze Days"
+                                label={t("Min Freeze Days")}
                                 id={
                                   editPlan.errors.minFreezeDays &&
                                   editPlan.touched.minFreezeDays
@@ -1035,7 +1050,7 @@ const Plans = () => {
                               >
                                 <Form.Control
                                   type="number"
-                                  placeholder="Minimum Freeze Days"
+                                  placeholder={t("Min Freeze Days")}
                                   value={editPlan.values.minFreezeDays}
                                   onChange={editPlan.handleChange}
                                   onBlur={editPlan.handleBlur}
@@ -1082,7 +1097,7 @@ const Plans = () => {
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="Invitations Number"
+                                label={t("Invitations Number")}
                                 id={
                                   editPlan.errors.invitationsNumber &&
                                   editPlan.touched.invitationsNumber
@@ -1092,7 +1107,7 @@ const Plans = () => {
                               >
                                 <Form.Control
                                   type="number"
-                                  placeholder="Invitations Number"
+                                  placeholder={t("Invitations Number")}
                                   name="invitationsNumber"
                                   value={editPlan.values.invitationsNumber}
                                   onChange={editPlan.handleChange}
@@ -1109,7 +1124,7 @@ const Plans = () => {
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="Private Sessions Number"
+                                label={t("Private Sessions Number")}
                                 id={
                                   editPlan.errors.privateSessionsNumber &&
                                   editPlan.touched.privateSessionsNumber
@@ -1119,7 +1134,7 @@ const Plans = () => {
                               >
                                 <Form.Control
                                   type="number"
-                                  placeholder="Private Sessions Number"
+                                  placeholder={t("Private Sessions Number")}
                                   value={editPlan.values.privateSessionsNumber}
                                   onChange={editPlan.handleChange}
                                   onBlur={editPlan.handleBlur}
@@ -1136,7 +1151,7 @@ const Plans = () => {
                             <div className="mb-2">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="Nutrition Sessions Number"
+                                label={t("Nutrition Sessions Number")}
                                 id={
                                   editPlan.errors.nutritionSessionsNumber &&
                                   editPlan.touched.nutritionSessionsNumber
@@ -1146,7 +1161,7 @@ const Plans = () => {
                               >
                                 <Form.Control
                                   type="number"
-                                  placeholder="Nutrition Sessions Number"
+                                  placeholder={t("Nutrition Sessions Number")}
                                   value={
                                     editPlan.values.nutritionSessionsNumber
                                   }
@@ -1171,13 +1186,15 @@ const Plans = () => {
                                   <FloatingLabel
                                     className="w-100"
                                     controlId="floatingInput"
-                                    label="Featurs"
+                                    label={t("Featurs")}
                                     id={"floatingInput"}
                                   >
                                     <Form.Control
                                       className="w-100"
                                       type="text"
-                                      placeholder={`Enter Feature ${index + 1}`}
+                                      placeholder={`${t("Enter feature")} ${
+                                        index + 1
+                                      }`}
                                       value={input}
                                       onChange={(event) =>
                                         handleChangeOfEditPlans(index, event)
@@ -1213,7 +1230,7 @@ const Plans = () => {
                           <div className="mb-2 w-100">
                             <FloatingLabel
                               controlId="floatingInput"
-                              label="Description"
+                              label={t("Description")}
                               id={
                                 editPlan.errors.description &&
                                 editPlan.touched.description
@@ -1223,7 +1240,7 @@ const Plans = () => {
                             >
                               <Form.Control
                                 as="textarea"
-                                placeholder="Description"
+                                placeholder={t("Description")}
                                 name="description"
                                 value={editPlan.values.description}
                                 onChange={editPlan.handleChange}
@@ -1244,7 +1261,7 @@ const Plans = () => {
                             type="submit"
                             disabled={editPlan.isSubmitting}
                           >
-                            Edit Plan
+                            {t("Edit Plan")}
                           </button>
                           <button
                             type="button"
@@ -1253,7 +1270,7 @@ const Plans = () => {
                             }}
                             className="DangerButton w-100"
                           >
-                            Delete Plan
+                            {t("Delete Plan")}
                           </button>
                         </div>
                       </form>
@@ -1273,7 +1290,7 @@ const Plans = () => {
                   >
                     <Modal.Header closeButton id="modal">
                       <Modal.Title id="contained-modal-title-vcenter">
-                        Add Offer
+                        {t("Add Offer")}
                       </Modal.Title>
                     </Modal.Header>
                     <Modal.Body id="modal">
@@ -1284,7 +1301,7 @@ const Plans = () => {
                               <div className="mb-2">
                                 <FloatingLabel
                                   controlId="floatingInput"
-                                  label="Offer Cost"
+                                  label={t("Offer Cost")}
                                   id={
                                     editOffer.errors.cost &&
                                     editOffer.touched.cost
@@ -1294,7 +1311,7 @@ const Plans = () => {
                                 >
                                   <Form.Control
                                     type="number"
-                                    placeholder="Cost"
+                                    placeholder={t("Cost")}
                                     name="cost"
                                     value={editOffer.values.cost}
                                     onChange={editOffer.handleChange}
@@ -1312,7 +1329,7 @@ const Plans = () => {
                               <div className="mb-2">
                                 <FloatingLabel
                                   controlId="floatingInput"
-                                  label="Duration(months)"
+                                  label={t("Duration(months)")}
                                   id={
                                     editOffer.errors.duration &&
                                     editOffer.touched.duration
@@ -1322,7 +1339,7 @@ const Plans = () => {
                                 >
                                   <Form.Control
                                     type="number"
-                                    placeholder="Duration"
+                                    placeholder={t("Duration(months)")}
                                     value={editOffer.values.duration}
                                     onChange={editOffer.handleChange}
                                     onBlur={editOffer.handleBlur}
@@ -1340,7 +1357,7 @@ const Plans = () => {
                             <div className="mb-2 w-100">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="End Date to the Offer"
+                                label={t("End Date to the Offer")}
                                 id={
                                   editOffer.errors.expireAt &&
                                   editOffer.touched.expireAt
@@ -1375,7 +1392,7 @@ const Plans = () => {
                               type="submit"
                               disabled={editOffer.isSubmitting}
                             >
-                              Add
+                              {t("Add Offer")}
                             </button>
                             <button
                               onClick={() => {
@@ -1383,7 +1400,7 @@ const Plans = () => {
                               }}
                               className="DangerButton w-100"
                             >
-                              Close
+                              {t("Cancel")}
                             </button>
                           </div>
                         </form>
@@ -1401,7 +1418,7 @@ const Plans = () => {
                   >
                     <Modal.Header closeButton id="modal">
                       <Modal.Title id="contained-modal-title-vcenter">
-                        Edit Offer
+                        {t("Edit Offer")}
                       </Modal.Title>
                     </Modal.Header>
                     <Modal.Body id="modal">
@@ -1412,7 +1429,7 @@ const Plans = () => {
                               <div className="mb-2">
                                 <FloatingLabel
                                   controlId="floatingInput"
-                                  label="Offer Cost"
+                                  label={t("Offer Cost")}
                                   id={
                                     editOffer.errors.cost &&
                                     editOffer.touched.cost
@@ -1422,7 +1439,7 @@ const Plans = () => {
                                 >
                                   <Form.Control
                                     type="number"
-                                    placeholder="Cost"
+                                    placeholder={t("Cost")}
                                     name="cost"
                                     value={editOffer.values.cost}
                                     onChange={editOffer.handleChange}
@@ -1436,11 +1453,11 @@ const Plans = () => {
                                     </small>
                                   )}
                               </div>
-                              <p>Per</p>
+                              <p>{t("Per")}</p>
                               <div className="mb-2">
                                 <FloatingLabel
                                   controlId="floatingInput"
-                                  label="Duration(months)"
+                                  label={t("Duration(months)")}
                                   id={
                                     editOffer.errors.duration &&
                                     editOffer.touched.duration
@@ -1450,7 +1467,7 @@ const Plans = () => {
                                 >
                                   <Form.Control
                                     type="number"
-                                    placeholder="Duration"
+                                    placeholder={t("Duration(months)")}
                                     value={editOffer.values.duration}
                                     onChange={editOffer.handleChange}
                                     onBlur={editOffer.handleBlur}
@@ -1468,7 +1485,7 @@ const Plans = () => {
                             <div className="mb-2 w-100">
                               <FloatingLabel
                                 controlId="floatingInput"
-                                label="End Date to the Offer"
+                                label={t("End Date to the Offer")}
                                 id={
                                   editOffer.errors.expireAt &&
                                   editOffer.touched.expireAt
@@ -1503,7 +1520,7 @@ const Plans = () => {
                               type="submit"
                               disabled={editOffer.isSubmitting}
                             >
-                              Edit
+                              {t("Edit Offer")}
                             </button>
                             <button
                               type="button"
@@ -1513,7 +1530,7 @@ const Plans = () => {
                               }}
                               className="DangerButton w-100"
                             >
-                              Delete Offer
+                              {t("Delete Offer")}
                             </button>
                           </div>
                         </form>

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import "./Subscreption.css";
 import avatar from "../../assetss/default/5856.jpg";
 import { CircularProgressbar } from "react-circular-progressbar";
-import { GiMetalDisc, GiOldKing, GiSilverBullet } from "react-icons/gi";
-import { CoinsIcon } from "lucide-react";
+import { GiOldKing } from "react-icons/gi";
 import { privateAxiosInstance } from "../../api/axios";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const Subscreption = () => {
+  const { t } = useTranslation();
   const [plans, setPlans] = useState([]);
   const { plan: myPlan } = useSelector((state) => state.user);
 
@@ -41,14 +42,14 @@ const Subscreption = () => {
         <div className="logo-small">
           <img src={avatar} alt="default" />
         </div>
-        <span>Gym Owner</span>
+        <span>{t("Gym Owner")}</span>
       </div>
       <div className="plansOfOwner">
         {plans.map((plan, index) => {
           return (
             <div className="bigCard ppoo">
               {plan._id === myPlan.id && (
-                <div className="currentAbs">Current</div>
+                <div className="currentAbs">{t("Current")}</div>
               )}
               <div className="planName fontMid">{plan.name}</div>
               <div className="price fontLarge">{plan.cost}</div>
@@ -89,18 +90,20 @@ const Subscreption = () => {
                       <GiOldKing />
                     </div>
                     <div className="daysLeft fontMid">
-                      {plan.duration * 30} days
+                      {plan.duration * 30} {t("Days")}
                     </div>
                   </div>
                 </div>
               )}
-              <div className="capacity fontMid">up to {plan.maxTrainees} Trainees</div>
+              <div className="capacity fontMid">
+                {t("up to")} {plan.maxTrainees} {t("Traineess")}
+              </div>
               <hr />
               <div className="d-flex justify-content-center align-items-center">
                 {plan._id === myPlan.id ? (
-                  <button className="SecondaryButton">Renew</button>
+                  <button className="SecondaryButton">{t("Renew")}</button>
                 ) : (
-                  <button className="SecondaryButton">Upgrade</button>
+                  <button className="SecondaryButton">{t("Upgrade")}</button>
                 )}
               </div>
             </div>

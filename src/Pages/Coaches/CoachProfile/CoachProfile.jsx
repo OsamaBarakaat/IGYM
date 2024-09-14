@@ -8,8 +8,10 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate, useParams } from "react-router-dom";
 import { privateAxiosInstance } from "../../../api/axios";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const CoachProfile = () => {
+  const { t } = useTranslation();
   const [coach, setCoach] = useState({});
   const { gymId } = useSelector((state) => state.user);
   const { coachId } = useParams();
@@ -56,7 +58,7 @@ const CoachProfile = () => {
 
     try {
       await axiosPrivate.patch(`/gyms/${gymId}/coaches/${coachId}`, data);
-      toast.success("Coach updated successfully");
+      toast.success(t("Coach updated successfully"));
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
@@ -66,7 +68,7 @@ const CoachProfile = () => {
   const handleDelete = async () => {
     try {
       await axiosPrivate.delete(`/gyms/${gymId}/coaches/${coachId}`);
-      toast.success("Coach deleted successfully");
+      toast.success(t("Coach deleted successfully"));
       navigate("/coaches");
     } catch (error) {
       console.log(error);
@@ -79,7 +81,7 @@ const CoachProfile = () => {
   }, []);
   return (
     <div className="m-2">
-      <Heading content={"Coach Profile"} />
+      <Heading content={t("Coach Profile")} />
       <form action="">
         <div className="mainContentOfCoach ">
           <div className="imageAndsave bigCard d-flex justify-content-center align-items-center flex-column">
@@ -92,7 +94,7 @@ const CoachProfile = () => {
             </div>
             <div className="saveAndDelete d-flex flex-column w-75 gap-2">
               <button className="SecondaryButton w-100" onClick={handleSave}>
-                Save
+                {t("Save")}
               </button>
               <button
                 className="DangerButton w-100"
@@ -101,7 +103,7 @@ const CoachProfile = () => {
                   handleDelete();
                 }}
               >
-                Delete
+                {t("Delete")}
               </button>
             </div>
           </div>
@@ -110,12 +112,12 @@ const CoachProfile = () => {
               <div className="inputFeild">
                 <FloatingLabel
                   controlId="floatingInput"
-                  label="First Name"
+                  label={t("First Name")}
                   id={"floatingInput"}
                 >
                   <Form.Control
                     type="text"
-                    placeholder="Coach Name"
+                    placeholder={t("Coach Name")}
                     defaultValue={coach?.name}
                     ref={nameRef}
                   />
@@ -124,12 +126,12 @@ const CoachProfile = () => {
               <div className="inputFeild">
                 <FloatingLabel
                   controlId="floatingInput"
-                  label="Profile Name"
+                  label={t("Profile Name")}
                   id={"floatingInput"}
                 >
                   <Form.Control
                     type="text"
-                    placeholder="Last Name"
+                    placeholder={t("Profile Name")}
                     defaultValue={coach?.user?.name}
                     disabled
                   />
@@ -138,12 +140,12 @@ const CoachProfile = () => {
               <div className="inputFeild">
                 <FloatingLabel
                   controlId="floatingInput"
-                  label="Email"
+                  label={t("Email")}
                   id={"floatingInput"}
                 >
                   <Form.Control
                     type="email"
-                    placeholder="Email"
+                    placeholder={t("Email")}
                     name="email"
                     defaultValue={coach?.user?.email}
                     disabled
@@ -153,12 +155,12 @@ const CoachProfile = () => {
               <div className="inputFeild">
                 <FloatingLabel
                   controlId="floatingInput"
-                  label="Phone Number"
+                  label={t("Phone Number")}
                   id={"floatingInput"}
                 >
                   <Form.Control
                     type="text"
-                    placeholder="Phone Number"
+                    placeholder={t("Phone Number")}
                     name="phoneNumber"
                     defaultValue={coach?.user?.phone}
                     disabled
@@ -168,12 +170,12 @@ const CoachProfile = () => {
               <div className="inputFeild">
                 <FloatingLabel
                   controlId="floatingInput"
-                  label="Date of Birth"
+                  label={t("Date of Birth")}
                   id={"floatingInput"}
                 >
                   <Form.Control
                     type="date"
-                    placeholder="Date of Birth"
+                    placeholder={t("Date of Birth")}
                     name="dateOfBirth"
                     defaultValue={coach?.user?.birthDate.split("T")[0]}
                     disabled
@@ -183,12 +185,12 @@ const CoachProfile = () => {
               <div className="inputFeild">
                 <FloatingLabel
                   controlId="floatingInput"
-                  label="City"
+                  label={t("City")}
                   id={"floatingInput"}
                 >
                   <Form.Control
                     type="text"
-                    placeholder="City"
+                    placeholder={t("City")}
                     name="city"
                     defaultValue={"Cairo"}
                     disabled
@@ -199,12 +201,12 @@ const CoachProfile = () => {
                 <div className="flexcenterbetween gap-2">
                   <FloatingLabel
                     controlId="floatingInput"
-                    label="Shift From"
+                    label={t("Shift From")}
                     id={"floatingInput"}
                   >
                     <Form.Control
                       type="time"
-                      placeholder="Shift"
+                      placeholder={t("Shift")}
                       name="shiftFrom"
                       defaultValue={coach?.shiftFrom}
                       ref={shiftFromRef}
@@ -212,12 +214,12 @@ const CoachProfile = () => {
                   </FloatingLabel>
                   <FloatingLabel
                     controlId="floatingInput"
-                    label="Shift To"
+                    label={t("Shift To")}
                     id={"floatingInput"}
                   >
                     <Form.Control
                       type="time"
-                      placeholder="Shift"
+                      placeholder={t("Shift")}
                       defaultValue={coach?.shiftTo}
                       ref={shiftToRef}
                     />
@@ -227,12 +229,12 @@ const CoachProfile = () => {
               <div className="inputFeild">
                 <FloatingLabel
                   controlId="floatingInput"
-                  label="Salary"
+                  label={t("Salary")}
                   id={"floatingInput"}
                 >
                   <Form.Control
                     type="text"
-                    placeholder="Salary"
+                    placeholder={t("Salary")}
                     name="salary"
                     defaultValue={coach?.salary}
                     ref={salaryRef}
@@ -248,12 +250,12 @@ const CoachProfile = () => {
         <div className="about my-1">
           <FloatingLabel
             controlId="floatingInput"
-            label="About"
+            label={t("About")}
             id={"floatingInput"}
           >
             <Form.Control
               type="text"
-              placeholder="About"
+              placeholder={t("About")}
               name="about"
               defaultValue={coach?.about}
               ref={aboutRef}
@@ -263,12 +265,12 @@ const CoachProfile = () => {
         <div className="qualifications my-1">
           <FloatingLabel
             controlId="floatingInput"
-            label="Qualifications"
+            label={t("Qualifications")}
             id={"floatingInput"}
           >
             <Form.Control
               type="text"
-              placeholder="Qualifications"
+              placeholder={t("Qualifications")}
               name="qualifications"
               defaultValue={coach?.qualification}
               ref={qualificationsRef}
@@ -278,12 +280,12 @@ const CoachProfile = () => {
         <div className="specialities my-1">
           <FloatingLabel
             controlId="floatingInput"
-            label="Specialities"
+            label={t("Specialities")}
             id={"floatingInput"}
           >
             <Form.Control
               type="text"
-              placeholder="Specialities"
+              placeholder={t("Specialities")}
               name="specialities"
               defaultValue={coach?.speciality}
               ref={specialityRef}

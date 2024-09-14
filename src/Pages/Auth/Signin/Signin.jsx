@@ -102,6 +102,8 @@ const Signin = () => {
               className="mb-3"
             >
               <Form.Control
+                style={{ fontSize: "16px" }}
+                className="inputSignIn"
                 type="text"
                 placeholder={t("Email")}
                 onChange={handleChange}
@@ -189,7 +191,7 @@ const Signin = () => {
               type="submit"
               className="SecondaryButton w-100 flexcentercenter"
             >
-              <span>{t("Sign in")}</span>
+              <span className="mx-1">{t("Sign in")}</span>
               {loadingInput && (
                 <Spinner
                   as="span"

@@ -70,14 +70,14 @@ const Settings = () => {
         description: values.description,
       });
       console.log("res", data);
-      toast.success("Plan added successfully");
+      toast.success(t("Plan added successfully"));
       setPlans([data?.data, ...plans]);
       setTimeout(() => {
         setModalShowAddPlan(false);
       }, 500);
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
     }
 
     setTimeout(() => {
@@ -143,7 +143,7 @@ const Settings = () => {
           }
         );
         console.log("res", data);
-        toast.success("Plan updated successfullyyy");
+        toast.success(t("Plan updated successfully"));
         const editedPlans = plans.map((plan) => {
           if (selectedPlan?._id === plan._id) {
             return data?.data;
@@ -154,7 +154,7 @@ const Settings = () => {
         setPlans(editedPlans);
       } catch (error) {
         console.log(error);
-        toast.error("Something went wronggg");
+        toast.error(t("Something went wrong"));
       }
     },
   });
@@ -164,7 +164,7 @@ const Settings = () => {
     try {
       const res = await axiosPrivate.delete(`/owner-plans/${id}`);
       console.log("res", res);
-      toast.success("Plan deleted successfully");
+      toast.success(t("Plan deleted successfully"));
       const newPlans = plans.filter((plan) => {
         return plan._id !== id;
       });
@@ -174,7 +174,7 @@ const Settings = () => {
       // }, 2000);
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
     }
   };
   const { gymId } = useSelector((state) => state.user);
@@ -194,10 +194,10 @@ const Settings = () => {
       setInviteLink(data.data.inviteLink);
       actions.resetForm();
       actions.setSubmitting(false);
-      toast.success("Invite sent successfully");
+      toast.success(t("Invite sent successfully"));
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
     }
   };
   console.log(inviteLink);
@@ -238,7 +238,7 @@ const Settings = () => {
       setMembers(data.data);
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
     } finally {
       setLoading(false);
     }
@@ -282,7 +282,7 @@ const Settings = () => {
         toast.success("Member role updated successfully");
       } catch (error) {
         console.log(error);
-        toast.error("Something went wrong");
+        toast.error(t("Something went wrong"));
       }
     },
   });
@@ -300,7 +300,7 @@ const Settings = () => {
       toast.success("Member suspended successfully");
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
     }
   };
 
@@ -315,10 +315,10 @@ const Settings = () => {
 
       fetchMembers();
       setShowEdit(false);
-      toast.success("Member activated successfully");
+      toast.success(t("Member activated successfully"));
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(t("Something went wrong"));
     }
   };
   // <=======> Edit member <=======> //
@@ -368,7 +368,7 @@ const Settings = () => {
   return (
     <div className="GeneralSettingsOne" style={{ minHeight: "100vh" }}>
       <aside className="GeneralSettingsOneSidebar">
-        <p className="cursor-pointer">Settings</p>
+        <p className="cursor-pointer">{t("Settings")}</p>
         <nav className="GeneralSettingsOneNav">
           <ul>
             <li
@@ -376,35 +376,35 @@ const Settings = () => {
                 setCurrentPage(1);
               }}
             >
-              Gym Profile
+              {t("Gym Profile")}
             </li>
             <li
               onClick={() => {
                 setCurrentPage(2);
               }}
             >
-              Members
+              {t("Staff members")}
             </li>
             <li
               onClick={() => {
                 setCurrentPage(3);
               }}
             >
-              Prefrences
+              {t("Theme&Language")}
             </li>
             <li
               onClick={() => {
                 setCurrentPage(4);
               }}
             >
-              Roles
+              {t("Roles")}
             </li>
           </ul>
         </nav>
       </aside>
       <main className="main-GS-content">
         <div className="secondNav">
-          <div className="head">Settings</div>
+          <div className="head"> {t("Settings")} </div>
           <div className="secondNavItems">
             <div
               className="myInfoSecondNav"
@@ -412,7 +412,7 @@ const Settings = () => {
                 setCurrentPage(2);
               }}
             >
-              Gym Profile
+              {t("Gym Profile")}
             </div>
             <div
               className="myInfoSecondNav"
@@ -420,7 +420,7 @@ const Settings = () => {
                 setCurrentPage(2);
               }}
             >
-              Members
+              {t("Staff members")}
             </div>
             <div
               className="myInfoSecondNav"
@@ -428,7 +428,7 @@ const Settings = () => {
                 setCurrentPage(3);
               }}
             >
-              Prefrences
+              {t("Theme&Language")}
             </div>
             <div
               className="myInfoSecondNav"
@@ -436,7 +436,7 @@ const Settings = () => {
                 setCurrentPage(4);
               }}
             >
-              Roles
+              {t("Roles")}
             </div>
           </div>
         </div>
@@ -466,16 +466,16 @@ const Settings = () => {
                         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
                       </svg>
                     </span>
-                    <span>Invite new</span>
+                    <span>{t("Invite new")}</span>
                   </button>
                 </div>
                 <table className="mainTable">
                   <thead>
                     <tr>
-                      <th>Member name</th>
-                      <th>Role</th>
-                      <th>Join date</th>
-                      <th>Actions</th>
+                      <th>{t("Member name")}</th>
+                      <th>{t("Role")}</th>
+                      <th>{t("Join date")}</th>
+                      <th>{t("Actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -492,7 +492,7 @@ const Settings = () => {
                                 />
                               </div>
                               <div className="profileName mx-3">
-                                {admin?.name || "No Name"}
+                                {admin?.name || t("No Name")}
                               </div>
                             </div>
                           </td>
@@ -520,7 +520,7 @@ const Settings = () => {
                                     />
                                   </svg>
                                 </span>
-                                <span>Edit</span>
+                                <span>{t("Edit")}</span>
                               </button>
                             </div>
                           </td>
@@ -543,7 +543,7 @@ const Settings = () => {
                       }}
                       disabled={!members?.pagination.prev}
                     >
-                      Previous
+                      {t("Previous")}
                     </button>
                     <div className="pages">
                       {pageArr.map((page) => {
@@ -571,7 +571,7 @@ const Settings = () => {
                       }}
                       disabled={!members?.pagination.next}
                     >
-                      Next
+                      {t("Next")}
                     </button>
                   </div>
                 </div>
@@ -587,7 +587,7 @@ const Settings = () => {
               </div>
 
               <div className="bigCard m-3">
-                <p> change theme</p>
+                <p>{t("Change Theme")}</p>
                 <div
                   onClick={handleClick}
                   className={`toggle${toggled ? " night" : ""}`}
@@ -647,7 +647,9 @@ const Settings = () => {
             <Offcanvas.Header>
               <div className="d-flex justify-content-between w-100 align-items-center mt-2">
                 <Offcanvas.Title>
-                  <span className="offCanvasHeadTitle">Invite member</span>
+                  <span className="offCanvasHeadTitle">
+                    {t("Invite member")}
+                  </span>
                 </Offcanvas.Title>
                 <button
                   className="btn-close bg-secondary"
@@ -663,7 +665,7 @@ const Settings = () => {
                   <div>
                     <FloatingLabel
                       controlId="floatingInput"
-                      label="Email"
+                      label={t("Email")}
                       id={
                         sendInvite.errors.email && sendInvite.touched.email
                           ? "floatingError"
@@ -673,7 +675,7 @@ const Settings = () => {
                     >
                       <Form.Control
                         type="email"
-                        placeholder="email"
+                        placeholder={t("Email")}
                         name="email"
                         onChange={sendInvite.handleChange}
                         onBlur={sendInvite.handleBlur}
@@ -689,7 +691,7 @@ const Settings = () => {
                   <div className="mb-3">
                     <FloatingLabel
                       controlId="floatingInput"
-                      label="Select role"
+                      label={t("Select role")}
                       id={
                         sendInvite.errors.role && sendInvite.touched.role
                           ? "floatingError"
@@ -703,7 +705,7 @@ const Settings = () => {
                         value={sendInvite.values.role}
                       >
                         <option value="" disabled>
-                          Select role
+                          {t("Select role")}
                         </option>
                         {roles.map((role) => (
                           <option key={role} value={role._id}>
@@ -724,7 +726,7 @@ const Settings = () => {
                       disabled={sendInvite.isSubmitting}
                       type="submit"
                     >
-                      Invite
+                      {t("Invite")}
                     </button>
                     <br />
                     <button
@@ -748,7 +750,7 @@ const Settings = () => {
                           <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z" />
                         </svg>
                       </span>
-                      <span>{copied ? "Copied!" : "Copy link"}</span>
+                      <span>{copied ? t("Copied!") : t("Copy link")}</span>
                       {/* <span>Copy link</span> */}
                     </button>
                   </div>
@@ -767,7 +769,7 @@ const Settings = () => {
             <Offcanvas.Header>
               <div className="d-flex justify-content-between w-100 align-items-center mt-2">
                 <Offcanvas.Title>
-                  <span className="offCanvasHeadTitle">Edit member</span>
+                  <span className="offCanvasHeadTitle">{t("Edit member")}</span>
                 </Offcanvas.Title>
                 <button
                   className="btn-close bg-secondary"
@@ -796,13 +798,13 @@ const Settings = () => {
                 </div>
               </div>
               <div>
-                <p className="text-start opacity-75">Edit role</p>
+                <p className="text-start opacity-75">{t("Edit role")}</p>
               </div>
               <form onSubmit={editMember.handleSubmit}>
                 <div>
                   <FloatingLabel
                     controlId="floatingInput"
-                    label="Select role"
+                    label={t("Select role")}
                     id="floatingInput"
                     className="mb-3"
                   >
@@ -827,13 +829,15 @@ const Settings = () => {
                     type="submit"
                     disabled={editMember.isSubmitting}
                   >
-                    Save
+                    {t("Save")}
                   </button>
                 </div>
               </form>
 
               <div>
-                <p className="text-start opacity-75 my-5">Other actions</p>
+                <p className="text-start opacity-75 my-5">
+                  {t("Other actions")}
+                </p>
               </div>
               <div className="flexcenteraround">
                 <button className="PrimaryButtonTwo w-100">
@@ -857,7 +861,7 @@ const Settings = () => {
                           activateUser(selectedAdmin?._id);
                         }}
                       >
-                        Activate
+                        {t("Activate")}
                       </span>
                     </>
                   ) : (
@@ -879,7 +883,7 @@ const Settings = () => {
                           suspendUser(selectedAdmin?._id);
                         }}
                       >
-                        Suspend
+                        {t("Suspend")}
                       </span>
                     </>
                   )}
@@ -898,7 +902,7 @@ const Settings = () => {
           >
             <Modal.Header closeButton id="modal">
               <Modal.Title id="contained-modal-title-vcenter">
-                Add Plan
+                {t("Add Plan")}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body id="modal">
@@ -908,7 +912,7 @@ const Settings = () => {
                     <div className="mb-2">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Plan Name"
+                        label={t("Plan Name")}
                         id={
                           errors.name && touched.name
                             ? "floatingError"
@@ -917,7 +921,7 @@ const Settings = () => {
                       >
                         <Form.Control
                           type="text"
-                          placeholder="Plan Name"
+                          placeholder={t("Plan Name")}
                           name="name"
                           value={values.name}
                           onChange={handleChange}
@@ -932,7 +936,7 @@ const Settings = () => {
                       <div className="mb-2">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label="Branches"
+                          label={t("Branches")}
                           id={
                             errors.branches && touched.branches
                               ? "floatingError"
@@ -942,7 +946,7 @@ const Settings = () => {
                         >
                           <Form.Control
                             type="number"
-                            placeholder="Branches"
+                            placeholder={t("Branches")}
                             name="branches"
                             value={values.branches}
                             onChange={handleChange}
@@ -958,7 +962,7 @@ const Settings = () => {
                       <div className="mb-2">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label="Max Trainees"
+                          label={t("Max Trainees")}
                           id={
                             errors.maxTrainees && touched.maxTrainees
                               ? "floatingError"
@@ -967,7 +971,7 @@ const Settings = () => {
                         >
                           <Form.Control
                             type="number"
-                            placeholder="Max Trainees"
+                            placeholder={t("Max Trainees")}
                             name="maxTrainees"
                             value={values.maxTrainees}
                             onChange={handleChange}
@@ -985,7 +989,7 @@ const Settings = () => {
                       <div className="mb-2">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label="Cost"
+                          label={t("Cost (EGP)")}
                           id={
                             errors.cost && touched.cost
                               ? "floatingError"
@@ -994,7 +998,7 @@ const Settings = () => {
                         >
                           <Form.Control
                             type="number"
-                            placeholder="Cost"
+                            placeholder={t("Cost (EGP)")}
                             name="cost"
                             value={values.cost}
                             onChange={handleChange}
@@ -1005,11 +1009,11 @@ const Settings = () => {
                           <small className="error-message">{errors.cost}</small>
                         )}
                       </div>
-                      <p>Per</p>
+                      <p>{t("Per")}</p>
                       <div className="mb-2">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label="Duration(months)"
+                          label={t("Duration(months)")}
                           id={
                             errors.duration && touched.duration
                               ? "floatingError"
@@ -1018,7 +1022,7 @@ const Settings = () => {
                         >
                           <Form.Control
                             type="number"
-                            placeholder="Duration"
+                            placeholder={t("Duration(months)")}
                             value={values.duration}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -1035,7 +1039,7 @@ const Settings = () => {
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Description"
+                        label={t("Description")}
                         id={
                           errors.description && touched.description
                             ? "floatingError"
@@ -1044,7 +1048,7 @@ const Settings = () => {
                       >
                         <Form.Control
                           type="text"
-                          placeholder="description"
+                          placeholder={t("Description")}
                           name="description"
                           value={values.description}
                           onChange={handleChange}
@@ -1064,7 +1068,7 @@ const Settings = () => {
                       type="submit"
                       disabled={isSubmitting}
                     >
-                      Add
+                      {t("Add")}
                     </button>
                     <button
                       onClick={() => {
@@ -1072,7 +1076,7 @@ const Settings = () => {
                       }}
                       className="DangerButton"
                     >
-                      Close
+                      {t("Cancel")}
                     </button>
                   </div>
                 </form>
@@ -1090,7 +1094,7 @@ const Settings = () => {
           >
             <Modal.Header closeButton id="modal">
               <Modal.Title id="contained-modal-title-vcenter">
-                Edit Plan
+                {t("Edit Plan")}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body id="modal">
@@ -1100,7 +1104,7 @@ const Settings = () => {
                     <div className="mb-2">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Plan Name"
+                        label={t("Plan Name")}
                         id={
                           editPlan.errors.name && editPlan.touched.name
                             ? "floatingError"
@@ -1109,7 +1113,7 @@ const Settings = () => {
                       >
                         <Form.Control
                           type="text"
-                          placeholder="Plan Name"
+                          placeholder={t("Plan Name")}
                           name="name"
                           value={editPlan.values.name}
                           onChange={editPlan.handleChange}
@@ -1126,7 +1130,7 @@ const Settings = () => {
                       <div className="mb-2">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label="Branches"
+                          label={t("Branches")}
                           id={
                             editPlan.errors.branches &&
                             editPlan.touched.branches
@@ -1137,7 +1141,7 @@ const Settings = () => {
                         >
                           <Form.Control
                             type="number"
-                            placeholder="Branches"
+                            placeholder={t("Branches")}
                             name="branches"
                             value={editPlan.values.branches}
                             onChange={editPlan.handleChange}
@@ -1154,7 +1158,7 @@ const Settings = () => {
                       <div className="mb-2">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label="Max Trainees"
+                          label={t("Max Trainees")}
                           id={
                             editPlan.errors.maxTrainees &&
                             editPlan.touched.maxTrainees
@@ -1164,7 +1168,7 @@ const Settings = () => {
                         >
                           <Form.Control
                             type="number"
-                            placeholder="Max Trainees"
+                            placeholder={t("Max Trainees")}
                             name="maxTrainees"
                             value={editPlan.values.maxTrainees}
                             onChange={editPlan.handleChange}
@@ -1183,7 +1187,7 @@ const Settings = () => {
                       <div className="mb-2">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label="Cost"
+                          label={t("Cost (EGP)")}
                           id={
                             editPlan.errors.cost && editPlan.touched.cost
                               ? "floatingError"
@@ -1192,7 +1196,7 @@ const Settings = () => {
                         >
                           <Form.Control
                             type="number"
-                            placeholder="Cost"
+                            placeholder={t("Cost (EGP)")}
                             name="cost"
                             value={editPlan.values.cost}
                             onChange={editPlan.handleChange}
@@ -1209,7 +1213,7 @@ const Settings = () => {
                       <div className="mb-2">
                         <FloatingLabel
                           controlId="floatingInput"
-                          label="Duration"
+                          label={t("Duration(months)")}
                           id={
                             editPlan.errors.duration &&
                             editPlan.touched.duration
@@ -1219,7 +1223,7 @@ const Settings = () => {
                         >
                           <Form.Control
                             type="number"
-                            placeholder="Duration"
+                            placeholder={t("Duration(months)")}
                             value={editPlan.values.duration}
                             onChange={editPlan.handleChange}
                             onBlur={editPlan.handleBlur}
@@ -1237,7 +1241,7 @@ const Settings = () => {
                     <div className="mb-2 w-100">
                       <FloatingLabel
                         controlId="floatingInput"
-                        label="Description"
+                        label={t("Description")}
                         id={
                           editPlan.errors.description &&
                           editPlan.touched.description
@@ -1247,7 +1251,7 @@ const Settings = () => {
                       >
                         <Form.Control
                           type="text"
-                          placeholder="description"
+                          placeholder={t("Description")}
                           name="description"
                           value={editPlan.values.description}
                           onChange={editPlan.handleChange}
@@ -1268,7 +1272,7 @@ const Settings = () => {
                       type="submit"
                       disabled={editPlan.isSubmitting}
                     >
-                      Edit
+                      {t("Save")}
                     </button>
                     <button
                       type="reset"
@@ -1277,7 +1281,7 @@ const Settings = () => {
                       }}
                       className="DangerButton"
                     >
-                      Close
+                      {t("Cancel")}
                     </button>
                   </div>
                 </form>
