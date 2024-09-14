@@ -35,6 +35,7 @@ const Plans = () => {
           invitationsNumber: values.invitationsNumber,
           privateSessionsNumber: values.privateSessionsNumber,
           nutritionSessionsNumber: values.nutritionSessionsNumber,
+          inBody: values.inBody,
           features: inputs,
           description: values.description,
         }
@@ -74,8 +75,9 @@ const Plans = () => {
       invitationsNumber: "",
       privateSessionsNumber: "",
       nutritionSessionsNumber: "",
+      inBody: "",
     },
-    validationSchema: planValidationSchema,
+    // validationSchema: planValidationSchema,
     onSubmit,
   });
 
@@ -146,6 +148,7 @@ const Plans = () => {
         invitationsNumber: selectedPlan?.invitationsNumber || "",
         privateSessionsNumber: selectedPlan?.privateSessionsNumber || "",
         nutritionSessionsNumber: selectedPlan?.nutritionSessionsNumber || "",
+        inBody: selectedPlan?.inBody || "",
         features: selectedPlan?.features || [""],
       });
     }
@@ -179,6 +182,7 @@ const Plans = () => {
             invitationsNumber: values.invitationsNumber,
             privateSessionsNumber: values.privateSessionsNumber,
             nutritionSessionsNumber: values.nutritionSessionsNumber,
+            inBody: values.inBody,
             features: inputs22,
             description: values.description,
           }
@@ -683,6 +687,32 @@ const Plans = () => {
                                   </small>
                                 )}
                             </div>
+
+                            <div className="mb-2">
+                              <FloatingLabel
+                                controlId="floatingInput"
+                                label="in body"
+                                id={
+                                  errors.inBody && touched.inBody
+                                    ? "floatingError"
+                                    : "floatingInput"
+                                }
+                              >
+                                <Form.Control
+                                  type="number"
+                                  placeholder="in Body"
+                                  value={values.inBody}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  name="inBody"
+                                ></Form.Control>
+                              </FloatingLabel>
+                              {errors.inBody && touched.inBody && (
+                                <small className="error-message">
+                                  {errors.inBody}
+                                </small>
+                              )}
+                            </div>
                           </div>
                           <div className="costpermonth">
                             <div className="mb-2">
@@ -1016,6 +1046,34 @@ const Plans = () => {
                                 editPlan.touched.minFreezeDays && (
                                   <small className="error-message">
                                     {editPlan.errors.minFreezeDays}
+                                  </small>
+                                )}
+                            </div>
+
+                            <div className="mb-2">
+                              <FloatingLabel
+                                controlId="floatingInput"
+                                label="in body"
+                                id={
+                                  editPlan.errors.inBody &&
+                                  editPlan.touched.inBody
+                                    ? "floatingError"
+                                    : "floatingInput"
+                                }
+                              >
+                                <Form.Control
+                                  type="number"
+                                  placeholder="in Body"
+                                  value={editPlan.values.inBody}
+                                  onChange={editPlan.handleChange}
+                                  onBlur={editPlan.handleBlur}
+                                  name="inBody"
+                                ></Form.Control>
+                              </FloatingLabel>
+                              {editPlan.errors.inBody &&
+                                editPlan.touched.inBody && (
+                                  <small className="error-message">
+                                    {editPlan.errors.inBody}
                                   </small>
                                 )}
                             </div>

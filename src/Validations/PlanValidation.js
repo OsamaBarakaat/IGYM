@@ -27,6 +27,9 @@ export const planValidationSchema = Yup.object().shape({
   nutritionSessionsNumber: Yup.number()
     .required("nutritionSessionsNumber is required")
     .min(0, "nutritionSessionsNumber must be at least 0"),
+    inBody: Yup.number()
+    .required("inBody is required")
+    .min(0, "inBody must be at least 0"),
 });
 
 

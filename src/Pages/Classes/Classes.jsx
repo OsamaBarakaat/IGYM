@@ -866,7 +866,11 @@ const Classes = () => {
       <div className="modalEditClass">
         <Modal
           show={modalShowEditClass}
-          onHide={() => setModalShowEditClass(false)}
+          onHide={() => {
+            setModalShowEditClass(false)
+            setSelectedCoaches([]);
+            setInputs([""]);
+          }}
           size="lg"
           aria-labelledby="contained-modal-title-vcenter"
           centered
