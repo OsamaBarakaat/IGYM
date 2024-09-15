@@ -7,8 +7,10 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader/Loader";
+import { useTranslation } from "react-i18next";
 
 const Roles = () => {
+  const { t } = useTranslation();
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -26,16 +28,18 @@ const Roles = () => {
     "ROLES",
     "SUBSCRIPTION",
   ];
-  
+
   const handleEditRole = (roleId) => {
     navigate(`/editrole/${roleId}`);
   };
 
   const handleDeleteRole = async (roleId) => {
     try {
-      const { data } = await axiosPrivate.delete(`/gyms/${gymId}/roles/${roleId}`);
+      const { data } = await axiosPrivate.delete(
+        `/gyms/${gymId}/roles/${roleId}`
+      );
       console.log(data);
-      toast.success("Role deleted successfully");
+      toast.success(t("Role deleted successfully"));
       fetchRoles();
     } catch (error) {
       console.log(error);
@@ -59,18 +63,18 @@ const Roles = () => {
     fetchRoles();
   }, []);
 
-   if (loading) {
-     return (
-       <>
-         <Loader />
-       </>
-     );
-   }
+  if (loading) {
+    return (
+      <>
+        <Loader />
+      </>
+    );
+  }
 
   return (
     <div className="myInfo">
       <div className="myInfoHeading">
-        <Heading content={"Roles"} />
+        <Heading content={t("Roles")} />
       </div>
 
       <div className="myInfoContent">
@@ -99,23 +103,29 @@ const Roles = () => {
                         />
                       </svg>
                     </span>
-                    <span>Edit</span>
+                    <span>{t("Edit")}</span>
                   </button>
-                  <button onClick={() => handleDeleteRole(role._id)} className="DangerButton">
+                  <button
+                    onClick={() => handleDeleteRole(role._id)}
+                    className="DangerButton"
+                  >
                     <span>
                       <Trash2Icon size={16} />
                     </span>
-                    <span>Delete</span>
+                    <span>{t("Delete")}</span>
                   </button>
                 </div>
                 <div className="roleName fontLarge text-center">
                   {role.name}
                 </div>
-                <p className="opacityL font-smaller">Access</p>
+                <p className="opacityL font-smaller">{t("Access")}</p>
                 <div className="line2 flexcenterbetween flex-wrap">
                   {role?.permissions.map((permission, index) => {
                     return (
-                      <div key={index} className=" w-40 m-1 p-1 flexcenterstart">
+                      <div
+                        key={index}
+                        className=" w-40 m-1 p-1 flexcenterstart"
+                      >
                         <span className="spanSVGPrimary">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -134,27 +144,32 @@ const Roles = () => {
                   })}
                 </div>
                 <hr />
-                <p className="opacityL font-smaller">Not Access</p>
+                <p className="opacityL font-smaller">{t("Not Access")}</p>
                 <div className="line2 flexcenterbetween flex-wrap">
-                  {rolesArray.filter((pr) => !role.permissions.includes(pr)).map((role, index) => {
-                    return (
-                      <div key={index} className=" w-40 m-1 p-1 flexcenterstart">
-                        <span className="spanSVGDanger">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            class="bi bi-ban"
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M15 8a6.97 6.97 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
-                          </svg>
-                        </span>
-                        <span className="">{role}</span>
-                      </div>
-                    );
-                  })}
+                  {rolesArray
+                    .filter((pr) => !role.permissions.includes(pr))
+                    .map((role, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className=" w-40 m-1 p-1 flexcenterstart"
+                        >
+                          <span className="spanSVGDanger">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              class="bi bi-ban"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M15 8a6.97 6.97 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
+                            </svg>
+                          </span>
+                          <span className="">{role}</span>
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
             );
@@ -181,7 +196,7 @@ const Roles = () => {
                   />
                 </svg>
               </span>
-              <p className="main-color">Add New Role</p>
+              <p className="main-color">{t("Add New Role")}</p>
             </div>
           </div>
         </div>

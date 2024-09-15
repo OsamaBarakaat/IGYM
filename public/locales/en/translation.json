@@ -311,5 +311,15 @@
   "Tuesday": "Tuesday",
   "Wednesday": "Wednesday",
   "Thursday": "Thursday",
-  "Close the day": "Close the day"
+  "Close the day": "Close the day",
+  "Role deleted successfully": "Role deleted successfully",
+  "Access": "Access",
+  "Not Access": "Not Access",
+  "Add New Role": "Add New Role",
+  "Edit Role": "Edit Role",
+  "Add Role": "Add Role",
+  "Role Includes:": "Role Includes:",
+  "Role Name": "Role Name",
+  "Role added successfully": "Role added successfully",
+  "Please fill name and select permissions": "Please fill name and select permissions"
 }

@@ -308,5 +308,15 @@
   "Monday": "الاثنين",
   "Tuesday": "الثلاثاء",
   "Wednesday": "الأربعاء",
-  "Thursday": "الخميس"
+  "Thursday": "الخميس",
+  "Role deleted successfully": "تم حذف الدور بنجاح",
+  "Access": "وصول",
+  "Not Access": "عدم الوصول",
+  "Add New Role": "إضافة دور جديد",
+  "Edit Role": "تعديل الدور",
+  "Add Role": "إضافة دور",
+  "Role Includes:": "يتضمن الدور:",
+  "Role added successfully": "تم إضافة الدور بنجاح",
+  "Role Name": "اسم الدور",
+  "Please fill name and select permissions": "يرجى ملء الاسم وتحديد الأذونات"
 }
