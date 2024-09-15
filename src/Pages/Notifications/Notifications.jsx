@@ -3,8 +3,10 @@ import "./Notifications.css";
 import avatar from "../../assetss/default/5856.jpg";
 import PushNotifications from "./PushNotifications/PushNotifications";
 import Heading from "../../components/Heading/Heading";
+import { useTranslation } from "react-i18next";
 
 const Notifications = () => {
+  const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -28,28 +30,28 @@ const Notifications = () => {
                 setCurrentPage(1);
               }}
             >
-              Notifications
+              {t("Notifications")}
             </li>
             <li
               onClick={() => {
                 setCurrentPage(2);
               }}
             >
-              Push Notifications
+              {t("Push Notifications")}
             </li>
             <li
               onClick={() => {
                 setCurrentPage(3);
               }}
             >
-              Subscriptions
+              {t("Subscriptions")}
             </li>
           </ul>
         </nav>
       </aside>
       <main className="main-GS-content">
         <div className="secondNav">
-          <div className="head">Settings</div>
+          <div className="head">{t("Settings")}</div>
           <div className="secondNavItems">
             <div
               className="myInfoSecondNav"
@@ -57,7 +59,7 @@ const Notifications = () => {
                 setCurrentPage(1);
               }}
             >
-              Notifications
+              {t("Notifications")}
             </div>
             <div
               className="myInfoSecondNav"
@@ -65,7 +67,7 @@ const Notifications = () => {
                 setCurrentPage(2);
               }}
             >
-              Push Notifications
+              {t("Push Notifications")}
             </div>
             <div
               className="myInfoSecondNav"
@@ -73,7 +75,7 @@ const Notifications = () => {
                 setCurrentPage(3);
               }}
             >
-              Subscriptions
+              {t("Subscriptions")}
             </div>
           </div>
         </div>

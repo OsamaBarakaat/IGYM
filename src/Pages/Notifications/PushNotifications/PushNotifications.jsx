@@ -6,8 +6,10 @@ import { signinValidationSchema } from "../../../Validations/SigninValidation";
 import { FloatingLabel, Form } from "react-bootstrap";
 import { SendNotificationValidation } from "../../../Validations/SendNotificationValidation";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const PushNotifications = () => {
+  const { t } = useTranslation();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -23,7 +25,7 @@ const PushNotifications = () => {
   const onSubmitSingle = async (values, actions) => {
     console.log(values);
     actions.setSubmitting(true);
-    toast.success("Notification sent to single user successfully");
+    toast.success(t("Notification sent to single user successfully"));
     setTimeout(() => {
       actions.setSubmitting(false);
     }, 1000);
@@ -35,10 +37,10 @@ const PushNotifications = () => {
       actions.setSubmitting(true);
       // Simulating an async action (e.g., API call)
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      toast.success("Notification sent to all users successfully");
+      toast.success(t("Notification sent to all users successfully"));
     } catch (error) {
       console.error("Error sending notification:", error);
-      toast.error("Error sending notification");
+      toast.error(t("Error sending notification"));
     } finally {
       actions.setSubmitting(false);
     }
@@ -62,7 +64,7 @@ const PushNotifications = () => {
   });
   return (
     <div className="pushNotif">
-      {windowWidth > 1024 && <Heading content={"Push Notifications"} />}
+      {windowWidth > 1024 && <Heading content={t("Push Notifications")} />}
 
       <div className="pushNotifcontent bigCard my-3">
         <div className="pushNootifHead flexcenteraround m-2">
@@ -76,7 +78,7 @@ const PushNotifications = () => {
               setCurrentPage(1);
             }}
           >
-            Single user
+            {t("Single user")}
           </div>
           <div
             className={
@@ -88,7 +90,7 @@ const PushNotifications = () => {
               setCurrentPage(2);
             }}
           >
-            all users
+            {t("All users")}
           </div>
         </div>
         {currentPage === 1 && (
@@ -97,7 +99,7 @@ const PushNotifications = () => {
               <div>
                 <FloatingLabel
                   controlId="floatingInput"
-                  label="Email"
+                  label={t("Email")}
                   id={
                     formikSingle.errors.email && formikSingle.touched.email
                       ? "floatingError"
@@ -107,7 +109,7 @@ const PushNotifications = () => {
                 >
                   <Form.Control
                     type="text"
-                    placeholder="Email"
+                    placeholder={t("Email")}
                     onChange={formikSingle.handleChange}
                     onBlur={formikSingle.handleBlur}
                     value={formikSingle.values.email}
@@ -123,7 +125,7 @@ const PushNotifications = () => {
               <div>
                 <FloatingLabel
                   controlId="floatingInput"
-                  label="Message"
+                  label={t("Message")}
                   id={
                     formikSingle.errors.message && formikSingle.touched.message
                       ? "floatingError"
@@ -133,7 +135,7 @@ const PushNotifications = () => {
                 >
                   <Form.Control
                     type="text"
-                    placeholder="Message"
+                    placeholder={t("Message")}
                     onChange={formikSingle.handleChange}
                     onBlur={formikSingle.handleBlur}
                     value={formikSingle.values.message}
@@ -153,7 +155,7 @@ const PushNotifications = () => {
                   type="submit"
                   disabled={formikSingle.isSubmitting}
                 >
-                  Send
+                  {t("Send")}
                 </button>
               </div>
             </form>
@@ -165,7 +167,7 @@ const PushNotifications = () => {
               <div>
                 <FloatingLabel
                   controlId="floatingInput"
-                  label="Message"
+                  label={t("Message")}
                   id={
                     formikAll.errors.message && formikAll.touched.message
                       ? "floatingError"
@@ -175,7 +177,7 @@ const PushNotifications = () => {
                 >
                   <Form.Control
                     type="text"
-                    placeholder="Message"
+                    placeholder={t("Message")}
                     onChange={formikAll.handleChange}
                     onBlur={formikAll.handleBlur}
                     value={formikAll.values.message}
@@ -194,7 +196,7 @@ const PushNotifications = () => {
                   type="submit"
                   disabled={formikAll.isSubmitting}
                 >
-                  Send
+                  {t("Send")}
                 </button>
               </div>
             </form>

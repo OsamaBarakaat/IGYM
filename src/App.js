@@ -16,7 +16,6 @@ import { ToastContainer } from "react-toastify";
 import LandedForgetpass from "./Pages/Auth/Landed-Forgetpass/LandedForgetpass";
 import SetPass from "./Pages/Auth/LandedFromInvit/SetPass/SetPass";
 import SetName from "./Pages/Auth/LandedFromInvit/SetName/SetName";
-import RequireAuth from "./Pages/Auth/ProtectdRoutes/RequireAuth";
 import NoAuth from "./Pages/Auth/ProtectdRoutes/NoAuth";
 import Notifications from "./Pages/Notifications/Notifications";
 import PushNotifications from "./Pages/Notifications/PushNotifications/PushNotifications";
@@ -30,6 +29,7 @@ import EditWorkingTimes from "./Pages/Settings/EditWorkingTimes/EditWorkingTimes
 import RevenueExpenses from "./Pages/RevenuExpenses/RevenueExpenses";
 import EditRole from "./Pages/Roles/EditRoles/EditRole";
 import { useEffect } from "react";
+import History from "./Pages/Classes/History/History";
 function App() {
   const theme = useSelector((state) => {
     return state.theme;
@@ -63,6 +63,7 @@ function App() {
             <Route path="/addnewrole" element={<AddNewRole />} />
             <Route path="/coachprofile/:coachId" element={<CoachProfile />} />
             <Route path="/classes" element={<Classes />} />
+            <Route path="/history" element={<History />} />
             <Route path="/addrole" element={<AddNewRole />} />
             <Route path="/editrole/:roleId" element={<EditRole />} />
             <Route path="/editworkingtimes" element={<EditWorkingTimes />} />

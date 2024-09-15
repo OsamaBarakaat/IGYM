@@ -6,8 +6,10 @@ import { toast } from "react-toastify";
 import axiosInstance, { privateAxiosInstance } from "../../../api/axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const EditWorkingTimes = () => {
+  const { t } = useTranslation();
   const [workingDays, setWorkingDays] = useState({
     friday: null,
     saturday: null,
@@ -54,13 +56,12 @@ const EditWorkingTimes = () => {
 
     e.preventDefault();
     try {
-      const response = await privateAxiosInstance.put(
-        `/gyms/${gymId}/branch`,
-        {workingTimes:workingDays}
-      );
+      const response = await privateAxiosInstance.put(`/gyms/${gymId}/branch`, {
+        workingTimes: workingDays,
+      });
 
-      console.log("data",response.data);
-      toast.success("Working times updated successfully");
+      console.log("data", response.data);
+      toast.success(t("Working times updated successfully"));
       navigate("/settings");
     } catch (error) {
       toast.error(error.response.data.message);
@@ -80,27 +81,43 @@ const EditWorkingTimes = () => {
   useEffect(() => {
     fetchGymInfo();
   }, []);
+
+  function changeName(name) {
+    if (name === "friday") return t("Friday");
+    if (name === "saturday") return t("Saturday");
+    if (name === "sunday") return t("Sunday");
+    if (name === "monday") return t("Monday");
+    if (name === "tuesday") return t("Tuesday");
+    if (name === "wednesday") return t("Wednesday");
+    if (name === "thursday") return t("Thursday");
+  }
   return (
     <div>
-      <Heading content={"Edit Working Times"} />
+      <Heading content={t("Edit Working Times")} />
       <div className="bigCard">
         <form onSubmit={handleSubmit}>
           {days.map((day) => (
             <div key={day} className="day-container">
-              <label className="w-100 text-capitalize d-flex align-items-center justify-content-between" htmlFor={day.toLowerCase()}>
-                {day}
-                <Button variant="danger" onClick={() => handleCloseDay(day)}>Close Day</Button>
+              <label
+                className="w-100 text-capitalize d-flex align-items-center justify-content-between"
+                htmlFor={day.toLowerCase()}
+              >
+                {changeName(day)}
+                <Button variant="danger" onClick={() => handleCloseDay(day)}>
+                  {t("Close the day")}
+                </Button>
               </label>
               <div className="flexcenterbetween midCol gap-2">
                 <div className="w-100">
                   <FloatingLabel
                     controlId={`opening-${day}`}
-                    label="Opening"
+                    label={t("Opening")}
                     className="floating-label"
                   >
                     <Form.Control
                       type="time"
-                      placeholder="Opening"
+                      className="text-small"
+                      placeholder={t("Opening")}
                       name="opening"
                       value={workingDays[day]?.opening || ""}
                       onChange={(e) => handleChange(e, day)}
@@ -110,12 +127,13 @@ const EditWorkingTimes = () => {
                 <div className="w-100">
                   <FloatingLabel
                     controlId={`closing-${day}`}
-                    label="Closing"
+                    label={t("Closing")}
                     className="floating-label"
                   >
                     <Form.Control
                       type="time"
-                      placeholder="Closing"
+                      placeholder={t("Closing")}
+                      className="text-small"
                       name="closing"
                       value={workingDays[day]?.closing || ""}
                       onChange={(e) => handleChange(e, day)}
@@ -129,7 +147,7 @@ const EditWorkingTimes = () => {
                     controlId={`peake-${day}`}
                     label={
                       <div className="label-with-icon">
-                        Peak Hours
+                        {t("Peak Hours")}
                         <svg
                           color="red"
                           xmlns="http://www.w3.org/2000/svg"
@@ -147,7 +165,8 @@ const EditWorkingTimes = () => {
                   >
                     <Form.Control
                       type="time"
-                      placeholder="Peak Hours"
+                      placeholder={t("Peak Hours")}
+                      className="text-small"
                       name="peak"
                       value={workingDays[day]?.peak || ""}
                       onChange={(e) => handleChange(e, day)}
@@ -159,7 +178,7 @@ const EditWorkingTimes = () => {
                     controlId={`female-${day}`}
                     label={
                       <div className="label-with-icon">
-                        Female Hours
+                        {t("Female Hours")}
                         <svg
                           stroke="pink"
                           strokeWidth={1.5}
@@ -182,6 +201,7 @@ const EditWorkingTimes = () => {
                     <Form.Control
                       type="time"
                       placeholder="Female Hours"
+                      className="text-small"
                       name="female"
                       value={workingDays[day]?.female || ""}
                       onChange={(e) => handleChange(e, day)}
@@ -191,7 +211,9 @@ const EditWorkingTimes = () => {
               </div>
             </div>
           ))}
-          <Button type="submit" className="w-100">Save</Button>
+          <Button type="submit" className="w-100">
+            {t("Save")}
+          </Button>
         </form>
       </div>
     </div>

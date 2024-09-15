@@ -21,3 +21,8 @@
     stroke: #ff5e78;
     stroke-width: 1px;
 }
+
+.text-small {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+}
