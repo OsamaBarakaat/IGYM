@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import "./Plans.css";
 import PrivateSession from "./PrivateSessions/PrivateSession";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 let planId;
 const Plans = () => {
@@ -22,12 +23,14 @@ const Plans = () => {
   const [modalEditOffer, setModalShowEditOffer] = useState(false);
   const [currentPage, setCurrentPage] = useState("Memberships");
   const axiosPrivate = useAxiosPrivate();
+  const { gymId } = useSelector((state) => state.user);
+
   const onSubmit = async (values, actions) => {
     console.log("Form submitted:", values);
     actions.setSubmitting(true);
     try {
       const { data } = await axiosPrivate.post(
-        "gyms/666ddfad7a0f09d99493d976/plans",
+        `gyms/${gymId}/plans`,
         {
           name: values.name,
           cost: values.cost,
@@ -79,7 +82,7 @@ const Plans = () => {
       nutritionSessionsNumber: "",
       inBody: "",
     },
-    // validationSchema: planValidationSchema,
+    validationSchema: planValidationSchema,
     onSubmit,
   });
 
@@ -125,9 +128,7 @@ const Plans = () => {
   const [plans, setPlans] = useState([]);
   useEffect(() => {
     const fetchPlans = async () => {
-      const res = await axiosPrivate.get(
-        "/gyms/666ddfad7a0f09d99493d976/plans"
-      );
+      const res = await axiosPrivate.get(gymId);
       setPlans(res?.data?.data?.documents);
       console.log("plans", res?.data?.data?.documents);
       setLoading(false);
@@ -174,7 +175,7 @@ const Plans = () => {
         console.log("values", values);
         console.log("inputs", inputs22);
         const { data } = await axiosPrivate.patch(
-          `/gyms/666ddfad7a0f09d99493d976/plans/${selectedPlan?._id}`,
+          `/gyms/${gymId}/plans/${selectedPlan?._id}`,
           {
             name: values.name,
             cost: values.cost,
@@ -235,7 +236,7 @@ const Plans = () => {
       console.log("values", values);
       try {
         const { data } = await axiosPrivate.patch(
-          `gyms/666ddfad7a0f09d99493d976/plans/${planId}/offer`,
+          `gyms/${gymId}/plans/${planId}/offer`,
           {
             cost: values.cost || undefined,
             duration: values.duration || undefined,
@@ -267,7 +268,7 @@ const Plans = () => {
   const handleDeleteOffer = async () => {
     try {
       const res = await axiosPrivate.delete(
-        `gyms/666ddfad7a0f09d99493d976/plans/${planId}/offer`
+        `gyms/${gymId}/plans/${planId}/offer`
       );
       console.log("res", res);
       toast.success(t("Offer deleted successfully"));
@@ -291,7 +292,7 @@ const Plans = () => {
   const handleDeletePlan = async (id) => {
     try {
       const res = await axiosPrivate.delete(
-        `/gyms/666ddfad7a0f09d99493d976/plans/${id}`
+        `/gyms/${gymId}/plans/${id}`
       );
       console.log("res", res);
       toast.success(t("Plan deleted successfully"));

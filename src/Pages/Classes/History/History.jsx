@@ -1,10 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./History.css";
 import { useTranslation } from "react-i18next";
 import defaultt from "../../../assetss/default/5856.jpg";
+import { useSelector } from "react-redux";
+import { privateAxiosInstance } from "../../../api/axios";
+import { toast } from "react-toastify";
 
 const History = () => {
   const { t } = useTranslation();
+  const [classesHistory, setClassesHistory] = useState([]);
+  const { gymId } = useSelector((state) => state.user);
+
+  const getClassesHistory = async () => {
+    try {
+      const { data } = await privateAxiosInstance.get(
+        `gyms/${gymId}/bookings/classes-history`
+      );
+      setClassesHistory(data.data);
+      console.log("classes", data.data);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {getClassesHistory()},[]);
 
   const history = [
     {
@@ -118,12 +138,12 @@ const History = () => {
     <div>
       <div className="myInfoContent m-2">
         <div className="plansOfMyGym">
-          {history.map((classItem, index) => (
+          {classesHistory.map((classItem, index) => (
             <div key={index} className="plans-details small-100">
               <div className="flexcenterbetween my-2">
-                <p className="fontMid">{classItem.name}</p>
+                <p className="fontMid">{classItem?.classData?.name}</p>
                 <p>
-                  <span className="fontMid">{classItem.cost}</span>
+                  <span className="fontMid">{classItem?.classData?.cost}</span>
                   <span>{t("/class")}</span>
                 </p>
               </div>
@@ -141,23 +161,23 @@ const History = () => {
                     <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0" />
                   </svg>
                 </span>
-                <span>{classItem?.repeat?.day},</span>
-                <span>
-                  {classItem?.repeat?.time} -{" "}
-                  {calculateEndTime(
-                    classItem?.repeat?.time,
-                    classItem?.duration
-                  )}
-                </span>
+                <span>{classItem?.start.split("T")[0]} - </span>
+                {new Date(classItem?.start).toLocaleTimeString()}
               </p>
               <div className="flexcenterstart gap-2">
-                <div className="repeat">{classItem?.repeat?.type}</div>
-                <div className="mins">{classItem?.duration} mins</div>
-                <div className="includedIn">{classItem?.plan?.name}</div>
+                <div className="repeat">
+                  {classItem?.classData?.repeat?.type}
+                </div>
+                <div className="mins">
+                  {classItem?.classData?.duration} mins
+                </div>
+                <div className="includedIn">
+                  {classItem?.classData?.plan?.name}
+                </div>
               </div>
               <p className="opacitySmall font-smaller my-2">{t("Coaches")}</p>
               <div className="flexcenterstart">
-                {classItem?.coaches?.map((coach, index) => (
+                {classItem?.classData?.coaches?.map((coach, index) => (
                   <div key={index} className="coach">
                     <div className="logo-extra-small flexcenterstart mx-1">
                       <img
@@ -187,7 +207,7 @@ const History = () => {
                     <path d="M7.066 4.76A1.665 1.665 0 0 0 4 5.668a1.667 1.667 0 0 0 2.561 1.406c-.131.389-.375.804-.777 1.22a.417.417 0 1 0 .6.58c1.486-1.54 1.293-3.214.682-4.112zm4 0A1.665 1.665 0 0 0 8 5.668a1.667 1.667 0 0 0 2.561 1.406c-.131.389-.375.804-.777 1.22a.417.417 0 1 0 .6.58c1.486-1.54 1.293-3.214.682-4.112z" />
                   </svg>
                 </span>{" "}
-                {classItem?.description}
+                {classItem?.classData?.description}
                 <span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -206,7 +226,7 @@ const History = () => {
                 {t("Class Included")}
               </p>
               <div className="flexcenterstart flex-wrap">
-                {classItem?.features?.map((feature, index) => {
+                {classItem?.classData?.features?.map((feature, index) => {
                   return (
                     <div key={index} className=" m-1 p-1 flexcenterstart ">
                       <span className="spanSVGPrimary">
@@ -221,7 +241,7 @@ const History = () => {
                           <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
                         </svg>
                       </span>
-                      <span className="">{feature?.name}</span>
+                      <span className="">{feature}</span>
                     </div>
                   );
                 })}
