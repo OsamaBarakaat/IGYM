@@ -321,5 +321,7 @@
   "Role Includes:": "Role Includes:",
   "Role Name": "Role Name",
   "Role added successfully": "Role added successfully",
+  "Accept": "Accept",
+  "Reject": "Reject",
   "Please fill name and select permissions": "Please fill name and select permissions"
 }

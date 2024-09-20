@@ -4,6 +4,7 @@ import avatar from "../../assetss/default/5856.jpg";
 import PushNotifications from "./PushNotifications/PushNotifications";
 import Heading from "../../components/Heading/Heading";
 import { useTranslation } from "react-i18next";
+import Subscriptions from "./Subscriptions/Subscriptions";
 
 const Notifications = () => {
   const { t } = useTranslation();
@@ -22,7 +23,7 @@ const Notifications = () => {
   return (
     <div className="GeneralSettingsOne" style={{ minHeight: "100vh" }}>
       <aside className="GeneralSettingsOneSidebar">
-        <p className="cursor-pointer">Notifications</p>
+        <p className="cursor-pointer">{t("Notifications")}</p>
         <nav className="GeneralSettingsOneNav">
           <ul>
             <li
@@ -81,117 +82,82 @@ const Notifications = () => {
         </div>
         {currentPage === 1 && (
           <>
-            {windowWidth > 1024 && <Heading content={"Notifications"} />}
+            {windowWidth > 1024 && <Heading content={t("Notifications")} />}
             <div className="allNotifications bigCard my-3">
               <div className="singleNotif">
-                <div className="notifIcon">
-                  <div className="logo-small">
-                    <img src={avatar} alt="avatar" />
-                  </div>
-                </div>
-                <div className="notifContent flexcenterbetween">
-                  <div className="text-start">
-                    <p>New Member</p>
-                    <p>John Doe has joined the group</p>
+                <div className="notifContent flexcenterbetween w-100">
+                  <div className="text-end">
+                    <p className="text-center">New Member</p>
+                    <p className="text-center">John Doe has joined the group</p>
                   </div>
                   <div>
-                    <small>12/3/2024</small>
+                    <p className="text-center opacity-50 midText">12/3/2024</p>
                   </div>
                 </div>
               </div>
               <div className="singleNotif">
-                <div className="notifIcon">
-                  <div className="logo-small">
-                    <img src={avatar} alt="avatar" />
-                  </div>
-                </div>
-                <div className="notifContent flexcenterbetween">
-                  <div className="text-start">
-                    <p>New Member</p>
-                    <p>John Doe has joined the group</p>
+                <div className="notifContent flexcenterbetween w-100">
+                  <div className="text-end">
+                    <p className="text-center">New Member</p>
+                    <p className="text-center">John Doe has joined the group</p>
                   </div>
                   <div>
-                    <small>12/3/2024</small>
+                    <p className="text-center opacity-50 midText">12/3/2024</p>
                   </div>
                 </div>
               </div>
               <div className="singleNotif">
-                <div className="notifIcon">
-                  <div className="logo-small">
-                    <img src={avatar} alt="avatar" />
-                  </div>
-                </div>
-                <div className="notifContent flexcenterbetween">
-                  <div className="text-start">
-                    <p>New Member</p>
-                    <p>John Doe has joined the group</p>
+                <div className="notifContent flexcenterbetween w-100">
+                  <div className="text-end">
+                    <p className="text-center">New Member</p>
+                    <p className="text-center">John Doe has joined the group</p>
                   </div>
                   <div>
-                    <small>12/3/2024</small>
+                    <p className="text-center opacity-50 midText">12/3/2024</p>
                   </div>
                 </div>
               </div>{" "}
               <div className="singleNotif">
-                <div className="notifIcon">
-                  <div className="logo-small">
-                    <img src={avatar} alt="avatar" />
-                  </div>
-                </div>
-                <div className="notifContent flexcenterbetween">
-                  <div className="text-start">
-                    <p>New Member</p>
-                    <p>John Doe has joined the group</p>
+                <div className="notifContent flexcenterbetween w-100">
+                  <div className="text-end">
+                    <p className="text-center">New Member</p>
+                    <p className="text-center">John Doe has joined the group</p>
                   </div>
                   <div>
-                    <small>12/3/2024</small>
+                    <p className="text-center opacity-50 midText">12/3/2024</p>
                   </div>
                 </div>
               </div>{" "}
               <div className="singleNotif">
-                <div className="notifIcon">
-                  <div className="logo-small">
-                    <img src={avatar} alt="avatar" />
-                  </div>
-                </div>
-                <div className="notifContent flexcenterbetween">
-                  <div className="text-start">
-                    <p>New Member</p>
-                    <p>John Doe has joined the group</p>
+                <div className="notifContent flexcenterbetween w-100">
+                  <div className="text-end">
+                    <p className="text-center">New Member</p>
+                    <p className="text-center">John Doe has joined the group</p>
                   </div>
                   <div>
-                    <small>12/3/2024</small>
+                    <p className="text-center opacity-50 midText">12/3/2024</p>
                   </div>
                 </div>
               </div>{" "}
               <div className="singleNotif">
-                <div className="notifIcon">
-                  <div className="logo-small">
-                    <img src={avatar} alt="avatar" />
-                  </div>
-                </div>
-                <div className="notifContent flexcenterbetween">
-                  <div className="text-start">
-                    <p>New Member</p>
-                    <p>John Doe has joined the group</p>
+                <div className="notifContent flexcenterbetween w-100">
+                  <div className="text-end">
+                    <p className="text-center">New Member</p>
+                    <p className="text-center">John Doe has joined the group</p>
                   </div>
                   <div>
-                    <small>12/3/2024</small>
+                    <p className="text-center opacity-50 midText">12/3/2024</p>
                   </div>
                 </div>
               </div>{" "}
               <div className="singleNotif">
-                <div className="notifIcon">
-                  <div className="logo-small">
-                    <img src={avatar} alt="avatar" />
-                  </div>
-                </div>
-                <div className="notifContent flexcenterbetween">
-                  <div className="text-start">
-                    <p>New Member</p>
-                    <p>John Doe has joined the group</p>
+                <div className="notifContent flexcenterbetween w-100">
+                  <div className="text-end">
+                    <p className="text-center">New Member</p>
+                    <p className="text-center">John Doe has joined the group</p>
                   </div>
                   <div>
-                    <small>12/3/2024</small>
+                    <p className="text-center opacity-50 midText">12/3/2024</p>
                   </div>
                 </div>
               </div>
@@ -207,7 +173,7 @@ const Notifications = () => {
         )}
         {currentPage === 3 && (
           <>
-            <div>Subscriptions</div>
+            <Subscriptions />
           </>
         )}
       </main>

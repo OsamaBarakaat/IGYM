@@ -318,5 +318,7 @@
   "Role Includes:": "يتضمن الدور:",
   "Role added successfully": "تم إضافة الدور بنجاح",
   "Role Name": "اسم الدور",
+  "Accept": "قبول",
+  "Reject": "رفض",
   "Please fill name and select permissions": "يرجى ملء الاسم وتحديد الأذونات"
 }

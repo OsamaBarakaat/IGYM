@@ -1,0 +1,56 @@
+/* Common styles for both LTR and RTL */
+.singleNotif {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.notifContent {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.text-start {
+    flex: 1;
+    padding-left: 15px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+
+
+.rtl .text-start {
+    padding-left: 0;
+    padding-right: 15px;
+}
+
+.rtl .actions {
+    flex-direction: row-reverse;
+}
+
+@media (max-width: 768px) {
+    .notifContent {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .PrimaryButton,
+    .DangerButton {
+        width: 48%;
+    }
+}
