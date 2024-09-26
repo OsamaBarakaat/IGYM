@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Home.css";
 import { Chart as ChartJs } from "chart.js/auto";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
@@ -10,9 +10,15 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import { date } from "yup";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { privateAxiosInstance } from "../../api/axios";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 const Home = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const { gymId } = useSelector((state) => state.user);
+  const [stats, setStats] = useState(null);
+
   const percentage = 23;
   const upcomingPayments = [
     {
@@ -79,6 +85,21 @@ const Home = () => {
       expirationDate: "22/06/2022",
     },
   ];
+
+  const fetchStats = async () => {
+    try {
+      const { data } = await privateAxiosInstance.get(`/gyms/${gymId}/stats`);
+      setStats(data.data);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
   return (
     <div className="Home">
       <Heading content={t("Home")} />
@@ -99,7 +120,7 @@ const Home = () => {
           </div>
           <div className="card-body">
             <p className="card-title">{t("My Balance")}</p>
-            <p className="card-details">$ 38,988</p>
+            <p className="card-details">${stats?.revenue?.total}</p>
           </div>
         </div>
         <div
@@ -122,7 +143,7 @@ const Home = () => {
           </div>
           <div className="card-body">
             <p className="card-title">{t("Revenue")}</p>
-            <p className="card-details">$ 3,700</p>
+            <p className="card-details">$ {stats?.revenue?.income}</p>
           </div>
         </div>
         <div
@@ -146,7 +167,7 @@ const Home = () => {
           </div>
           <div className="card-body">
             <p className="card-title">{t("Expenses")}</p>
-            <p className="card-details">$ 1,288</p>
+            <p className="card-details">$ {stats?.revenue?.expenses}</p>
           </div>
         </div>
         <div className="upcomingPayments">
@@ -154,34 +175,37 @@ const Home = () => {
             <p>{t("Upcoming Payments")}</p>
           </div>
           <div className="upcomingPaymentsBody">
-            {upcomingPayments.map((item) => (
-              <div className="upcomingPaymentsItem" key={item.id}>
-                <div className="upcomingPaymentsItemImg">
-                  <img src={avatar} alt="userImg" className="w-10" />
+            {stats?.upcomingPayments.length ? (
+              stats?.upcomingPayments.map((item) => (
+                <div className="upcomingPaymentsItem" key={item._id}>
+                  <div className="upcomingPaymentsItemImg">
+                    <img
+                      src={item.user?.image}
+                      alt="userImg"
+                      className="w-10"
+                    />
+                  </div>
+                  <div className="upcomingPaymentsItemBody">
+                    <p>{item?.user.name}</p>
+                    {/* <p>{item.date}</p> */}
+                  </div>
+                  <p className="mb-0">${item.cost}</p>
                 </div>
-                <div className="upcomingPaymentsItemBody">
-                  <p>{item.name}</p>
-                  <p>{item.date}</p>
-                </div>
-                <p>{item.amount}</p>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p>No upcoming payments exists</p>
+            )}
           </div>
         </div>
 
         <div className="dountChart ">
           <Doughnut
             data={{
-              labels: [
-                "Expert Plan",
-                "Advanced Plan",
-                "Master Plan",
-                "Starter Plan",
-              ],
+              labels: stats?.topPlansNames || [],
               datasets: [
                 {
                   label: "count",
-                  data: [100, 200, 300, 250],
+                  data: stats?.topPlansCount || [],
                   backgroundColor: ["#396AFF", "#FF82AC", "#16DBCC", "#FFBB38"],
                   hoverBackgroundColor: "rgba(55, 55, 55, 0.786)",
                   hoverBorderColor: "#396AFF",

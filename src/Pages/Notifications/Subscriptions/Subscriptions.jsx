@@ -3,8 +3,17 @@ import avatar from "../../../assetss/default/5856.jpg";
 import Heading from "../../../components/Heading/Heading";
 import { useTranslation } from "react-i18next";
 import "./Subscriptions.css"; // Import your CSS file for styling
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
-const NotificationItem = ({ name, date, onAccept, onReject }) => {
+const NotificationItem = ({
+  name,
+  subscriptionsInfo,
+  status,
+  onAccept,
+  onReject,
+}) => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === "rtl"; // Detect language direction
 
@@ -14,18 +23,21 @@ const NotificationItem = ({ name, date, onAccept, onReject }) => {
         <div className="text-end">
           <p className="text-center">{t("New Member")}</p>
           <p className="text-center">
-            {name} {t("has joined the group")}
+            {name} -- {t("has joined the group")}
           </p>
-          <p className="text-center opacity-50 midText">{date}</p>
+          <p className="text-center opacity-50 midText">{subscriptionsInfo}</p>
         </div>
-        <div className="actions">
-          <button className="SecondaryButton" onClick={onAccept}>
-            {t("Accept")}
-          </button>
-          <button className="DangerButton" onClick={onReject}>
-            {t("Reject")}
-          </button>
-        </div>
+        <div>{status}</div>
+        {status === "pending" && (
+          <div className="actions">
+            <button className="SecondaryButton" onClick={onAccept}>
+              {t("Accept")}
+            </button>
+            <button className="DangerButton" onClick={onReject}>
+              {t("Reject")}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -45,34 +57,68 @@ const Subscriptions = () => {
     };
   }, []);
 
-  const handleAccept = (name) => {
-    console.log(`${name} has been accepted.`);
-    // Implement further logic here
+  const handleAccept = async (id) => {
+    try {
+      await axiosPrivate.patch(`/gyms/${gymId}/subscriptions/${id}`, {
+        status: "accepted",
+      });
+      toast.success(t("Subscription accepted successfully"));
+      fetchSubscriptions();
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
 
-  const handleReject = (name) => {
-    console.log(`${name} has been rejected.`);
-    // Implement further logic here
+  const handleReject = async (id) => {
+    try {
+      await axiosPrivate.patch(`/gyms/${gymId}/subscriptions/${id}`, {
+        status: "rejected",
+      });
+      toast.success(t("Subscription rejected successfully"));
+      fetchSubscriptions();
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
 
-  const notifications = [
-    { name: "John Doe", date: "12/3/2024" },
-    { name: "Jane Smith", date: "15/3/2024" },
-    { name: "Alice Johnson", date: "17/3/2024" },
-    { name: "Robert Brown", date: "20/3/2024" },
-  ];
+  const { gymId } = useSelector((state) => state.user);
+  const axiosPrivate = useAxiosPrivate();
+
+  const [Subscriptions, setSubscriptions] = useState([]);
+
+  const fetchSubscriptions = async () => {
+    try {
+      const response = await axiosPrivate.get(`/gyms/${gymId}/subscriptions`);
+      setSubscriptions(response.data.data);
+      console.log(response.data.data);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchSubscriptions();
+  }, []);
 
   return (
     <>
       {windowWidth > 1024 && <Heading content={t("Subscriptions")} />}
       <div className="allNotifications bigCard my-3">
-        {notifications.map((notif, index) => (
+        {Subscriptions.map((notif, index) => (
           <NotificationItem
             key={index}
-            name={notif.name}
-            date={notif.date}
-            onAccept={() => handleAccept(notif.name)}
-            onReject={() => handleReject(notif.name)}
+            name={notif.user.name}
+            subscriptionsInfo={
+              notif?.plan?.name
+                ? `(${notif.plan.name}) plan`
+                : `(${notif.privatePackage.cost}/${notif.privatePackage.sessions}) package`
+            }
+            status={notif.status}
+            onAccept={() => handleAccept(notif._id)}
+            onReject={() => handleReject(notif._id)}
           />
         ))}
       </div>

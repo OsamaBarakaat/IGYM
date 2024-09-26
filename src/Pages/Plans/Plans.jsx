@@ -128,7 +128,7 @@ const Plans = () => {
   const [plans, setPlans] = useState([]);
   useEffect(() => {
     const fetchPlans = async () => {
-      const res = await axiosPrivate.get(gymId);
+      const res = await axiosPrivate.get(`gyms/${gymId}/plans`);
       setPlans(res?.data?.data?.documents);
       console.log("plans", res?.data?.data?.documents);
       setLoading(false);
