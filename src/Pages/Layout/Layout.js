@@ -7,12 +7,27 @@ import { setUser } from "../../Sotre/Action/User.action";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Loader from "../../components/Loader/Loader";
 import RequireAuth from "../Auth/ProtectdRoutes/RequireAuth";
+import { toast } from "react-toastify";
+import { setUnReadNotification } from "../../Sotre/Action/unReadNotification";
 
-const Layout = () => {
+const Layout = ({ socket }) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const axiosPrivate = useAxiosPrivate();
   const [loading, setLoading] = useState(true);
+  const { gymId } = useSelector((state) => state.user);
+
+  const fetchUnreadNotificationsCount = async () => {
+    try {
+      const { data } = await axiosPrivate.get(
+        `/gyms/${gymId}/notifications/count`
+      );
+      dispatch(setUnReadNotification(data.data));
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
   const fetchUser = async () => {
     try {
       const { data } = await axiosPrivate.get("/owners/me/");
@@ -30,14 +45,33 @@ const Layout = () => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     if (!user.data) {
       fetchUser();
-    }else{
+    } else {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (gymId) {
+      fetchUnreadNotificationsCount();
+
+      socket.on("notification", (m) => {
+        fetchUnreadNotificationsCount();
+        console.log("message", m);
+        toast.success(m);
+      });
+
+      socket.on("read notification", () => {
+        console.log("read notification");
+        
+        dispatch(setUnReadNotification(0));
+      });
+    }
+  }, [gymId]);
+
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -62,7 +96,7 @@ const Layout = () => {
         <div className="app-container">
           {windowWidth > 768 && (
             <div className="sideBarOfAppJs">
-              <SideBar />
+              <SideBar/>
             </div>
           )}
           <div className="main-content">

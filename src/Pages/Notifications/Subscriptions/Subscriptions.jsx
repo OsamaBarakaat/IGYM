@@ -43,7 +43,7 @@ const NotificationItem = ({
   );
 };
 
-const Subscriptions = () => {
+const Subscriptions = ({socket}) => {
   const { t, i18n } = useTranslation();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -101,6 +101,9 @@ const Subscriptions = () => {
 
   useEffect(() => {
     fetchSubscriptions();
+    socket.on("new subscription", () => {
+      fetchSubscriptions();
+    });
   }, []);
 
   return (

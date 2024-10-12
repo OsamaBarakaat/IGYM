@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { privateAxiosInstance } from "../../api/axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-const Home = () => {
+const Home = ({ socket }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { gymId } = useSelector((state) => state.user);
@@ -90,6 +90,7 @@ const Home = () => {
     try {
       const { data } = await privateAxiosInstance.get(`/gyms/${gymId}/stats`);
       setStats(data.data);
+      console.log("stats", data.data);
     } catch (error) {
       console.error(error);
       toast.error(error.response.data.message);
@@ -98,6 +99,17 @@ const Home = () => {
 
   useEffect(() => {
     fetchStats();
+
+    socket.on("new subscription", () => {
+      console.log("new subscription");
+      fetchStats();
+      toast.success(t("New Upcoming Payment"));
+    });
+
+    socket.on("checkIn", () => {
+      console.log("checkIn");
+      fetchStats();
+    });
   }, []);
 
   return (
@@ -264,11 +276,11 @@ const Home = () => {
           </div>
           <Bar
             data={{
-              labels: sourceData.map((item) => item.label),
+              labels: stats?.weeklyAttendanceLabels || [],
               datasets: [
                 {
                   label: t("Weekly Trafic"),
-                  data: sourceData.map((item) => item.sales),
+                  data: stats?.weeklyAttendanceValues || [],
                   backgroundColor: "#396AFF",
                   borderColor: "#396AFF",
                   hoverBackgroundColor: "#E7EDFF",
@@ -284,24 +296,30 @@ const Home = () => {
         <div className="checkIn opacity-75">
           <p>{t("check in")}</p>
           <div className="checkInBody">
-            {checkIn.map((item) => {
+            {stats?.gymAttendance.map((item) => {
               return (
                 <div className="checkInRow">
                   <div className="upcomingPaymentsItemImg">
-                    <img src={avatar} alt="img" className="w-10" />
+                    <img
+                      src={item.userGym?.user.image}
+                      alt="img"
+                      className="w-10"
+                    />
                   </div>
                   <div>
-                    <p>{item.name}</p>
-                    <p className="opacity-75">{item.date}</p>
+                    <p>{item.userGym?.user.name}</p>
+                    <p className="opacity-75">{item.date.split("T")[0]}</p>
                   </div>
                   <div>
                     <p>{t("Expiration Date")}</p>
-                    <p className="opacity-75">{item.expirationDate}</p>
+                    <p className="opacity-75">
+                      {item.userGym.plan.expiredAt.split("T")[0]}
+                    </p>
                   </div>
 
-                  <div>
+                  {/* <div>
                     <button className="btn btn-primary">{t("View")}</button>
-                  </div>
+                  </div> */}
                 </div>
               );
             })}

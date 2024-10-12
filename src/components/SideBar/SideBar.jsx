@@ -5,11 +5,18 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import Popover from "react-bootstrap/Popover";
 import avatar from "../../assetss/default/5856.jpg";
+import Badge from "react-bootstrap/Badge";
+
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 const SideBar = () => {
   const location = useLocation();
   const [open, setOpen] = useState(true);
   const [click, setClick] = useState(false);
+  const unReadNotfication = useSelector((state) => state.unReadNotification);
+
+  console.log("unReadNotfication", unReadNotfication);
+  
   const toggelShow = () => {
     setClick(!click);
   };
@@ -273,7 +280,10 @@ const SideBar = () => {
                       <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901" />
                     </svg>
                   </span>
-                  <span className="spanOfTitleOfUl">{t("Notifications")}</span>
+                  <span className="spanOfTitleOfUl">
+                    {t("Notifications")}
+                    {unReadNotfication > 0 && <Badge bg="danger">{unReadNotfication}</Badge>}
+                  </span>
                 </li>
               </span>
             </OverlayTrigger>

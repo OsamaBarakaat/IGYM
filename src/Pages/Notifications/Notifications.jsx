@@ -5,13 +5,36 @@ import PushNotifications from "./PushNotifications/PushNotifications";
 import Heading from "../../components/Heading/Heading";
 import { useTranslation } from "react-i18next";
 import Subscriptions from "./Subscriptions/Subscriptions";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
-const Notifications = () => {
+const Notifications = ({ socket }) => {
+  const [notfications, setNotifications] = useState([]);
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const axiosPrivate = useAxiosPrivate();
+  const { gymId } = useSelector((state) => state.user);
+
+  const fetchNotifications = async () => {
+    try {
+      const { data } = await axiosPrivate.get(`/gyms/${gymId}/notifications`);
+      setNotifications(data.data);
+      console.log(data.data);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
 
   useEffect(() => {
+    fetchNotifications();
+
+    socket.on("notification", (m) => {
+      fetchNotifications();
+    });
+
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
@@ -84,83 +107,21 @@ const Notifications = () => {
           <>
             {windowWidth > 1024 && <Heading content={t("Notifications")} />}
             <div className="allNotifications bigCard my-3">
-              <div className="singleNotif">
-                <div className="notifContent flexcenterbetween w-100">
-                  <div className="text-end">
-                    <p className="text-center">New Member</p>
-                    <p className="text-center">John Doe has joined the group</p>
-                  </div>
-                  <div>
-                    <p className="text-center opacity-50 midText">12/3/2024</p>
-                  </div>
-                </div>
-              </div>
-              <div className="singleNotif">
-                <div className="notifContent flexcenterbetween w-100">
-                  <div className="text-end">
-                    <p className="text-center">New Member</p>
-                    <p className="text-center">John Doe has joined the group</p>
-                  </div>
-                  <div>
-                    <p className="text-center opacity-50 midText">12/3/2024</p>
+              {notfications.map((notification) => (
+                <div className="singleNotif">
+                  <div className="notifContent flexcenterbetween w-100">
+                    <div className="text-end">
+                      <p className="text-center">{notification.title}</p>
+                      <p className="text-center">{notification.message}</p>
+                    </div>
+                    <div>
+                      <p className="text-center opacity-50 midText">
+                        {new Date(notification.createdAt).toLocaleString()}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="singleNotif">
-                <div className="notifContent flexcenterbetween w-100">
-                  <div className="text-end">
-                    <p className="text-center">New Member</p>
-                    <p className="text-center">John Doe has joined the group</p>
-                  </div>
-                  <div>
-                    <p className="text-center opacity-50 midText">12/3/2024</p>
-                  </div>
-                </div>
-              </div>{" "}
-              <div className="singleNotif">
-                <div className="notifContent flexcenterbetween w-100">
-                  <div className="text-end">
-                    <p className="text-center">New Member</p>
-                    <p className="text-center">John Doe has joined the group</p>
-                  </div>
-                  <div>
-                    <p className="text-center opacity-50 midText">12/3/2024</p>
-                  </div>
-                </div>
-              </div>{" "}
-              <div className="singleNotif">
-                <div className="notifContent flexcenterbetween w-100">
-                  <div className="text-end">
-                    <p className="text-center">New Member</p>
-                    <p className="text-center">John Doe has joined the group</p>
-                  </div>
-                  <div>
-                    <p className="text-center opacity-50 midText">12/3/2024</p>
-                  </div>
-                </div>
-              </div>{" "}
-              <div className="singleNotif">
-                <div className="notifContent flexcenterbetween w-100">
-                  <div className="text-end">
-                    <p className="text-center">New Member</p>
-                    <p className="text-center">John Doe has joined the group</p>
-                  </div>
-                  <div>
-                    <p className="text-center opacity-50 midText">12/3/2024</p>
-                  </div>
-                </div>
-              </div>{" "}
-              <div className="singleNotif">
-                <div className="notifContent flexcenterbetween w-100">
-                  <div className="text-end">
-                    <p className="text-center">New Member</p>
-                    <p className="text-center">John Doe has joined the group</p>
-                  </div>
-                  <div>
-                    <p className="text-center opacity-50 midText">12/3/2024</p>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </>
         )}
@@ -173,7 +134,7 @@ const Notifications = () => {
         )}
         {currentPage === 3 && (
           <>
-            <Subscriptions />
+            <Subscriptions socket={socket} />
           </>
         )}
       </main>
