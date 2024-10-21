@@ -32,7 +32,8 @@ import { useEffect } from "react";
 import History from "./Pages/Classes/History/History";
 import io from "socket.io-client";
 
-const ENDPOINT = "https://api.igymsystem.com/";
+// const ENDPOINT = "https://api.igymsystem.com/";
+const ENDPOINT = "http://localhost:8000";
 let socket = io(ENDPOINT);
 
 function App() {
