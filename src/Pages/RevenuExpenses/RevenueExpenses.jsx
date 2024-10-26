@@ -40,6 +40,7 @@ const RevenueExpenses = () => {
   const [showModalRevenue, setShowModalRevenue] = useState(false);
   const [showModalExpense, setShowModalExpense] = useState(false);
   const [isRevenueModal, setIsRevenueModal] = useState(true);
+  const [stats, setStats] = useState(null);
   const [key, setKey] = useState("all");
 
   const handleShowModalRevenue = () => {
@@ -53,11 +54,24 @@ const RevenueExpenses = () => {
   const handleCloseModalEdit = () => setShowModalEdit(false);
   const axiosPrivate = useAxiosPrivate();
   const data = {
-    labels: ["Aug", "Sep", "Oct", "Nov", "Dec", "Jan"],
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
     datasets: [
       {
         label: "My Expense",
-        data: [1200, 1500, 800, 1700, 12500, 600],
+        data: stats?.monthlyExpenses,
         backgroundColor: "#396AFF",
         borderColor: "#396AFF",
         hoverBackgroundColor: "#E7EDFF",
@@ -141,7 +155,8 @@ const RevenueExpenses = () => {
       const { data } = await axiosPrivate.get(
         `/gyms/${gymId}/transactions?limit=200`
       );
-      setAllTransaction(data?.data?.documents); // Update your state with the fetched data
+      setAllTransaction(data?.data?.result?.documents); // Update your state with the fetched data
+      setStats(data?.data?.stats);
     } catch (error) {
       console.error("Error fetching transactions:", error);
     }
@@ -151,7 +166,7 @@ const RevenueExpenses = () => {
       const { data } = await axiosPrivate.get(
         `/gyms/${gymId}/transactions?type=income&limit=200`
       );
-      setRevenue(data?.data?.documents); // Update your state with the fetched data
+      setRevenue(data?.data?.result?.documents); // Update your state with the fetched data
     } catch (error) {
       console.error("Error fetching transactions:", error);
     }
@@ -162,7 +177,7 @@ const RevenueExpenses = () => {
       const { data } = await axiosPrivate.get(
         `/gyms/${gymId}/transactions?type=expense&limit=200`
       );
-      setExpenses(data?.data?.documents); // Update your state with the fetched data
+      setExpenses(data?.data?.result?.documents); // Update your state with the fetched data
     } catch (error) {
       console.error("Error fetching transactions:", error);
     }
@@ -192,9 +207,10 @@ const RevenueExpenses = () => {
         `/gyms/${gymId}/transactions?limit=200`
       );
 
-      setAllTransaction(data?.data?.documents);
+      setAllTransaction(data?.data?.result?.documents);
       setLoading(false);
       setAllTransactionsPagination(data?.data?.pagination);
+      setStats(data?.data?.stats);
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -208,7 +224,7 @@ const RevenueExpenses = () => {
         `/gyms/${gymId}/transactions?type=income&limit=200`
       );
 
-      setRevenue(data?.data?.documents);
+      setRevenue(data?.data?.result?.documents);
       setAllIncomePagination(data?.data?.pagination);
     } catch (error) {
       console.log(error);
@@ -222,7 +238,9 @@ const RevenueExpenses = () => {
         `/gyms/${gymId}/transactions?type=expense&limit=200`
       );
 
-      setExpenses(data?.data?.documents);
+      console.log("data sss", data.data);
+      
+      setExpenses(data?.data?.result?.documents);
       setAllExpensePagination(data?.data?.pagination);
     } catch (error) {
       console.log(error);
@@ -296,7 +314,7 @@ const RevenueExpenses = () => {
                 <Plus size={40} className="mb-2" color="#396AFF" />
               </div>
 
-              <h4 className="mt-3">$3,700</h4>
+              <h4 className="mt-3">${stats?.income}</h4>
             </div>
           </div>
         </div>
@@ -316,7 +334,7 @@ const RevenueExpenses = () => {
                 <Plus size={40} className="mb-2" color="#FF82AC" />
               </div>
 
-              <h4 className="mt-3">$1,260</h4>
+              <h4 className="mt-3">${stats?.expenses}</h4>
             </div>
           </div>
         </div>
