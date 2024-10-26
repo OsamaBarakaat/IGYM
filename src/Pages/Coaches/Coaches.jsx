@@ -88,7 +88,7 @@ const Coaches = () => {
       <div className="myInfoHeading">
         <Heading content={t("Coaches")} />
       </div>
-      <div className="myInfoContent">
+      <div className="myInfoContent m-2">
         <div className="bigCard">
           <div className="tableContainer">
             <div className="addMember px-4 flexcenterbetween">
