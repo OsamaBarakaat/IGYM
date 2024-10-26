@@ -77,7 +77,7 @@ const Roles = () => {
         <Heading content={t("Roles")} />
       </div>
 
-      <div className="myInfoContent">
+      <div className="myInfoContent m-2">
         <div className="roles">
           {roles.map((role, index) => {
             return (

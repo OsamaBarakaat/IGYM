@@ -109,7 +109,6 @@
 
     .mainTableTwo tr,
     .mainTableTwo td {
-        padding: 1rem;
         background-color: var(--main-background-color-two);
 
     }

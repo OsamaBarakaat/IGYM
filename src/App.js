@@ -31,6 +31,8 @@ import EditRole from "./Pages/Roles/EditRoles/EditRole";
 import { useEffect } from "react";
 import History from "./Pages/Classes/History/History";
 import io from "socket.io-client";
+import TraineeProfile from "./Pages/Trainees/TraineeProfile/TraineeProfile";
+import Invitations from "./Pages/Invitations/Invitations";
 
 const ENDPOINT = "https://api.igymsystem.com/";
 // const ENDPOINT = "http://localhost:8000";
@@ -55,7 +57,7 @@ function App() {
 
 
   useEffect(() => {
-    if (gymId) {      
+    if (gymId) {
       socket.emit("setup", gymId);
       socket.on("connected", () => {
         console.log("socket connect");
@@ -78,6 +80,7 @@ function App() {
             <Route path="/pushnotifications" element={<PushNotifications />} />
             <Route path="/coaches" element={<Coaches />} />
             <Route path="/trainees" element={<Trainees />} />
+            <Route path="/traineeprofile/:traineeId" element={<TraineeProfile />} />
             <Route path="/subscreptions" element={<Subscreption />} />
             <Route path="/addnewrole" element={<AddNewRole />} />
             <Route path="/coachprofile/:coachId" element={<CoachProfile />} />
@@ -87,6 +90,7 @@ function App() {
             <Route path="/editrole/:roleId" element={<EditRole />} />
             <Route path="/editworkingtimes" element={<EditWorkingTimes />} />
             <Route path="/revenueexpenses" element={<RevenueExpenses />} />
+            <Route path="/invitations" element={<Invitations />} />
           </Route>
           <Route
             path="/signin"

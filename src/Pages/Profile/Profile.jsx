@@ -234,7 +234,7 @@ const Profile = () => {
             <div className="myInfoHeading">
               <Heading content={t("My info")} />
             </div>
-            <div className="myInfoContent">
+            <div className="myInfoContent m-2">
               <div className="imgContainer">
                 <div className="h3OfimgContainer">
                   <p>{t("Profile image")}</p>

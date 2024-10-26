@@ -27,7 +27,7 @@ export const planValidationSchema = Yup.object().shape({
   nutritionSessionsNumber: Yup.number()
     .required("nutritionSessionsNumber is required")
     .min(0, "nutritionSessionsNumber must be at least 0"),
-    inBody: Yup.number()
+  inBody: Yup.number()
     .required("inBody is required")
     .min(0, "inBody must be at least 0"),
 });
@@ -45,4 +45,11 @@ export const offerValidationSchema = Yup.object().shape({
   expireAt: Yup.date()
     .required("Expiration date is required")
     .min(new Date(), "Expiration date cannot be in the past"),
+});
+
+export const invitationValidationSchema = Yup.object().shape({
+  invitationName: Yup.string().required("Name is required"),
+  invitationPhoneNumber: Yup.number().required("phone number is required"),
+  // invitationEmail: Yup.string().email("Invalid email").required("Email is required"),
+  invitationNationalId: Yup.string().required("National ID is required"),
 });

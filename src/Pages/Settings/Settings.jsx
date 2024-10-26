@@ -450,7 +450,7 @@ const Settings = () => {
             <div className="myInfoHeading">
               <Heading content={"Staff members"} />
             </div>
-            <div className="myInfoContent">
+            <div className="myInfoContent m-2">
               <div className="tableContainer">
                 <div className="addMember px-4">
                   <button className="PrimaryButton" onClick={handleShow}>
@@ -618,12 +618,14 @@ const Settings = () => {
                         fontSize: "16px",
                         borderRadius: "5px",
                         borderColor: "#ccc",
+                        width: "200px",
                         backgroundColor: "#f8f8f8",
-                        color: "#333",
+                        // color: "#333",
                       }),
                       option: (base) => ({
                         ...base,
                         fontSize: "16px",
+                        color: "#333",
                       }),
                     }}
                   />
