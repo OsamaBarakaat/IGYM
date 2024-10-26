@@ -12,9 +12,11 @@ import { privateAxiosInstance } from "../../api/axios";
 import Loader from "../../components/Loader/Loader";
 import { ArrowUpNarrowWideIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const Trainees = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -35,7 +37,7 @@ const Trainees = () => {
   const [loading, setLoading] = useState(true);
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(1);
+  const [limit, setLimit] = useState(3);
 
   const pageArr = [];
   for (let i = 0; i < Trainees?.pagination?.numberOfPages; i++) {
@@ -106,7 +108,7 @@ const Trainees = () => {
       <div className="myInfoHeading">
         <Heading content={t("Trainees")} />
       </div>
-      <div className="myInfoContent">
+      <div className="myInfoContent m-2">
         <div className="bigCard">
           <div className="tableContainer">
             <div className="addMember px-4 flexcenterbetween">
@@ -153,7 +155,14 @@ const Trainees = () => {
                   return (
                     <tr>
                       <td>
-                        <div className="d-flex align-items-center justify-content-start">
+                        <div
+                          className="d-flex align-items-center justify-content-start cursor-pointer"
+                          onClick={() => {
+                            navigate(`/traineeprofile/${trainee._id}`, {
+                              state: { trainee },
+                            });
+                          }}
+                        >
                           <div className="profilePic">
                             <img
                               src={trainee?.user.image || avatar}
