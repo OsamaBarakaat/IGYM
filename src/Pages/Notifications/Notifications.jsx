@@ -31,7 +31,8 @@ const Notifications = ({ socket }) => {
   useEffect(() => {
     fetchNotifications();
 
-    socket.on("notification", (m) => {
+    socket.on("refetch notification", () => {
+      console.log("refetch notification");
       fetchNotifications();
     });
 
@@ -41,6 +42,7 @@ const Notifications = ({ socket }) => {
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
+      socket.off("refetch notification");
     };
   }, []);
   return (

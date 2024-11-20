@@ -2,16 +2,20 @@ import React, { useEffect, useState } from "react";
 import Heading from "../../../components/Heading/Heading";
 import "./PushNotifications.css";
 import { useFormik } from "formik";
-import { signinValidationSchema } from "../../../Validations/SigninValidation";
 import { FloatingLabel, Form } from "react-bootstrap";
-import { SendNotificationValidation } from "../../../Validations/SendNotificationValidation";
+import {
+  SendNotificationAllValidation,
+  SendNotificationValidation,
+} from "../../../Validations/SendNotificationValidation";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 
 const PushNotifications = () => {
   const { t } = useTranslation();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [currentPage, setCurrentPage] = useState(1);
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -24,19 +28,33 @@ const PushNotifications = () => {
   }, []);
   const onSubmitSingle = async (values, actions) => {
     console.log(values);
-    actions.setSubmitting(true);
-    toast.success(t("Notification sent to single user successfully"));
-    setTimeout(() => {
+    try {
+      actions.setSubmitting(true);
+      await axiosPrivate.post(`/user-notifications`, {
+        ...values,
+        type: "private",
+      });
+      toast.success(t("Notification sent successfully"));
+    } catch (error) {
+      if (error.response.status === 404) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(t("Error sending notification"));
+      }
+      console.error("Error sending notification:", error);
+    } finally {
       actions.setSubmitting(false);
-    }, 1000);
+    }
   };
 
   const onSubmitAll = async (values, actions) => {
     console.log(values);
     try {
       actions.setSubmitting(true);
-      // Simulating an async action (e.g., API call)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await axiosPrivate.post(`/user-notifications`, {
+        ...values,
+        type: "public",
+      });
       toast.success(t("Notification sent to all users successfully"));
     } catch (error) {
       console.error("Error sending notification:", error);
@@ -59,7 +77,7 @@ const PushNotifications = () => {
     initialValues: {
       message: "",
     },
-    validationSchema: SendNotificationValidation,
+    validationSchema: SendNotificationAllValidation,
     onSubmit: onSubmitAll,
   });
   return (

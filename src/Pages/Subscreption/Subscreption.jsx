@@ -53,7 +53,8 @@ const Subscreption = () => {
               )}
               <div className="planName fontMid">{plan.name}</div>
               <div className="price fontLarge">{plan.cost}</div>
-              {plan._id === myPlan.id ? (
+              {plan._id === myPlan.id &&
+              new Date(myPlan.expireAt) > new Date() ? (
                 <div className="plansOfOwenrBody">
                   <div className="uncrowdedProgressbar">
                     <CircularProgressbar
@@ -101,9 +102,21 @@ const Subscreption = () => {
               <hr />
               <div className="d-flex justify-content-center align-items-center">
                 {plan._id === myPlan.id ? (
-                  <button className="SecondaryButton">{t("Renew")}</button>
+                  <a
+                    href="https://gym-lp.vercel.app/#pricing"
+                    target="_blank"
+                    className="SecondaryButton text-decoration-none"
+                  >
+                    {t("Renew")}
+                  </a>
                 ) : (
-                  <button className="SecondaryButton">{t("Upgrade")}</button>
+                  <a
+                    href="https://gym-lp.vercel.app/#pricing"
+                    target="_blank"
+                    className="SecondaryButton text-decoration-none"
+                  >
+                    {t("Upgrade")}
+                  </a>
                 )}
               </div>
             </div>

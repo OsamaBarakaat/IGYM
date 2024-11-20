@@ -225,8 +225,10 @@ const Settings = () => {
   };
 
   useEffect(() => {
-    fetchRoles();
-  }, []);
+    if (show) {
+      fetchRoles();
+    }
+  }, [show]);
 
   const fetchMembers = async () => {
     setLoading(true);
@@ -245,8 +247,10 @@ const Settings = () => {
   };
 
   useEffect(() => {
-    fetchMembers();
-  }, [page, limit]);
+    if (currentPage === 2) {
+      fetchMembers();
+    }
+  }, [page, limit, currentPage]);
   const pageArr = [];
   for (let i = 0; i < members?.pagination?.numberOfPages; i++) {
     pageArr.push(i);
@@ -358,7 +362,7 @@ const Settings = () => {
     value: language.code,
     label: language.name,
   }));
-  if (loading) {
+  if (loading && currentPage === 2) {
     return (
       <>
         <Loader />

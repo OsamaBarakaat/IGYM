@@ -7,3 +7,8 @@ export const SendNotificationValidation = Yup.object().shape({
     message: Yup.string()
         .required('Required'),
 });
+
+
+export const SendNotificationAllValidation = Yup.object().shape({
+  message: Yup.string().required("Required"),
+});

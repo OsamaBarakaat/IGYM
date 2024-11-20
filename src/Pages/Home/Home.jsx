@@ -13,11 +13,13 @@ import { useTranslation } from "react-i18next";
 import { privateAxiosInstance } from "../../api/axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import Loader from "../../components/Loader/Loader";
 const Home = ({ socket }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { gymId } = useSelector((state) => state.user);
   const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const percentage = 23;
   const upcomingPayments = [
@@ -94,6 +96,8 @@ const Home = ({ socket }) => {
     } catch (error) {
       console.error(error);
       toast.error(error.response.data.message);
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -111,6 +115,15 @@ const Home = ({ socket }) => {
       fetchStats();
     });
   }, []);
+
+
+ if (loading) {
+   return (
+     <>
+       <Loader />
+     </>
+   );
+ }
 
   return (
     <div className="Home">
@@ -233,8 +246,8 @@ const Home = ({ socket }) => {
           <div className="uncrowdedProgress">
             <div className="uncrowdedProgressbar">
               <CircularProgressbar
-                value={percentage}
-                text={`${percentage}%`}
+                value={stats?.gymCapacityPercentage.percentage}
+                text={`${stats?.gymCapacityPercentage.percentage}%`}
                 styles={{
                   path: { stroke: "#396AFF", strokeWidth: 8 },
                   text: { fill: "#396AFF" },
@@ -242,8 +255,8 @@ const Home = ({ socket }) => {
               />
             </div>
             <div className="text-center opacity-75">
-              <h3>Un-Crowded</h3>
-              <p>now is the best time to go and enjoy your exercise</p>
+              <h3>{stats?.gymCapacityPercentage.status}</h3>
+              <p>{stats?.gymCapacityPercentage.description}</p>
             </div>
           </div>
           <div className="flexcenteraround">
@@ -272,7 +285,7 @@ const Home = ({ socket }) => {
         <div className="monthlyTrafic">
           <div className="flexcenterbetween opacity-75">
             <p>{t("Weekly Trafic")}</p>
-            <p className="primary-color">+2.45%</p>
+            {/* <p className="primary-color">+2.45%</p> */}
           </div>
           <Bar
             data={{

@@ -87,7 +87,7 @@ const CoachProfile = () => {
           <div className="imageAndsave bigCard d-flex justify-content-center align-items-center flex-column">
             <div className="coachImage ">
               <img
-                src={coach?.image || defaultt}
+                src={coach?.user?.image || defaultt}
                 className="logoLarge"
                 alt="Coach"
               />

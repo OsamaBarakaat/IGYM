@@ -20,10 +20,18 @@ const Trainees = () => {
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
-  const [showSingleMessage, setShowSignleMessage] = useState(false);
-  const handleCloseSingleMessage = () => setShowSignleMessage(false);
-  const [showEditTrainee, setShowEditTrainee] = useState(false);
-  const handleCloseEditTrainee = () => setShowEditTrainee(false);
+  const [showSingleMessage, setShowSignleMessage] = useState({
+    show: false,
+    traineeId: null,
+  });
+  const handleCloseSingleMessage = () =>
+    setShowSignleMessage({ show: false, traineeId: null });
+  const [showEditTrainee, setShowEditTrainee] = useState({
+    show: false,
+    traineeId: null,
+  });
+  const handleCloseEditTrainee = () =>
+    setShowEditTrainee({ show: false, traineeId: null });
   const [otp, setOtp] = useState("");
   const [sendInvite, setSendInvite] = useState(true);
   const [showVerify, setShowVerify] = useState(false);
@@ -33,6 +41,11 @@ const Trainees = () => {
   const axiosPrivate = useAxiosPrivate();
   const inputRef = useRef(null);
   const planRef = useRef(null);
+
+  const msgTitleRef = useRef(null);
+  const msgBodyRef = useRef(null);
+
+  const newPlanRef = useRef(null);
   const [keyWord, setKeyWord] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -62,7 +75,9 @@ const Trainees = () => {
 
   const fetchPlans = async () => {
     try {
-      const { data } = await privateAxiosInstance.get(`/gyms/${gymId}/plans`);
+      const { data } = await privateAxiosInstance.get(
+        `/gyms/${gymId}/plans?select=name,_id`
+      );
       setPlans(data.data.documents);
       console.log("plans", data.data.documents);
     } catch (error) {
@@ -73,6 +88,11 @@ const Trainees = () => {
 
   const handleAddTrainee = async (e) => {
     e.preventDefault();
+
+    if (!inputRef.current.value || !planRef.current.value) {
+      toast.error(t("user phone and plan are required"));
+      return;
+    }
     try {
       await axiosPrivate.post(`/gyms/${gymId}/trainees`, {
         userPhone: inputRef.current.value,
@@ -81,6 +101,49 @@ const Trainees = () => {
       fetchTrainees();
       handleClose();
       toast.success(t("Trainee added successfully"));
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const handleEditTraineePlan = async (e) => {
+    e.preventDefault();
+    if (!newPlanRef.current.value) {
+      toast.error(t("plan is required"));
+      return;
+    }
+    console.log("newPlanRef", newPlanRef.current.value);
+    console.log("traineeId", showEditTrainee.traineeId);
+    try {
+      await axiosPrivate.post(
+        `/gyms/${gymId}/trainees/${showEditTrainee.traineeId}/renew`,
+        {
+          planId: newPlanRef.current.value,
+        }
+      );
+      fetchTrainees();
+      handleCloseEditTrainee();
+      toast.success(t("Trainee plan updated successfully"));
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const handleSendMsg = async () => {
+    if (!msgTitleRef.current?.value || !msgBodyRef.current?.value) {
+      toast.error(t("name and message are required"));
+      return;
+    }
+    try {
+      await axiosPrivate.post(`/user-notifications/email`, {
+        subject: msgTitleRef.current.value,
+        message: msgBodyRef.current.value,
+        userId: showSingleMessage.traineeId,
+      });
+      handleCloseSingleMessage();
+      toast.success(t("Message sent successfully"));
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
@@ -188,7 +251,12 @@ const Trainees = () => {
                         <div className="d-flex justify-content-center flex-column">
                           <button
                             className="SecondaryButton my-1"
-                            onClick={() => setShowEditTrainee(true)}
+                            onClick={() =>
+                              setShowEditTrainee({
+                                show: true,
+                                traineeId: trainee?.user._id,
+                              })
+                            }
                           >
                             <span>
                               {/* <svg
@@ -211,7 +279,14 @@ const Trainees = () => {
                           </button>
                           <button
                             className="PrimaryButton"
-                            onClick={() => setShowSignleMessage(true)}
+                            onClick={() => {
+                              console.log("traineeId", trainee?.user._id);
+
+                              setShowSignleMessage({
+                                show: true,
+                                traineeId: trainee?.user._id,
+                              });
+                            }}
                           >
                             <span>
                               <svg
@@ -408,7 +483,7 @@ const Trainees = () => {
         </Modal>
         <div className="editTraineeOffcanvase">
           <Offcanvas
-            show={showEditTrainee}
+            show={showEditTrainee.show}
             onHide={handleCloseEditTrainee}
             placement="end"
             id="offCanvas"
@@ -423,7 +498,7 @@ const Trainees = () => {
                 <button
                   className="btn-close bg-secondary"
                   onClick={() => {
-                    setShowEditTrainee(false);
+                    setShowEditTrainee({ show: false, traineeId: null });
                   }}
                 ></button>
               </div>
@@ -451,21 +526,28 @@ const Trainees = () => {
                       label={t("Select plan")}
                       id={"floatingInput"}
                     >
-                      <Form.Select name="plan">
+                      <Form.Select
+                        name="plan"
+                        defaultValue={""}
+                        ref={newPlanRef}
+                      >
                         <option value="" disabled>
-                          Select Plan
+                          {t("Select Plan")}
                         </option>
-                        <option value={"starter"}>Starter</option>
-                        <option value={"advanced"}>Advanced</option>
+                        {plans.map((plan) => {
+                          return (
+                            <option key={plan._id} value={plan._id}>
+                              {plan.name}
+                            </option>
+                          );
+                        })}
                       </Form.Select>
                     </FloatingLabel>
                   </div>
                   <div>
                     <button
                       className="SecondaryButton w-100"
-                      onClick={() => {
-                        setShowEditTrainee(false);
-                      }}
+                      onClick={handleEditTraineePlan}
                     >
                       {t("Renew")}
                     </button>
@@ -476,7 +558,10 @@ const Trainees = () => {
           </Offcanvas>
         </div>
         <div className="sendSingleMessage">
-          <Modal show={showSingleMessage} onHide={handleCloseSingleMessage}>
+          <Modal
+            show={showSingleMessage.show}
+            onHide={handleCloseSingleMessage}
+          >
             <div>
               <Modal.Header className="modala">
                 <div className="d-flex justify-content-between w-100 align-items-center mt-2">
@@ -488,7 +573,7 @@ const Trainees = () => {
                   <button
                     className="btn-close bg-secondary"
                     onClick={() => {
-                      setShowSignleMessage(false);
+                      handleCloseSingleMessage();
                     }}
                   ></button>
                 </div>
@@ -507,6 +592,7 @@ const Trainees = () => {
                           type="text"
                           placeholder={t("Name")}
                           name="name"
+                          ref={msgTitleRef}
                         />
                       </FloatingLabel>
                     </div>
@@ -522,6 +608,7 @@ const Trainees = () => {
                           min={0}
                           placeholder={t("type your message here ...")}
                           name="message"
+                          ref={msgBodyRef}
                         />
                       </FloatingLabel>
                     </div>
@@ -530,8 +617,9 @@ const Trainees = () => {
                       <button
                         className="SecondaryButton w-100"
                         type="submit"
-                        onClick={() => {
-                          setShowSignleMessage(false);
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSendMsg();
                         }}
                       >
                         {t("Send Message")}
