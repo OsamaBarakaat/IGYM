@@ -35,24 +35,27 @@ const SetPass = () => {
   const dispatch = useDispatch();
   const onSubmit = async (values, actions) => {
     console.log("user signed in : ", values);
-    actions.setSubmitting(true);
-    setTimeout(() => {
-      actions.resetForm();
-      actions.setSubmitting(false);
-    }, 1000);
-    const { data } = await axiosInstance.patch(
-      `/owners/set-password/${invitToken}`,
-      {
-        password: values.newPassword,
-        passwordConfirm: values.confirmPassword,
-      }
-    );
-    console.log(data);
-    dispatch(setUser(data.data.user));
-    localStorage.setItem("accessToken", data.data.accessToken);
-    localStorage.setItem("jwt", data.data.refreshToken);
-    toast.success(t("password set successfully"));
-    navigate("/setname");
+
+    try {
+     const { data } = await axiosInstance.patch(
+       `/owners/set-password/${invitToken}`,
+       {
+         password: values.newPassword,
+         passwordConfirm: values.confirmPassword,
+       }
+     );
+     console.log(data);
+     dispatch(setUser(data.data.user));
+     actions.setSubmitting(true);
+     setTimeout(() => {
+       actions.resetForm();
+       actions.setSubmitting(false);
+     }, 1000);
+     toast.success(t("password set successfully"));
+     navigate("/setname"); 
+    } catch (error) {
+      toast.error(t(error.response.data.message));
+    }
   };
   const {
     handleBlur,
