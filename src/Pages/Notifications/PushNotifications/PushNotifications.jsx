@@ -10,12 +10,14 @@ import {
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { useSelector } from "react-redux";
 
 const PushNotifications = () => {
   const { t } = useTranslation();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [currentPage, setCurrentPage] = useState(1);
   const axiosPrivate = useAxiosPrivate();
+  const { gymId } = useSelector((state) => state.user);
 
   useEffect(() => {
     const handleResize = () => {
@@ -33,6 +35,7 @@ const PushNotifications = () => {
       await axiosPrivate.post(`/user-notifications`, {
         ...values,
         type: "private",
+        gym: gymId,
       });
       toast.success(t("Notification sent successfully"));
     } catch (error) {
@@ -54,6 +57,7 @@ const PushNotifications = () => {
       await axiosPrivate.post(`/user-notifications`, {
         ...values,
         type: "public",
+        gym: gymId,
       });
       toast.success(t("Notification sent to all users successfully"));
     } catch (error) {

@@ -141,6 +141,7 @@ const Trainees = () => {
         subject: msgTitleRef.current.value,
         message: msgBodyRef.current.value,
         userId: showSingleMessage.traineeId,
+        gym: gymId,
       });
       handleCloseSingleMessage();
       toast.success(t("Message sent successfully"));

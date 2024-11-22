@@ -21,73 +21,6 @@ const Home = ({ socket }) => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const percentage = 23;
-  const upcomingPayments = [
-    {
-      id: 1,
-      name: "Emilli Willson",
-      amount: "$ 1,200",
-      date: "12/06/2021",
-    },
-    {
-      id: 2,
-      name: "Emilli Willson",
-      amount: "$ 100",
-      date: "15/06/2021",
-    },
-    {
-      id: 3,
-      name: "Emilli Willson",
-      amount: "$ 50",
-      date: "18/06/2021",
-    },
-    {
-      id: 4,
-      name: "Emilli Willson",
-      amount: "$ 70",
-      date: "20/06/2021",
-    },
-    {
-      id: 5,
-      name: "Emilli Willson",
-      amount: "$ 30",
-      date: "22/06/2021",
-    },
-  ];
-
-  const checkIn = [
-    {
-      id: 1,
-      name: "Emilli Willson",
-      date: "12/06/2021",
-      expirationDate: "12/06/2022",
-    },
-    {
-      id: 2,
-      name: "Emilli Willson",
-      date: "15/06/2021",
-      expirationDate: "15/06/2022",
-    },
-    {
-      id: 3,
-      name: "Emilli Willson",
-      date: "18/06/2021",
-      expirationDate: "18/06/2022",
-    },
-    {
-      id: 4,
-      name: "Emilli Willson",
-      date: "20/06/2021",
-      expirationDate: "20/06/2022",
-    },
-    {
-      id: 5,
-      name: "Emilli Willson",
-      date: "22/06/2021",
-      expirationDate: "22/06/2022",
-    },
-  ];
-
   const fetchStats = async () => {
     try {
       const { data } = await privateAxiosInstance.get(`/gyms/${gymId}/stats`);
@@ -224,6 +157,7 @@ const Home = ({ socket }) => {
         </div>
 
         <div className="dountChart ">
+          {!stats?.topPlansNames.length && <p>No Plans used yet</p>}
           <Doughnut
             data={{
               labels: stats?.topPlansNames || [],
@@ -309,6 +243,7 @@ const Home = ({ socket }) => {
         <div className="checkIn opacity-75">
           <p>{t("check in")}</p>
           <div className="checkInBody">
+            {!stats?.gymAttendance.length && <p>No check in Today</p>}
             {stats?.gymAttendance.map((item) => {
               return (
                 <div className="checkInRow">
