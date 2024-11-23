@@ -8,6 +8,7 @@ import Subscriptions from "./Subscriptions/Subscriptions";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import HeadingNoBack from "../../components/HeadingNoBack/Heading";
 
 const Notifications = ({ socket }) => {
   const [notfications, setNotifications] = useState([]);
@@ -107,7 +108,9 @@ const Notifications = ({ socket }) => {
         </div>
         {currentPage === 1 && (
           <>
-            {windowWidth > 1024 && <Heading content={t("Notifications")} />}
+            {windowWidth > 1024 && (
+              <HeadingNoBack content={t("Notifications")} />
+            )}
             <div className="allNotifications bigCard my-3">
               {notfications.map((notification) => (
                 <div className="singleNotif">

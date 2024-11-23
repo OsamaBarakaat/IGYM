@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader/Loader";
 import { useTranslation } from "react-i18next";
+import HeadingNoBack from "../../components/HeadingNoBack/Heading";
 
 const Roles = () => {
   const { t } = useTranslation();
@@ -74,7 +75,7 @@ const Roles = () => {
   return (
     <div className="myInfo">
       <div className="myInfoHeading">
-        <Heading content={t("Roles")} />
+        <HeadingNoBack content={t("Roles")} />
       </div>
 
       <div className="myInfoContent m-2">

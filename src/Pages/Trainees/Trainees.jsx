@@ -13,6 +13,7 @@ import Loader from "../../components/Loader/Loader";
 import { ArrowUpNarrowWideIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import HeadingNoBack from "../../components/HeadingNoBack/Heading";
 
 const Trainees = () => {
   const { t } = useTranslation();
@@ -50,7 +51,7 @@ const Trainees = () => {
   const [loading, setLoading] = useState(true);
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(5);
 
   const pageArr = [];
   for (let i = 0; i < Trainees?.pagination?.numberOfPages; i++) {
@@ -170,7 +171,7 @@ const Trainees = () => {
   return (
     <div className="myInfo">
       <div className="myInfoHeading">
-        <Heading content={t("Trainees")} />
+        <HeadingNoBack content={t("Trainees")} />
       </div>
       <div className="myInfoContent m-2">
         <div className="bigCard">

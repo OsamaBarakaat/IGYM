@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "./Home.css";
-import { Chart as ChartJs } from "chart.js/auto";
-import { Bar, Doughnut, Line } from "react-chartjs-2";
-import sourceData from "../../data/data.json";
-import revenue from "../../data/revenue.json";
-import Heading from "../../components/Heading/Heading";
+import { Bar, Doughnut } from "react-chartjs-2";
+
 import avatar from "../../assetss/default/5856.jpg";
 import { CircularProgressbar } from "react-circular-progressbar";
-import { date } from "yup";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { privateAxiosInstance } from "../../api/axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import Loader from "../../components/Loader/Loader";
+import HeadingNoBack from "../../components/HeadingNoBack/Heading";
 const Home = ({ socket }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { gymId } = useSelector((state) => state.user);
   const [stats, setStats] = useState(null);
@@ -29,7 +26,7 @@ const Home = ({ socket }) => {
     } catch (error) {
       console.error(error);
       toast.error(error.response.data.message);
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -49,18 +46,17 @@ const Home = ({ socket }) => {
     });
   }, []);
 
-
- if (loading) {
-   return (
-     <>
-       <Loader />
-     </>
-   );
- }
+  if (loading) {
+    return (
+      <>
+        <Loader />
+      </>
+    );
+  }
 
   return (
     <div className="Home">
-      <Heading content={t("Home")} />
+      <HeadingNoBack content={t("Home")} />
       <div className="m-4 upperPart">
         <div className="card-home card-one">
           <div className="card-icon">

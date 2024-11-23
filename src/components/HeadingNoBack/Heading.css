@@ -13,13 +13,3 @@
     font-size: 24px;
     font-weight: var(--main-font-weight);
 }
-
-.arrowBack {
-    color: var(--main-text-color);
-    cursor: pointer;
-}
-
-.arrowBack svg {
-    width: 24px;
-    height: 24px;
-}

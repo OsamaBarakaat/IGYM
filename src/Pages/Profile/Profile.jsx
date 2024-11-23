@@ -13,6 +13,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import axiosInstance from "../../api/axios";
 import avatar from "../../assetss/default/5856.jpg";
 import { useTranslation } from "react-i18next";
+import HeadingNoBack from "../../components/HeadingNoBack/Heading";
 const Profile = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -232,7 +233,7 @@ const Profile = () => {
         {currentPage === 1 && (
           <div className="myInfo">
             <div className="myInfoHeading">
-              <Heading content={t("My info")} />
+              <HeadingNoBack content={t("My info")} />
             </div>
             <div className="myInfoContent m-2">
               <div className="imgContainer">

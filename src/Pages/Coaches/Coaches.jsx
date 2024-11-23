@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Loader from "../../components/Loader/Loader";
 import { useTranslation } from "react-i18next";
+import HeadingNoBack from "../../components/HeadingNoBack/Heading";
 
 const Coaches = () => {
   const { t } = useTranslation();
@@ -33,7 +34,7 @@ const Coaches = () => {
   const [loading, setLoading] = useState(true);
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(1);
+  const [limit, setLimit] = useState(5);
 
   const pageArr = [];
   for (let i = 0; i < coaches?.pagination?.numberOfPages; i++) {
@@ -86,7 +87,7 @@ const Coaches = () => {
   return (
     <div className="myInfo">
       <div className="myInfoHeading">
-        <Heading content={t("Coaches")} />
+        <HeadingNoBack content={t("Coaches")} />
       </div>
       <div className="myInfoContent m-2">
         <div className="bigCard">

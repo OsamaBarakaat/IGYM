@@ -6,6 +6,7 @@ import "./Subscriptions.css"; // Import your CSS file for styling
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import HeadingNoBack from "../../../components/HeadingNoBack/Heading";
 
 const NotificationItem = ({
   name,
@@ -43,7 +44,7 @@ const NotificationItem = ({
   );
 };
 
-const Subscriptions = ({socket}) => {
+const Subscriptions = ({ socket }) => {
   const { t, i18n } = useTranslation();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -108,7 +109,7 @@ const Subscriptions = ({socket}) => {
 
   return (
     <>
-      {windowWidth > 1024 && <Heading content={t("Subscriptions")} />}
+      {windowWidth > 1024 && <HeadingNoBack content={t("Subscriptions")} />}
       <div className="allNotifications bigCard my-3">
         {Subscriptions.map((notif, index) => (
           <NotificationItem

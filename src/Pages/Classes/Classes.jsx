@@ -14,6 +14,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Loader from "../../components/Loader/Loader";
 import { useTranslation } from "react-i18next";
 import History from "./History/History";
+import HeadingNoBack from "../../components/HeadingNoBack/Heading";
 
 const Classes = () => {
   const { t, i18n } = useTranslation();
@@ -99,10 +100,10 @@ const Classes = () => {
         return;
       }
 
-      if (inputs[0] === "") {
-        toast.error(t("Please add at least one feature"));
-        return;
-      }
+      // if (inputs[0] === "") {
+      //   toast.error(t("Please add at least one feature"));
+      //   return;
+      // }
 
       try {
         await axiosPrivate.post(`/gyms/${gymId}/classes`, {
@@ -244,7 +245,7 @@ const Classes = () => {
   return (
     <div className="myInfo">
       <div className="myInfoHeading">
-        <Heading content={"Classes"} />
+        <HeadingNoBack content={"Classes"} />
       </div>
       <div className="flexcenterstart bigCardTwo p-2 gap-4">
         <div
@@ -272,6 +273,31 @@ const Classes = () => {
         <>
           <div className="myInfoContent m-2">
             <div className="plansOfMyGym">
+              <div
+                className="plans-details add-plan min-vh-40"
+                onClick={() => {
+                  setModalShowAddClass(true);
+                }}
+              >
+                <div className="Add">
+                  <span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-plus-lg"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
+                      />
+                    </svg>
+                  </span>
+                  <p className="main-color">{t("Add New Class")}</p>
+                </div>
+              </div>
               {classes.map((classItem, index) => {
                 return (
                   <div key={index} className={"plans-details small-100"}>
@@ -412,7 +438,7 @@ const Classes = () => {
                       </span>
                     </p>
                     <p className="opacitySmall font-smaller my-2">
-                      {t("Class Included")}
+                      {t("Features Included")}
                     </p>
                     <div className="flexcenterstart flex-wrap">
                       {classItem?.features?.map((feature, index) => {
@@ -441,31 +467,6 @@ const Classes = () => {
                   </div>
                 );
               })}
-              <div
-                className="plans-details add-plan min-vh-40"
-                onClick={() => {
-                  setModalShowAddClass(true);
-                }}
-              >
-                <div className="Add">
-                  <span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      class="bi bi-plus-lg"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
-                      />
-                    </svg>
-                  </span>
-                  <p className="main-color">{t("Add New Class")}</p>
-                </div>
-              </div>
             </div>
           </div>
           <div className="modalAddClass">
@@ -626,7 +627,7 @@ const Classes = () => {
                               onChange={addClass.handleChange}
                               onBlur={addClass.handleBlur}
                             >
-                              <option value="" disabled selected>
+                              <option value="" selected>
                                 {t("Not Included")}
                               </option>
                               {plans.map((plan) => {
@@ -1039,7 +1040,7 @@ const Classes = () => {
                               onChange={editClass.handleChange}
                               onBlur={editClass.handleBlur}
                             >
-                              <option value="" disabled selected>
+                              <option value="" selected>
                                 {t("Not included")}
                               </option>
                               {plans.map((plan) => {
