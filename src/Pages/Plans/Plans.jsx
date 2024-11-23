@@ -189,6 +189,7 @@ const Plans = () => {
         );
         console.log("res", data);
         toast.success(t("Plan updated successfully"));
+        setModalShowEditPlan(false);
         const editedPlans = plans.map((plan) => {
           if (selectedPlan?._id === plan._id) {
             return data?.data;
@@ -242,6 +243,7 @@ const Plans = () => {
         );
         console.log("res", data);
         toast.success(t("Offer updated successfully"));
+        setModalShowEditOffer(false);
         const editedPlans = plans.map((plan) => {
           if (data?.data?._id === plan._id) {
             return data?.data;
