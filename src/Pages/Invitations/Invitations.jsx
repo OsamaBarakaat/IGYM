@@ -3,6 +3,7 @@ import Heading from "../../components/Heading/Heading";
 
 import Loader from "../../components/Loader/Loader";
 import { useTranslation } from "react-i18next";
+import HeadingNoBack from "../../components/HeadingNoBack/Heading";
 
 const Invitations = () => {
   const { t } = useTranslation();
@@ -63,7 +64,7 @@ const Invitations = () => {
   return (
     <div className="myInfo">
       <div className="myInfoHeading">
-        <Heading content={t("Invitations")} />
+        <HeadingNoBack content={t("Invitations")} />
       </div>
       <div className="myInfoContent m-2">
         <div className="bigCard">

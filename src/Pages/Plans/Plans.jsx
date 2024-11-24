@@ -29,22 +29,19 @@ const Plans = () => {
     console.log("Form submitted:", values);
     actions.setSubmitting(true);
     try {
-      const { data } = await axiosPrivate.post(
-        `gyms/${gymId}/plans`,
-        {
-          name: values.name,
-          cost: values.cost,
-          duration: values.duration,
-          freezeDays: values.freezeDays,
-          minFreezeDays: values.minFreezeDays,
-          invitationsNumber: values.invitationsNumber,
-          privateSessionsNumber: values.privateSessionsNumber,
-          nutritionSessionsNumber: values.nutritionSessionsNumber,
-          inBody: values.inBody,
-          features: inputs,
-          description: values.description,
-        }
-      );
+      const { data } = await axiosPrivate.post(`gyms/${gymId}/plans`, {
+        name: values.name,
+        cost: values.cost,
+        duration: values.duration,
+        freezeDays: values.freezeDays,
+        minFreezeDays: values.minFreezeDays,
+        invitationsNumber: values.invitationsNumber,
+        privateSessionsNumber: values.privateSessionsNumber,
+        nutritionSessionsNumber: values.nutritionSessionsNumber,
+        inBody: values.inBody,
+        features: inputs,
+        description: values.description,
+      });
       console.log("res", data);
       toast.success(t("Plan added successfully"));
       setPlans([data?.data, ...plans]);
@@ -192,6 +189,7 @@ const Plans = () => {
         );
         console.log("res", data);
         toast.success(t("Plan updated successfully"));
+        setModalShowEditPlan(false);
         const editedPlans = plans.map((plan) => {
           if (selectedPlan?._id === plan._id) {
             return data?.data;
@@ -245,6 +243,7 @@ const Plans = () => {
         );
         console.log("res", data);
         toast.success(t("Offer updated successfully"));
+        setModalShowEditOffer(false);
         const editedPlans = plans.map((plan) => {
           if (data?.data?._id === plan._id) {
             return data?.data;
@@ -291,9 +290,7 @@ const Plans = () => {
   //delete plan
   const handleDeletePlan = async (id) => {
     try {
-      const res = await axiosPrivate.delete(
-        `/gyms/${gymId}/plans/${id}`
-      );
+      const res = await axiosPrivate.delete(`/gyms/${gymId}/plans/${id}`);
       console.log("res", res);
       toast.success(t("Plan deleted successfully"));
       const newPlans = plans.filter((plan) => {
@@ -351,6 +348,31 @@ const Plans = () => {
           {currentPage === "Memberships" ? (
             <>
               <div className="plansOfMyGym">
+                <div
+                  className="plans-details add-plan"
+                  onClick={() => {
+                    setModalShowAddPlan(true);
+                  }}
+                >
+                  <div className="Add">
+                    <span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-plus-lg"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
+                        />
+                      </svg>
+                    </span>
+                    <p className="main-color">{t("Add New Plan")}</p>
+                  </div>
+                </div>
                 {plans.map((plan) => {
                   return (
                     <div className={"plans-details"}>
@@ -528,32 +550,6 @@ const Plans = () => {
                     </div>
                   );
                 })}
-
-                <div
-                  className="plans-details add-plan"
-                  onClick={() => {
-                    setModalShowAddPlan(true);
-                  }}
-                >
-                  <div className="Add">
-                    <span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        class="bi bi-plus-lg"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
-                        />
-                      </svg>
-                    </span>
-                    <p className="main-color">{t("Add New Plan")}</p>
-                  </div>
-                </div>
               </div>
               <div className="modalAddPlan">
                 <Modal

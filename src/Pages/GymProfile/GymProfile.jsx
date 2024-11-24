@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Trash2Icon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import HeadingNoBack from "../../components/HeadingNoBack/Heading";
 
 const GymProfile = () => {
   const { t } = useTranslation();
@@ -231,7 +232,7 @@ const GymProfile = () => {
   return (
     <div className="myInfo ">
       <div className="myInfoHeading ">
-        <Heading content={t("Gym Profile")} />
+        <HeadingNoBack content={t("Gym Profile")} />
       </div>
       <div className="myInfoContent m-2">
         <div className="theme bigCard">

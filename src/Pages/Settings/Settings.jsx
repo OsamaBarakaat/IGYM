@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 import GymProfile from "../GymProfile/GymProfile";
 import Roles from "../Roles/Roles";
 import { useTranslation } from "react-i18next";
+import HeadingNoBack from "../../components/HeadingNoBack/Heading";
 const Settings = () => {
   const { t, i18n } = useTranslation();
   const [members, setMembers] = useState([]);
@@ -465,7 +466,7 @@ const Settings = () => {
         {currentPage === 2 && (
           <div className="myInfo">
             <div className="myInfoHeading">
-              <Heading content={"Staff members"} />
+              <HeadingNoBack content={"Staff members"} />
             </div>
             <div className="myInfoContent m-2">
               <div className="tableContainer">
@@ -600,7 +601,7 @@ const Settings = () => {
           <div>
             <div className="myInfo">
               <div className="myInfoHeading">
-                <Heading content={"Theme&Language"} />
+                <HeadingNoBack content={"Theme&Language"} />
               </div>
 
               <div className="bigCard m-3">

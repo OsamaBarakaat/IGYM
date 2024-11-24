@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useSelector } from "react-redux";
+import HeadingNoBack from "../../../components/HeadingNoBack/Heading";
 
 const PushNotifications = () => {
   const { t } = useTranslation();
@@ -86,7 +87,9 @@ const PushNotifications = () => {
   });
   return (
     <div className="pushNotif">
-      {windowWidth > 1024 && <Heading content={t("Push Notifications")} />}
+      {windowWidth > 1024 && (
+        <HeadingNoBack content={t("Push Notifications")} />
+      )}
 
       <div className="pushNotifcontent bigCard my-3">
         <div className="pushNootifHead flexcenteraround m-2">
