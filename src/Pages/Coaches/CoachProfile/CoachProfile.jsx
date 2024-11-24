@@ -59,6 +59,7 @@ const CoachProfile = () => {
     try {
       await axiosPrivate.patch(`/gyms/${gymId}/coaches/${coachId}`, data);
       toast.success(t("Coach updated successfully"));
+      navigate("/coaches");
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);

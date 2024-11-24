@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "./Home.css";
-import { Bar, Doughnut } from "react-chartjs-2";
-
+import { Chart as ChartJs } from "chart.js/auto";
+import { Bar, Doughnut, Line } from "react-chartjs-2";
+import sourceData from "../../data/data.json";
+import revenue from "../../data/revenue.json";
+import Heading from "../../components/Heading/Heading";
 import avatar from "../../assetss/default/5856.jpg";
 import { CircularProgressbar } from "react-circular-progressbar";
+import { date } from "yup";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { privateAxiosInstance } from "../../api/axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import Loader from "../../components/Loader/Loader";
-import HeadingNoBack from "../../components/HeadingNoBack/Heading";
 const Home = ({ socket }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { gymId } = useSelector((state) => state.user);
   const [stats, setStats] = useState(null);
@@ -56,7 +59,7 @@ const Home = ({ socket }) => {
 
   return (
     <div className="Home">
-      <HeadingNoBack content={t("Home")} />
+      <Heading content={t("Home")} />
       <div className="m-4 upperPart">
         <div className="card-home card-one">
           <div className="card-icon">

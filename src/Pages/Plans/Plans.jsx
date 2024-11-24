@@ -254,7 +254,20 @@ const Plans = () => {
         setPlans(editedPlans);
       } catch (error) {
         if (error.response.status === 400) {
-          toast.error(error.response.data.message);
+           if (error.response.data.errors) {
+             toast.error(
+               <div>
+                 <strong>{error.response.data.message}</strong>
+                 <ul>
+                   {error.response.data.errors.map((err, index) => (
+                     <li key={index}>{err.msg}</li>
+                   ))}
+                 </ul>
+               </div>
+             );
+           } else {
+             toast.error(error.response.data.message);
+           }
         } else {
           toast.error(t("Something went wrong"));
         }
@@ -1392,6 +1405,7 @@ const Plans = () => {
                               {t("Add Offer")}
                             </button>
                             <button
+                              type="button"
                               onClick={() => {
                                 setModalShowAddOffer(false);
                               }}
