@@ -188,7 +188,7 @@ const Settings = () => {
         {
           email: values.email,
           role: values.role,
-          clientUrl: "https://my-gym-panel.vercel.app/setpass/",
+          clientUrl: "https://igym.vercel.app/setpass/",
         }
       );
       setInviteLink(data.data.inviteLink);
@@ -197,7 +197,20 @@ const Settings = () => {
       toast.success(t("Invite sent successfully"));
     } catch (error) {
       console.log(error);
-      toast.error(t("Something went wrong"));
+     if (error.response.data.errors) {
+       toast.error(
+         <div>
+           <strong>{error.response.data.message}</strong>
+           <ul>
+             {error.response.data.errors.map((err, index) => (
+               <li key={index}>{err.msg}</li>
+             ))}
+           </ul>
+         </div>
+       );
+     } else {
+       toast.error(error.response.data.message);
+     }
     }
   };
   console.log(inviteLink);

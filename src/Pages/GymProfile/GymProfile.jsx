@@ -103,6 +103,7 @@ const GymProfile = () => {
       toast.error(error?.response?.data?.message);
     } finally {
       setGalleryLoading(false);
+      e.target.value = null;
     }
   };
 
@@ -116,7 +117,21 @@ const GymProfile = () => {
       toast.success(response.data.message);
     } catch (error) {
       console.error(error.response.data);
-      toast.error(error.response.data.message);
+
+      if (error.response.data.errors) {
+        toast.error(
+          <div>
+            <strong>{error.response.data.message}</strong>
+            <ul>
+              {error.response.data.errors.map((err, index) => (
+                <li key={index}>{err.msg}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      } else {
+        toast.error(error.response.data.message);
+      }
     } finally {
       setShowEditDesc(false);
     }
@@ -147,7 +162,7 @@ const GymProfile = () => {
 
   const handleChangePhone = (e) => {
     const { value } = e.target;
-    const phones = [value];
+    const phones = value === "" ? [] : [value];
     setGymInfo({ ...gymInfo, phones });
   };
 
@@ -163,7 +178,20 @@ const GymProfile = () => {
       toast.success(response.data.message);
     } catch (error) {
       console.error(error.response.data);
-      toast.error(error.response.data.message);
+       if (error.response.data.errors) {
+         toast.error(
+           <div>
+             <strong>{error.response.data.message}</strong>
+             <ul>
+               {error.response.data.errors.map((err, index) => (
+                 <li key={index}>{err.msg}</li>
+               ))}
+             </ul>
+           </div>
+         );
+       } else {
+         toast.error(error.response.data.message);
+       }
     }
   };
 
