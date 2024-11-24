@@ -34,8 +34,8 @@ import io from "socket.io-client";
 import TraineeProfile from "./Pages/Trainees/TraineeProfile/TraineeProfile";
 import Invitations from "./Pages/Invitations/Invitations";
 
-// const ENDPOINT = "https://api.igymsystem.com/";
-const ENDPOINT = "http://localhost:8000";
+const ENDPOINT = "https://api.igymsystem.com/";
+// const ENDPOINT = "http://localhost:8000";
 let socket = io(ENDPOINT);
 
 function App() {
