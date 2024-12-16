@@ -71,7 +71,7 @@ const PushNotifications = () => {
 
   const formikSingle = useFormik({
     initialValues: {
-      email: "",
+      phone: "",
       message: "",
     },
     validationSchema: SendNotificationValidation,
@@ -124,9 +124,9 @@ const PushNotifications = () => {
               <div>
                 <FloatingLabel
                   controlId="floatingInput"
-                  label={t("Email")}
+                  label={t("phone")}
                   id={
-                    formikSingle.errors.email && formikSingle.touched.email
+                    formikSingle.errors.phone && formikSingle.touched.phone
                       ? "floatingError"
                       : "floatingInput"
                   }
@@ -134,16 +134,16 @@ const PushNotifications = () => {
                 >
                   <Form.Control
                     type="text"
-                    placeholder={t("Email")}
+                    placeholder={t("phone")}
                     onChange={formikSingle.handleChange}
                     onBlur={formikSingle.handleBlur}
-                    value={formikSingle.values.email}
-                    name="email"
+                    value={formikSingle.values.phone}
+                    name="phone"
                   />
                 </FloatingLabel>
-                {formikSingle.errors.email && formikSingle.touched.email && (
+                {formikSingle.errors.phone && formikSingle.touched.phone && (
                   <small className="error-message">
-                    {formikSingle.errors.email}
+                    {formikSingle.errors.phone}
                   </small>
                 )}
               </div>
