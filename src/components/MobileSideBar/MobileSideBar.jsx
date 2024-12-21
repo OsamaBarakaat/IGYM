@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "./MobileSideBar.css";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const MobileSideBar = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   return (
@@ -26,7 +26,7 @@ const MobileSideBar = () => {
               <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
             </svg>
           </span>
-          <span>Home</span>
+          <span>{t("Home")}</span>
         </div>
       </Link>
       <Link to={"/trainees"} className="linkMobileSide">
@@ -44,7 +44,7 @@ const MobileSideBar = () => {
               <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z" />
             </svg>
           </span>
-          <span>Trainees</span>
+          <span>{t("Trainees")}</span>
         </div>
       </Link>
 
@@ -65,7 +65,7 @@ const MobileSideBar = () => {
               />
             </svg>
           </span>
-          <span>Settings</span>
+          <span>{t("Settings")}</span>
         </div>{" "}
       </Link>
       <Link to={"/profile"} className="linkMobileSide">
@@ -87,7 +87,7 @@ const MobileSideBar = () => {
               />
             </svg>
           </span>
-          <span>Profile</span>
+          <span>{t("Profile")}</span>
         </div>
       </Link>
 
@@ -107,7 +107,7 @@ const MobileSideBar = () => {
             />
           </svg>
         </span>
-        <span title="Notifications">More</span>
+        <span title="More">{t("More")}</span>
       </div>
       <Offcanvas
         show={show}
@@ -117,7 +117,7 @@ const MobileSideBar = () => {
         className={"offcanvas"}
       >
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>More Options</Offcanvas.Title>
+          <Offcanvas.Title>{t("MoreOptions")}</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <ul className="ulOfmobileSide">
@@ -142,7 +142,7 @@ const MobileSideBar = () => {
                     <path d="m5.93 6.704-.846 8.451a.768.768 0 0 0 1.523.203l.81-4.865a.59.59 0 0 1 1.165 0l.81 4.865a.768.768 0 0 0 1.523-.203l-.845-8.451A1.5 1.5 0 0 1 10.5 5.5L13 2.284a.796.796 0 0 0-1.239-.998L9.634 3.84a.7.7 0 0 1-.33.235c-.23.074-.665.176-1.304.176-.64 0-1.074-.102-1.305-.176a.7.7 0 0 1-.329-.235L4.239 1.286a.796.796 0 0 0-1.24.998l2.5 3.216c.317.316.475.758.43 1.204Z" />
                   </svg>
                 </span>
-                Coaches
+                {t("Coaches")}
               </Link>
             </li>
             <li>
@@ -168,7 +168,7 @@ const MobileSideBar = () => {
                     />
                   </svg>
                 </span>
-                Plans
+                {t("Plans")}
               </Link>
             </li>
             <li>
@@ -191,7 +191,7 @@ const MobileSideBar = () => {
                     <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z" />
                   </svg>
                 </span>
-                Classes
+                {t("Classes")}
               </Link>
             </li>
             <li>
@@ -215,7 +215,7 @@ const MobileSideBar = () => {
                     <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686" />
                   </svg>
                 </span>
-                Invitations
+                {t("invitations")}
               </Link>
             </li>
             <li>
@@ -239,7 +239,7 @@ const MobileSideBar = () => {
                     <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
                   </svg>
                 </span>
-                Subscreptions
+                {t("Subscreptions")}
               </Link>
             </li>
             <li>
@@ -262,7 +262,7 @@ const MobileSideBar = () => {
                     <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901" />
                   </svg>
                 </span>
-                Notifications
+                {t("Notifications")}
               </Link>
             </li>
           </ul>

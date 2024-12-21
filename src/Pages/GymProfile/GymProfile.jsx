@@ -8,7 +8,7 @@ import "swiper/css/scrollbar";
 import { Controller } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import { Form, InputGroup, Modal, Spinner } from "react-bootstrap";
+import { Form, FormLabel, InputGroup, Modal, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FaPhone, FaTiktok, FaFacebook, FaInstagram } from "react-icons/fa";
 import axiosInstance, { privateAxiosInstance } from "../../api/axios";
@@ -28,6 +28,9 @@ const GymProfile = () => {
   const [logoLoading, setLogoLoading] = useState(false);
   const [galleryLoading, setGalleryLoading] = useState(false);
   const [editDesc, setEditDesc] = useState(null);
+  const [gymName, setEditGymName] = useState(null);
+  const [lat, setEditLat] = useState(null);
+  const [lng, setEditLng] = useState(null);
 
   const handleImageClick = (image) => {
     setExpandedImage(image);
@@ -36,11 +39,17 @@ const GymProfile = () => {
 
   const [show, setShow] = useState(false);
   const [showEditDesc, setShowEditDesc] = useState(false);
+  const [showEditGymName, setShowEditGymName] = useState(false);
+  const [showEditLocation, setShowEditLocation] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleCloseEditDesc = () => setShowEditDesc(false);
   const handleShowEditDesc = () => setShowEditDesc(true);
+  const handleShowEditGymName = () => setShowEditGymName(true);
+  const handleCloseEditGymName = () => setShowEditGymName(false);
+  const handleShowEditLocation = () => setShowEditLocation(true);
+  const handleCloseEditLocation = () => setShowEditLocation(false);
 
   const handleChangeImg = async (e, key) => {
     const img = e.target.files[0];
@@ -137,6 +146,73 @@ const GymProfile = () => {
       setShowEditDesc(false);
     }
   };
+  const handleUpdateGymName = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await privateAxiosInstance.put(`/gyms/${gymId}`, {
+        name: gymName,
+      });
+      setGymInfo({ ...gymInfo, name: response.data.data.name });
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error(error.response.data);
+
+      if (error.response.data.errors) {
+        toast.error(
+          <div>
+            <strong>{error.response.data.message}</strong>
+            <ul>
+              {error.response.data.errors.map((err, index) => (
+                <li key={index}>{err.msg}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      } else {
+        toast.error(error.response.data.message);
+      }
+    } finally {
+      setShowEditGymName(false);
+    }
+  };
+  const handleUpdateLocation = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await privateAxiosInstance.put(`/gyms/${gymId}`, {
+        branchInfo: {
+          location: {
+            lat: lat,
+            lng: lng,
+          },
+        },
+      });
+      setGymInfo({
+        ...gymInfo,
+        lat: response?.data?.data?.branchInfo?.location?.lat,
+        lng: response.data?.data?.branchInfo?.location?.lng,
+      });
+      toast.success(response?.data?.message);
+    } catch (error) {
+      console.error(error?.response?.data);
+
+      if (error?.response?.data?.errors) {
+        toast.error(
+          <div>
+            <strong>{error?.response?.data?.message}</strong>
+            <ul>
+              {error.response.data.errors.map((err, index) => (
+                <li key={index}>{err.msg}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      } else {
+        toast.error(error.response.data.message);
+      }
+    } finally {
+      setShowEditLocation(false);
+    }
+  };
 
   const handleDeleteImage = async (image) => {
     const filteredImages = gymInfo.branchInfo.images.filter(
@@ -179,22 +255,24 @@ const GymProfile = () => {
       toast.success(response.data.message);
     } catch (error) {
       console.error(error.response.data);
-       if (error.response.data.errors) {
-         toast.error(
-           <div>
-             <strong>{error.response.data.message}</strong>
-             <ul>
-               {error.response.data.errors.map((err, index) => (
-                 <li key={index}>{err.msg}</li>
-               ))}
-             </ul>
-           </div>
-         );
-       } else {
-         toast.error(error.response.data.message);
-       }
+      if (error.response.data.errors) {
+        toast.error(
+          <div>
+            <strong>{error.response.data.message}</strong>
+            <ul>
+              {error.response.data.errors.map((err, index) => (
+                <li key={index}>{err.msg}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      } else {
+        toast.error(error.response.data.message);
+      }
     }
   };
+
+  console.log("aaaaaaaaaaaaaaaaaa", gymInfo);
 
   const fetchGymInfo = async () => {
     try {
@@ -311,9 +389,8 @@ const GymProfile = () => {
                 </label>
               </div>
             </div>
-            <span className="divider"></span>
 
-            <div className="flexcenteraround ">
+            {/* <div className="flexcenteraround ">
               <div className="themeColor p-3 overflow-hidden">
                 <Form.Control
                   type="color"
@@ -326,7 +403,7 @@ const GymProfile = () => {
                 <button className="textButtonTwo w-100">
                   <div className="flexcenterbetween">
                     <span className="font-smaller mx-1 hoverUnderline primary-color bold">
-                      {t("Change Color")}
+                      {t("ChangeGymName")}
                     </span>
                     <span>
                       <svg
@@ -343,17 +420,51 @@ const GymProfile = () => {
                     </span>
                   </div>
                 </button>
-                <input type="file" id="changeColor" className="sr-only" />
               </div>
-            </div>
+            </div> */}
           </div>
+        </div>
+        <div className="infoCard">
+          <div className="flexcenterbetween">
+            <h3>{t("GymName")}</h3>
+            <span className="flexcenterbetween">
+              <button
+                className="PrimaryButton  gap-1"
+                onClick={() => {
+                  handleShowEditGymName();
+                }}
+              >
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-pencil-square"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                    />
+                  </svg>
+                </span>
+                <span>{t("Edit")}</span>
+              </button>
+            </span>
+          </div>
+
+          <p name="info" className=" m-auto pOfGymInfo rounded-2">
+            {gymInfo?.name}
+          </p>
         </div>
         <div className="infoCard">
           <div className="flexcenterbetween">
             <h3>{t("Gym Description")}</h3>
             <span className="flexcenterbetween">
               <button
-                className="PrimaryButton"
+                className="PrimaryButton  gap-1"
                 onClick={() => {
                   handleShowEditDesc();
                 }}
@@ -383,27 +494,59 @@ const GymProfile = () => {
             {gymInfo?.description}
           </p>
         </div>
-        <div className="locationAndPlans">
-          <div className="location">
+        <div className="infoCard">
+          <div className="flexcenterbetween">
             <h3>{t("Location")}</h3>
-            <div>
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3456.23655343019!2d30.94184382470436!3d29.972631021970244!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14585658563d8c9d%3A0xf8037c015d1d48ec!2sAir%20Gym%20%26%20Spa!5e0!3m2!1sar!2seg!4v1710300431515!5m2!1sar!2seg"
-                style={{ border: 0 }}
-                title="map"
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
+            <span className="flexcenterbetween">
+              <button
+                className="PrimaryButton  gap-1"
+                onClick={() => {
+                  handleShowEditLocation();
+                }}
+              >
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-pencil-square"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                    />
+                  </svg>
+                </span>
+                <span>{t("Edit")}</span>
+              </button>
+            </span>
+          </div>
+
+          <div className="">
+            <p name="info" className=" m-auto pOfGymInfo rounded-2 my-1">
+              {t("lat")} :{" "}
+              {gymInfo?.branchInfo?.location?.lat
+                ? gymInfo?.branchInfo?.location?.lat
+                : t("noLatYet")}
+            </p>
+            <p name="info" className=" m-auto pOfGymInfo rounded-2 my-1">
+              {t("lng")} :{" "}
+              {gymInfo?.branchInfo?.location?.lng
+                ? gymInfo?.branchInfo?.location?.lng
+                : t("noLngYet")}
+            </p>
           </div>
         </div>
+
         <div className="workingTimes bigCard">
           <div className="flexcenterbetween">
             <h3>{t("Working times")}</h3>
             <span className="flexcenterbetween">
               <button
-                className="PrimaryButton"
+                className="PrimaryButton  gap-1"
                 onClick={() => {
                   navigate("/editworkingtimes");
                 }}
@@ -467,7 +610,7 @@ const GymProfile = () => {
           <div className="flexcenterbetween">
             <h3>{t("Gallery")}</h3>
             <label htmlFor="changeGallery">
-              <div className="PrimaryButton">
+              <div className="PrimaryButton  gap-1">
                 <span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -558,7 +701,7 @@ const GymProfile = () => {
         <div className="bigCard socialLinks">
           <div className="flexcenterbetween">
             <p className="m-0">{t("Web & social media")}</p>
-            <button className="PrimaryButton" onClick={handleShow}>
+            <button className="PrimaryButton  gap-1" onClick={handleShow}>
               <span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -746,8 +889,11 @@ const GymProfile = () => {
       </div>
       <div className="EditDescriptionModal">
         <Modal show={showEditDesc} onHide={handleCloseEditDesc}>
-          <Modal.Header closeButton className="modalOfLogout">
+          <Modal.Header className="modalOfLogout d-flex justify-contnet-spacebetween align-items-center">
             <Modal.Title>{t("Edit Description")}</Modal.Title>
+            <div onClick={handleCloseEditDesc} className="cursor-pointer">
+              X
+            </div>
           </Modal.Header>
           <Modal.Body className="modalOfLogout">
             <Form>
@@ -771,6 +917,92 @@ const GymProfile = () => {
                   onClick={handleUpdateDesc}
                 >
                   {t("Edit Description")}
+                </button>
+              </div>
+            </Form>
+          </Modal.Body>
+        </Modal>
+      </div>
+      <div className="EditGymNameModal">
+        <Modal show={showEditGymName} onHide={handleCloseEditGymName}>
+          <Modal.Header className="modalOfLogout d-flex justify-contnet-spacebetween align-items-center">
+            <Modal.Title>{t("EditGymName")}</Modal.Title>
+            <div onClick={handleCloseEditGymName} className="cursor-pointer">
+              X
+            </div>
+          </Modal.Header>
+          <Modal.Body className="modalOfLogout">
+            <Form>
+              <Form.Group controlId="formDescription" className="my-2">
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  placeholder={t("EditYourGymName")}
+                  name="gymName"
+                  defaultValue={gymInfo?.name}
+                  value={gymName}
+                  onChange={(e) => {
+                    setEditGymName(e.target.value);
+                  }}
+                />
+              </Form.Group>
+              <div className="flexcenterend gap-2">
+                <button
+                  type="submit"
+                  className="SecondaryButton w-100"
+                  onClick={handleUpdateGymName}
+                >
+                  {t("EditGymName")}
+                </button>
+              </div>
+            </Form>
+          </Modal.Body>
+        </Modal>
+      </div>
+      <div className="EditLocationModal">
+        <Modal show={showEditLocation} onHide={handleCloseEditLocation}>
+          <Modal.Header className="modalOfLogout d-flex justify-contnet-spacebetween align-items-center">
+            <Modal.Title>{t("EditGymLocation")}</Modal.Title>
+            <div onClick={handleCloseEditLocation} className="cursor-pointer">
+              X
+            </div>
+          </Modal.Header>
+          <Modal.Body className="modalOfLogout">
+            <Form>
+              <Form.Group controlId="formDescription" className="my-2">
+                <div className="gap-2">
+                  <FormLabel htmlFor="lat">{t("lat")}</FormLabel>
+                  <Form.Control
+                    placeholder={t("EditYourLocation(lat)")}
+                    controlId="lat"
+                    name="lat"
+                    defaultValue={gymInfo?.branchInfo?.location?.lat}
+                    value={lat}
+                    onChange={(e) => {
+                      setEditLat(e.target.value);
+                    }}
+                  />
+                  <FormLabel htmlFor="lng">{t("lng")}</FormLabel>
+                  <Form.Control
+                    id="lng"
+                    controlId="lng"
+                    placeholder={t("EditYourLocation(lng)")}
+                    name="lng"
+                    defaultValue={gymInfo?.branchInfo?.location?.lng}
+                    value={lng}
+                    onChange={(e) => {
+                      setEditLng(e.target.value);
+                    }}
+                  />
+                </div>
+              </Form.Group>
+              <div className="flexcenterend gap-2">
+                <button
+                  type="submit"
+                  className="SecondaryButton w-100"
+                  onClick={handleUpdateLocation}
+                >
+                  {t("EditGymLocation")}
                 </button>
               </div>
             </Form>

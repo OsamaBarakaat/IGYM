@@ -67,7 +67,6 @@ const Trainees = () => {
       const { data } = await axiosPrivate.get(url);
       setTrainees(data.data);
       setLoading(false);
-      console.log("trainees", data.data.documents);
     } catch (error) {
       console.log(error);
       toast.error(t("Something went wrong"));
@@ -80,7 +79,6 @@ const Trainees = () => {
         `/gyms/${gymId}/plans?select=name,_id`
       );
       setPlans(data.data.documents);
-      console.log("plans", data.data.documents);
     } catch (error) {
       console.log(error);
       toast.error(t("Something went wrong"));

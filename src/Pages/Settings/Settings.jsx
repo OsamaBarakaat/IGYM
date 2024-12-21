@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from "react";
 import "./Settings.css";
-import Heading from "../../components/Heading/Heading";
 import Select from "react-select";
-import {
-  FloatingLabel,
-  Form,
-  Offcanvas,
-  Modal,
-  NavDropdown,
-} from "react-bootstrap";
+import { FloatingLabel, Form, Offcanvas, Modal } from "react-bootstrap";
 import avatar from "../../assetss/default/5856.jpg";
 import * as Yup from "yup";
 import { planValidationSchema } from "../../Validations/PlanValidation";
-import { Formik, ErrorMessage, useFormik } from "formik";
+import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { setTheme } from "../../Sotre/Action/Theme.action";
 import { SendInviteValidation } from "../../Validations/SendInviteValidation";
-import axiosInstance, { privateAxiosInstance } from "../../api/axios";
+import { privateAxiosInstance } from "../../api/axios";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { convertToCreatedAtFormat } from "../../createdAt";
 import Loader from "../../components/Loader/Loader";
@@ -198,20 +191,20 @@ const Settings = () => {
       toast.success(t("Invite sent successfully"));
     } catch (error) {
       console.log(error);
-     if (error.response.data.errors) {
-       toast.error(
-         <div>
-           <strong>{error.response.data.message}</strong>
-           <ul>
-             {error.response.data.errors.map((err, index) => (
-               <li key={index}>{err.msg}</li>
-             ))}
-           </ul>
-         </div>
-       );
-     } else {
-       toast.error(error.response.data.message);
-     }
+      if (error.response.data.errors) {
+        toast.error(
+          <div>
+            <strong>{error.response.data.message}</strong>
+            <ul>
+              {error.response.data.errors.map((err, index) => (
+                <li key={index}>{err.msg}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      } else {
+        toast.error(error.response.data.message);
+      }
     }
   };
   console.log(inviteLink);

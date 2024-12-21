@@ -15,23 +15,7 @@ import { Edit, Plus, Trash2Icon } from "lucide-react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { all } from "axios";
 import SmallLoader from "../../components/SmallLoader/SmallLoader";
-
-const dummyData = {
-  income: [
-    { description: "Service Sale", date: "28 Jan, 12.30 AM", amount: "$3,000" },
-    { description: "Product Sale", date: "25 Jan, 10.40 PM", amount: "$700" },
-  ],
-  expenses: [
-    { description: "Staff Salary", date: "28 Jan, 12.30 AM", amount: "$2,500" },
-    {
-      description: "Maintenance Service",
-      date: "15 Jan, 03.29 PM",
-      amount: "$1,050",
-    },
-  ],
-};
 
 const RevenueExpenses = () => {
   const [revenue, setRevenue] = useState([]);
@@ -39,7 +23,6 @@ const RevenueExpenses = () => {
   const [allTransactions, setAllTransaction] = useState([]);
   const [showModalRevenue, setShowModalRevenue] = useState(false);
   const [showModalExpense, setShowModalExpense] = useState(false);
-  const [isRevenueModal, setIsRevenueModal] = useState(true);
   const [stats, setStats] = useState(null);
   const [key, setKey] = useState("all");
 
@@ -239,7 +222,7 @@ const RevenueExpenses = () => {
       );
 
       console.log("data sss", data.data);
-      
+
       setExpenses(data?.data?.result?.documents);
       setAllExpensePagination(data?.data?.pagination);
     } catch (error) {

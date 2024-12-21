@@ -14,6 +14,7 @@ import { privateAxiosInstance } from "../../api/axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import Loader from "../../components/Loader/Loader";
+import HeadingHome from "../../components/HeadingHome/HeadingHome";
 const Home = ({ socket }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ const Home = ({ socket }) => {
 
   return (
     <div className="Home">
-      <Heading content={t("Home")} />
+      <HeadingHome content={t("Home")} />
       <div className="m-4 upperPart">
         <div className="card-home card-one">
           <div className="card-icon">
@@ -147,16 +148,42 @@ const Home = ({ socket }) => {
                     {/* <p>{item.date}</p> */}
                   </div>
                   <p className="mb-0">${item.cost}</p>
+                  <div className="d-flex justify-content-center align-items-center gap-1">
+                    <button className="SecondaryButton">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-check2"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
+                      </svg>
+                    </button>
+                    <button className="DangerButton">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-x-lg"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               ))
             ) : (
-              <p>No upcoming payments exists</p>
+              <p>{t("noUpcomingPaymentsYet")}</p>
             )}
           </div>
         </div>
 
         <div className="dountChart ">
-          {!stats?.topPlansNames.length && <p>No Plans used yet</p>}
+          {!stats?.topPlansNames.length && <p>{t("noPlansUsedYet")}</p>}
           <Doughnut
             data={{
               labels: stats?.topPlansNames || [],
@@ -192,26 +219,6 @@ const Home = ({ socket }) => {
               <p>{stats?.gymCapacityPercentage.description}</p>
             </div>
           </div>
-          <div className="flexcenteraround">
-            <div className="upcomingPaymentsItemImg">
-              <img src={avatar} className="w-10" alt="img" />
-            </div>
-            <div className="upcomingPaymentsItemImg">
-              <img src={avatar} className="w-10" alt="img" />
-            </div>
-            <div className="upcomingPaymentsItemImg">
-              <img src={avatar} className="w-10" alt="img" />
-            </div>
-            <div className="upcomingPaymentsItemImg">
-              <img src={avatar} className="w-10" alt="img" />
-            </div>
-            <div className="upcomingPaymentsItemImg">
-              <img src={avatar} className="w-10" alt="img" />
-            </div>
-            <div className="upcomingPaymentsItemImg">
-              <img src={avatar} className="w-10" alt="img" />
-            </div>
-          </div>
         </div>
       </div>
       <div className="downPart">
@@ -242,7 +249,7 @@ const Home = ({ socket }) => {
         <div className="checkIn opacity-75">
           <p>{t("check in")}</p>
           <div className="checkInBody">
-            {!stats?.gymAttendance.length && <p>No check in Today</p>}
+            {!stats?.gymAttendance.length && <p>{t("noCheckIn")}</p>}
             {stats?.gymAttendance.map((item) => {
               return (
                 <div className="checkInRow">

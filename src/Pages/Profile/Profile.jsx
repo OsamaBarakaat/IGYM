@@ -240,10 +240,10 @@ const Profile = () => {
                 <div className="h3OfimgContainer">
                   <p>{t("Profile image")}</p>
                 </div>
-                <div className="imgContContainer position-relative">
+                <div className="imgContContainer position-relative ">
                   {imageLoading && Loader}
 
-                  <div>
+                  <div className="mx-1">
                     <img src={userData?.image || avatar} alt="profile img" />
                   </div>
                   <div className="transition">

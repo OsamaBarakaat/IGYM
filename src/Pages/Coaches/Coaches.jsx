@@ -34,7 +34,7 @@ const Coaches = () => {
   const [loading, setLoading] = useState(true);
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(2);
 
   const pageArr = [];
   for (let i = 0; i < coaches?.pagination?.numberOfPages; i++) {
