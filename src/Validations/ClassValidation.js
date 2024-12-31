@@ -18,5 +18,4 @@ export const classValidationSchema = Yup.object().shape({
   repeatType: Yup.string().required("Type is required"),
   repeatTime: Yup.string().required("Time is required"),
   repeatDay: Yup.string(),
-  description: Yup.string().required("Description is required"),
 });
