@@ -207,7 +207,7 @@ const Home = ({ socket }) => {
             <div className="uncrowdedProgressbar">
               <CircularProgressbar
                 value={stats?.gymCapacityPercentage.percentage}
-                text={`${stats?.gymCapacityPercentage.percentage}%`}
+                text={`${Math.round(stats?.gymCapacityPercentage.percentage)}%`}
                 styles={{
                   path: { stroke: "#396AFF", strokeWidth: 8 },
                   text: { fill: "#396AFF" },
