@@ -267,7 +267,10 @@ const Home = ({ socket }) => {
                   <div>
                     <p>{t("Expiration Date")}</p>
                     <p className="opacity-75">
-                      {item.userGym.plan.expiredAt.split("T")[0]}
+                      {item.userGym.plan?
+                      item.userGym.plan.expiredAt.split("T")[0]
+                      :"Trainer"
+                      }
                     </p>
                   </div>
 
