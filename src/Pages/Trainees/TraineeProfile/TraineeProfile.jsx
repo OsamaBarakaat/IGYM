@@ -27,6 +27,45 @@ const TraineeProfile = () => {
   const handleShowInvitation = () => setShowInvitation(true);
   const handleCloseInvitation = () => setShowInvitation(false);
 
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showStepBackButton, setShowStepBackButton] = useState(false);
+  const [stepBackTime, setStepBackTime] = useState(10);
+  const [timer, setTimer] = useState(null);
+
+  const handleConfirmUse = () => {
+    if (inBodyCount > 0) {
+      setInBodyCount((prevCount) => prevCount - 1);
+      setShowConfirm(false);
+      setShowStepBackButton(true);
+      setStepBackTime(10);
+      const countdown = setInterval(() => {
+        setStepBackTime((prevTime) => prevTime - 1);
+        if (stepBackTime === 0) {
+          clearInterval(countdown);
+          setShowStepBackButton(false);
+        }
+      }, 1000);
+      setTimer(countdown);
+    } else {
+      toast.warning(t("You have used all your free in-bodies"));
+      setShowConfirm(false);
+    }
+  };
+
+  const handleStepBack = () => {
+    if (stepBackTime > 0) {
+      setInBodyCount((prevCount) => prevCount + 1);
+      setShowStepBackButton(false);
+      clearInterval(timer);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      clearInterval(timer);
+    };
+  }, [timer]);
+
   const [inBodyCount, setInBodyCount] = useState(5); // Starting count
   const maxFreeInBodies = 0;
   const handleCountDown = () => {
@@ -129,11 +168,9 @@ const TraineeProfile = () => {
               <button
                 className="SecondaryButton w-100"
                 type="button"
-                onClick={() => {
-                  handleShow();
-                }}
+                onClick={() => setShowConfirm(true)}
               >
-                {t("Use In-body")}
+                {t("Use In-body")} : {inBodyCount}
               </button>
               <button
                 className="PrimaryButton w-100"
@@ -145,6 +182,20 @@ const TraineeProfile = () => {
                 {t("Use Invitation")}
               </button>
             </div>
+            {showStepBackButton && (
+              <div className="step-back-container w-100 my-2">
+                <button
+                  className="btn btn-warning w-100"
+                  onClick={handleStepBack}
+                  hidden={stepBackTime <= 0}
+                  aria-label={
+                    t("Step back in") + " " + stepBackTime + " " + t("seconds")
+                  }
+                >
+                  {t("Step back in")} {stepBackTime} {t("seconds")}
+                </button>
+              </div>
+            )}
           </div>
           <div className="coachData w-100 bigCard flex-grow-1">
             <div className="inputsInCoachProfile">
@@ -430,6 +481,28 @@ const TraineeProfile = () => {
               </form>
             </Modal.Body>
           </div>
+        </Modal>
+
+        {/* Confirmation Modal */}
+        <Modal show={showConfirm} onHide={() => setShowConfirm(false)} centered>
+          <Modal.Header>
+            <Modal.Title>{t("Confirm Use In-Body")}</Modal.Title>
+            <button
+              className="btn-close"
+              onClick={() => setShowConfirm(false)}
+            ></button>
+          </Modal.Header>
+          <Modal.Body>
+            <p>{t("Are you sure you want to use an In-Body?")}</p>
+            <div className="d-flex justify-content-end gap-3">
+              <Button variant="secondary" onClick={() => setShowConfirm(false)}>
+                {t("Cancel")}
+              </Button>
+              <Button variant="primary" onClick={handleConfirmUse}>
+                {t("Confirm")}
+              </Button>
+            </div>
+          </Modal.Body>
         </Modal>
       </div>
     </div>

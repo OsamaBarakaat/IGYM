@@ -67,17 +67,16 @@ const RevenueExpenses = () => {
   };
 
   const expenseTitles = ["Rent", "Food", "Maintenance", "Bill"];
+  const initialFormData = expenseTitles.reduce(
+    (acc, title) => {
+      acc[title] = { cost: "" };
+      return acc;
+    },
+    { extra: { title: "", cost: "" } }
+  );
 
   const [selectedCards, setSelectedCards] = useState([]);
-  const [formData, setFormData] = useState(
-    expenseTitles.reduce(
-      (acc, title) => {
-        acc[title] = { cost: "" };
-        return acc;
-      },
-      { extra: { title: "", cost: "" } }
-    )
-  );
+  const [formData, setFormData] = useState(initialFormData);
 
   const handleCardClick = (card) => {
     setSelectedCards((prevSelected) =>
@@ -89,9 +88,12 @@ const RevenueExpenses = () => {
 
   const handleInputChange = (e, card) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [card]: { ...prevData[card], [name]: value },
+    setFormData((prev) => ({
+      ...prev,
+      [card]: {
+        ...prev[card],
+        [name]: value,
+      },
     }));
   };
 
@@ -128,6 +130,10 @@ const RevenueExpenses = () => {
       await refetchTransactions();
       await refetchIncome();
       await refetchExpenses();
+
+      // Reset formData and selectedCards after successful submission
+      setFormData(initialFormData);
+      setSelectedCards([]);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -398,6 +404,7 @@ const RevenueExpenses = () => {
                       <Form.Control
                         type="text"
                         placeholder="Title"
+                        className="text-sm"
                         name="title"
                         value={formData[card].title}
                         onChange={(e) => handleInputChange(e, card)}
@@ -412,6 +419,7 @@ const RevenueExpenses = () => {
                       <Form.Control
                         type="text"
                         placeholder="Cost"
+                        className="text-sm"
                         name="cost"
                         value={formData[card].cost}
                         onChange={(e) => handleInputChange(e, card)}
@@ -496,6 +504,7 @@ const RevenueExpenses = () => {
                           type="text"
                           placeholder="Title"
                           name="title"
+                          className="text-sm"
                           value={formData[card].title}
                           onChange={(e) => handleInputChange(e, card)}
                         />
@@ -512,6 +521,7 @@ const RevenueExpenses = () => {
                     <Form.Control
                       type="text"
                       placeholder="Cost"
+                      className="text-sm"
                       name="cost"
                       value={formData[card].cost}
                       onChange={(e) => handleInputChange(e, card)}
