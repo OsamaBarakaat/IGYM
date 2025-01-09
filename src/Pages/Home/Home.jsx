@@ -15,6 +15,8 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import Loader from "../../components/Loader/Loader";
 import HeadingHome from "../../components/HeadingHome/HeadingHome";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+
 const Home = ({ socket }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ const Home = ({ socket }) => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const axiosPrivate = useAxiosPrivate();
   const fetchStats = async () => {
     try {
       const { data } = await privateAxiosInstance.get(`/gyms/${gymId}/stats`);
@@ -32,6 +35,32 @@ const Home = ({ socket }) => {
       toast.error(error.response.data.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAccept = async (id) => {
+    try {
+      await axiosPrivate.patch(`/gyms/${gymId}/subscriptions/${id}`, {
+        status: "accepted",
+      });
+      toast.success(t("Subscription accepted successfully"));
+      fetchStats();
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const handleReject = async (id) => {
+    try {
+      await axiosPrivate.patch(`/gyms/${gymId}/subscriptions/${id}`, {
+        status: "rejected",
+      });
+      toast.success(t("Subscription rejected successfully"));
+      fetchStats();
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -78,7 +107,7 @@ const Home = ({ socket }) => {
           </div>
           <div className="card-body">
             <p className="card-title">{t("My Balance")}</p>
-            <p className="card-details">${stats?.revenue?.total}</p>
+            <p className="card-details">${stats?.revenue?.balance}</p>
           </div>
         </div>
         <div
@@ -148,32 +177,33 @@ const Home = ({ socket }) => {
                     {/* <p>{item.date}</p> */}
                   </div>
                   <p className="mb-0">${item.cost}</p>
-                  <div className="d-flex justify-content-center align-items-center gap-1">
-                    <button className="SecondaryButton">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        class="bi bi-check2"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
-                      </svg>
-                    </button>
-                    <button className="DangerButton">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        class="bi bi-x-lg"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                      </svg>
-                    </button>
-                  </div>
+                    <div className="d-flex justify-content-center align-items-center gap-1">
+                      <button onClick={() => handleAccept(item._id)} className="SecondaryButton">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="bi bi-check2"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
+                        </svg>
+                      </button>
+                      <button className="DangerButton">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="bi bi-x-lg"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                        </svg>
+                      </button>
+                    </div>
+                 
                 </div>
               ))
             ) : (
@@ -267,10 +297,9 @@ const Home = ({ socket }) => {
                   <div>
                     <p>{t("Expiration Date")}</p>
                     <p className="opacity-75">
-                      {item.userGym.plan?
-                      item.userGym.plan.expiredAt.split("T")[0]
-                      :"Trainer"
-                      }
+                      {item.userGym.plan
+                        ? item.userGym.plan.expiredAt.split("T")[0]
+                        : "Trainer"}
                     </p>
                   </div>
 

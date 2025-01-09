@@ -114,11 +114,11 @@ const Subscriptions = ({ socket }) => {
         {Subscriptions.map((notif, index) => (
           <NotificationItem
             key={index}
-            name={notif.user.name}
+            name={notif.user?.name}
             subscriptionsInfo={
               notif?.plan?.name
                 ? `(${notif.plan.name}) plan`
-                : `(${notif.privatePackage.cost}/${notif.privatePackage.sessions}) package`
+                : `(${notif.privatePackage?.cost}/${notif.privatePackage?.sessions}) package`
             }
             status={notif.status}
             onAccept={() => handleAccept(notif._id)}

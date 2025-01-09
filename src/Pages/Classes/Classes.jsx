@@ -117,7 +117,7 @@ const Classes = () => {
             time: values.repeatTime,
             day: values.repeatDay,
           },
-          plan: values.plan,
+          plan: values.plan ? values.plan : null,
           coaches: selectedCoaches.map((coach) => coach.value),
           features: inputs,
         });
@@ -161,7 +161,7 @@ const Classes = () => {
             time: values.repeatTime,
             day: values.repeatDay,
           },
-          plan: values.plan,
+          plan: values.plan ? values.plan : null,
           coaches: selectedCoaches.map((coach) => coach.value),
           features: inputs,
         });

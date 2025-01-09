@@ -14,7 +14,6 @@ export const classValidationSchema = Yup.object().shape({
     .required("Capacity is required")
     .positive("Capacity must be a positive number")
     .min(1, "Capacity must be at least 1"),
-  plan: Yup.string().required("Name is required"),
   repeatType: Yup.string().required("Type is required"),
   repeatTime: Yup.string().required("Time is required"),
   repeatDay: Yup.string(),
