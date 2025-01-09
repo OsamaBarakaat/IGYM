@@ -221,31 +221,31 @@ const Trainees = () => {
                         <div
                           className="d-flex align-items-center justify-content-start cursor-pointer"
                           onClick={() => {
-                            navigate(`/traineeprofile/${trainee._id}`, {
+                            navigate(`/traineeprofile/${trainee?._id}`, {
                               state: { trainee },
                             });
                           }}
                         >
                           <div className="profilePic">
                             <img
-                              src={trainee?.user.image || avatar}
+                              src={trainee?.user?.image || avatar}
                               alt="profilePic"
                               className="widthSmall"
                             />
                           </div>
                           <div className="profileName mx-3">
-                            {trainee?.user.name || "No Name"}
+                            {trainee?.user?.name || "No Name"}
                           </div>
                         </div>
                       </td>
-                      <td data-label={t("Phone")}>{trainee?.user.phone}</td>
-                      <td data-label={t("Gender")}>{trainee?.user.gender}</td>
-                      <td data-label={t("Plan")}>{trainee?.plan.name}</td>
+                      <td data-label={t("Phone")}>{trainee?.user?.phone}</td>
+                      <td data-label={t("Gender")}>{trainee?.user?.gender}</td>
+                      <td data-label={t("Plan")}>{trainee?.plan?.name}</td>
                       <td data-label={t("Join Date")}>
                         {convertToCreatedAtFormat(trainee?.createdAt)}
                       </td>
                       <td data-label={t("Expire Date")}>
-                        {convertToCreatedAtFormat(trainee?.plan.expiredAt)}
+                        {convertToCreatedAtFormat(trainee?.plan?.expiredAt)}
                       </td>
                       <td>
                         <div className="d-flex justify-content-center flex-column">

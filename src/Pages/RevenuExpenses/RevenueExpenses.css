@@ -228,3 +228,7 @@
     text-align: center;
 
 }
+
+.text-sm {
+    font-size: small !important;
+}

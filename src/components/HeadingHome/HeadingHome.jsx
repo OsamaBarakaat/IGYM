@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 const HeadingHome = ({ content }) => {
   const navigate = useNavigate();
   const { data: userData } = useSelector((state) => state.user);
-  console.log(userData);
 
   return (
     <div className="titleContainerHome">
