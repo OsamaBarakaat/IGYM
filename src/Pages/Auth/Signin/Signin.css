@@ -47,3 +47,15 @@
     color: var(--main-text-color);
     opacity: 0.9;
 }
+
+.signin__container_logo {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 1rem;
+
+    img {
+        width: 30px;
+        height: 30px;
+    }
+}
