@@ -21,7 +21,7 @@ const Forgetpass = () => {
     try {
       const res = await axiosInstance.post("/owners/forget-password", {
         email: values.email,
-        clientUrl: "https://my-gym-panel.vercel.app/resetpassword/",
+        clientUrl: "https://igym.vercel.app/resetpassword/",
       });
       console.log(res);
       toast.success(t("Email sent successfully"));

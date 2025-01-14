@@ -24,10 +24,8 @@ const Roles = () => {
     "COACHES",
     "CLASSES",
     "PLANS",
-    "PRIVATE_SESSIONS",
     "NOTIFICATIONS",
-    "ROLES",
-    "SUBSCRIPTION",
+    "HOME",
   ];
 
   const handleEditRole = (roleId) => {

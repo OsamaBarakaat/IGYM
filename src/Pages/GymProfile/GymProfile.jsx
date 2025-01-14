@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Heading from "../../components/Heading/Heading";
 import "./GymProfile.css";
 import "swiper/css";
@@ -29,8 +29,8 @@ const GymProfile = () => {
   const [galleryLoading, setGalleryLoading] = useState(false);
   const [editDesc, setEditDesc] = useState(null);
   const [gymName, setEditGymName] = useState(null);
-  const [lat, setEditLat] = useState(null);
-  const [lng, setEditLng] = useState(null);
+  const latRef = useRef(null);
+  const lngRef = useRef(null);
 
   const handleImageClick = (image) => {
     setExpandedImage(image);
@@ -178,19 +178,14 @@ const GymProfile = () => {
   const handleUpdateLocation = async (e) => {
     e.preventDefault();
     try {
-      const response = await privateAxiosInstance.put(`/gyms/${gymId}`, {
-        branchInfo: {
-          location: {
-            lat: lat,
-            lng: lng,
-          },
+      const response = await privateAxiosInstance.put(`/gyms/${gymId}/branch`, {
+        location: {
+          lat: latRef.current.value,
+          lng: lngRef.current.value,
         },
       });
-      setGymInfo({
-        ...gymInfo,
-        lat: response?.data?.data?.branchInfo?.location?.lat,
-        lng: response.data?.data?.branchInfo?.location?.lng,
-      });
+
+      fetchGymInfo();
       toast.success(response?.data?.message);
     } catch (error) {
       console.error(error?.response?.data);
@@ -977,10 +972,7 @@ const GymProfile = () => {
                     controlId="lat"
                     name="lat"
                     defaultValue={gymInfo?.branchInfo?.location?.lat}
-                    value={lat}
-                    onChange={(e) => {
-                      setEditLat(e.target.value);
-                    }}
+                    ref={latRef}
                   />
                   <FormLabel htmlFor="lng">{t("lng")}</FormLabel>
                   <Form.Control
@@ -989,10 +981,7 @@ const GymProfile = () => {
                     placeholder={t("EditYourLocation(lng)")}
                     name="lng"
                     defaultValue={gymInfo?.branchInfo?.location?.lng}
-                    value={lng}
-                    onChange={(e) => {
-                      setEditLng(e.target.value);
-                    }}
+                    ref={lngRef}
                   />
                 </div>
               </Form.Group>
