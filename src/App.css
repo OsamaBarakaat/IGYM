@@ -484,6 +484,58 @@ input {
 
 }
 
+.PurpleButton {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    /* color: var(--main-text-color); */
+    color: whitesmoke;
+    border: none;
+    font-size: small;
+    transition: all 0.3s ease;
+    background-color: purple;
+    cursor: pointer;
+    font-weight: var(--main-font-weight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.PurpleButton:hover {
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.PurpleButton span:first-child {
+    margin-right: 0.5rem;
+
+}
+
+.OrangeButton {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    /* color: var(--main-text-color); */
+    color: whitesmoke;
+    border: none;
+    font-size: small;
+    transition: all 0.3s ease;
+    background-color: rgb(202, 172, 1);
+    cursor: pointer;
+    font-weight: var(--main-font-weight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.OrangeButton:hover {
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.OrangeButton span:first-child {
+    margin-right: 0.5rem;
+
+}
+
 .textButton {
     color: var(--main-color-500);
     font-weight: var(--main-font-weight);

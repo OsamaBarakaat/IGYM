@@ -65,7 +65,6 @@ const TraineeProfile = () => {
       clearInterval(timer);
     };
   }, [timer]);
-
   const [inBodyCount, setInBodyCount] = useState(5); // Starting count
   const maxFreeInBodies = 0;
   const handleCountDown = () => {
@@ -79,6 +78,120 @@ const TraineeProfile = () => {
       toast.warning(t("You have used all your free in-bodies"));
     }
   }, [inBodyCount, t]);
+
+  // -------
+  const [showConfirmPrivateSession, setShowConfirmPrivateSession] =
+    useState(false);
+  const [
+    showStepBackButtonPrivateSession,
+    setShowStepBackButtonPrivateSession,
+  ] = useState(false);
+  const [stepBackTimePrivateSession, setStepBackTimePrivateSession] =
+    useState(10);
+  const [timerPrivateSession, setTimerPrivateSession] = useState(null);
+
+  const handleConfirmUsePrivateSession = () => {
+    if (inBodyCountPrivateSession > 0) {
+      setInBodyCountPrivateSession((prevCount) => prevCount - 1);
+      setShowConfirmPrivateSession(false);
+      setShowStepBackButtonPrivateSession(true);
+      setStepBackTimePrivateSession(10);
+      const countdown = setInterval(() => {
+        setStepBackTimePrivateSession((prevTime) => prevTime - 1);
+        if (stepBackTimePrivateSession === 0) {
+          clearInterval(countdown);
+          setShowStepBackButtonPrivateSession(false);
+        }
+      }, 1000);
+      setTimerPrivateSession(countdown);
+    } else {
+      toast.warning(t("You have used all your free Private Session"));
+      setShowConfirmPrivateSession(false);
+    }
+  };
+
+  const handleStepBackPrivateSession = () => {
+    if (stepBackTimePrivateSession > 0) {
+      setInBodyCountPrivateSession((prevCount) => prevCount + 1);
+      setShowStepBackButtonPrivateSession(false);
+      clearInterval(timerPrivateSession);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      clearInterval(timerPrivateSession);
+    };
+  }, [timerPrivateSession]);
+  const [inBodyCountPrivateSession, setInBodyCountPrivateSession] = useState(5); // Starting count
+  const maxFreeInBodiesPrivateSession = 0;
+  const handleCountDownPrivateSession = () => {
+    if (inBodyCountPrivateSession >= 1) {
+      setInBodyCountPrivateSession((prevCount) => prevCount - 1);
+    }
+  };
+
+  useEffect(() => {
+    if (inBodyCountPrivateSession === 0) {
+      toast.warning(t("You have used all your free Private Session"));
+    }
+  }, [inBodyCountPrivateSession, t]);
+  // -------
+
+  // -------
+  const [showConfirmNS, setShowConfirmNS] = useState(false);
+  const [showStepBackButtonNS, setShowStepBackButtonNS] = useState(false);
+  const [stepBackTimeNS, setStepBackTimeNS] = useState(10);
+  const [timerNS, setTimerNS] = useState(null);
+
+  const handleConfirmUseNS = () => {
+    if (inBodyCountNS > 0) {
+      setInBodyCountNS((prevCount) => prevCount - 1);
+      setShowConfirmNS(false);
+      setShowStepBackButtonNS(true);
+      setStepBackTimeNS(10);
+      const countdown = setInterval(() => {
+        setStepBackTimeNS((prevTime) => prevTime - 1);
+        if (stepBackTimeNS === 0) {
+          clearInterval(countdown);
+          setShowStepBackButtonNS(false);
+        }
+      }, 1000);
+      setTimerNS(countdown);
+    } else {
+      toast.warning(t("You have used all your free Private Session"));
+      setShowConfirmNS(false);
+    }
+  };
+
+  const handleStepBackNS = () => {
+    if (stepBackTimeNS > 0) {
+      setInBodyCountNS((prevCount) => prevCount + 1);
+      setShowStepBackButtonNS(false);
+      clearInterval(timerNS);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      clearInterval(timerNS);
+    };
+  }, [timerNS]);
+  const [inBodyCountNS, setInBodyCountNS] = useState(5); // Starting count
+  const maxFreeInBodiesNS = 0;
+  const handleCountDownNS = () => {
+    if (inBodyCountNS >= 1) {
+      setInBodyCountNS((prevCount) => prevCount - 1);
+    }
+  };
+
+  useEffect(() => {
+    if (inBodyCountNS === 0) {
+      toast.warning(t("You have used all your free Private Session"));
+    }
+  }, [inBodyCountNS, t]);
+  // -------
+
   const axiosPrivate = useAxiosPrivate();
 
   //   const fetchData = async () => {
@@ -164,16 +277,30 @@ const TraineeProfile = () => {
                 alt="Coach"
               />
             </div>
-            <div className="saveAndDelete d-flex flex-column w-75 gap-2">
+            <div className="saveAndDelete d-flex justify-content-center w-75 gap-2 flex-wrap">
               <button
-                className="SecondaryButton w-100"
+                className="SecondaryButton w-40"
                 type="button"
                 onClick={() => setShowConfirm(true)}
               >
                 {t("Use In-body")} : {inBodyCount}
               </button>
               <button
-                className="PrimaryButton w-100"
+                className="PurpleButton w-40"
+                type="button"
+                onClick={() => setShowConfirmPrivateSession(true)}
+              >
+                {t("Use Private Session")} : {inBodyCountPrivateSession}
+              </button>
+              <button
+                className="OrangeButton w-40"
+                type="button"
+                onClick={() => setShowConfirmNS(true)}
+              >
+                {t("Use Nutriation plan")} : {inBodyCountNS}
+              </button>
+              <button
+                className="PrimaryButton w-40"
                 type="button"
                 onClick={() => {
                   handleShowInvitation();
@@ -185,7 +312,7 @@ const TraineeProfile = () => {
             {showStepBackButton && (
               <div className="step-back-container w-100 my-2">
                 <button
-                  className="btn btn-warning w-100"
+                  className="SecondaryButton w-100"
                   onClick={handleStepBack}
                   hidden={stepBackTime <= 0}
                   aria-label={
@@ -193,6 +320,43 @@ const TraineeProfile = () => {
                   }
                 >
                   {t("Step back in")} {stepBackTime} {t("seconds")}
+                </button>
+              </div>
+            )}
+            {showStepBackButtonPrivateSession && (
+              <div className="step-back-container w-100 my-2">
+                <button
+                  className="PurpleButton w-100"
+                  onClick={handleStepBackPrivateSession}
+                  hidden={stepBackTimePrivateSession <= 0}
+                  aria-label={
+                    t("Step back in(PS)") +
+                    " " +
+                    stepBackTimePrivateSession +
+                    " " +
+                    t("seconds")
+                  }
+                >
+                  {t("Step back in")} {stepBackTimePrivateSession}{" "}
+                  {t("seconds")}
+                </button>
+              </div>
+            )}
+            {showStepBackButtonNS && (
+              <div className="step-back-container w-100 my-2">
+                <button
+                  className="OrangeButton w-100"
+                  onClick={handleStepBackNS}
+                  hidden={stepBackTimeNS <= 0}
+                  aria-label={
+                    t("Step back in(NS)") +
+                    " " +
+                    stepBackTimeNS +
+                    " " +
+                    t("seconds")
+                  }
+                >
+                  {t("Step back in")} {stepBackTimeNS} {t("seconds")}
                 </button>
               </div>
             )}
@@ -499,6 +663,63 @@ const TraineeProfile = () => {
                 {t("Cancel")}
               </Button>
               <Button variant="primary" onClick={handleConfirmUse}>
+                {t("Confirm")}
+              </Button>
+            </div>
+          </Modal.Body>
+        </Modal>
+        <Modal
+          show={showConfirmPrivateSession}
+          onHide={() => setShowConfirmPrivateSession(false)}
+          centered
+        >
+          <Modal.Header>
+            <Modal.Title>{t("Confirm Use Private Sessions")}</Modal.Title>
+            <button
+              className="btn-close"
+              onClick={() => setShowConfirmPrivateSession(false)}
+            ></button>
+          </Modal.Header>
+          <Modal.Body>
+            <p>{t("Are you sure you want to use an Private Session?")}</p>
+            <div className="d-flex justify-content-end gap-3">
+              <Button
+                variant="secondary"
+                onClick={() => setShowConfirmPrivateSession(false)}
+              >
+                {t("Cancel")}
+              </Button>
+              <Button
+                variant="primary"
+                onClick={handleConfirmUsePrivateSession}
+              >
+                {t("Confirm")}
+              </Button>
+            </div>
+          </Modal.Body>
+        </Modal>
+        <Modal
+          show={showConfirmNS}
+          onHide={() => setShowConfirmNS(false)}
+          centered
+        >
+          <Modal.Header>
+            <Modal.Title>{t("Confirm Use Nutriation Sessions")}</Modal.Title>
+            <button
+              className="btn-close"
+              onClick={() => setShowConfirmNS(false)}
+            ></button>
+          </Modal.Header>
+          <Modal.Body>
+            <p>{t("Are you sure you want to use an Private Session?")}</p>
+            <div className="d-flex justify-content-end gap-3">
+              <Button
+                variant="secondary"
+                onClick={() => setShowConfirmNS(false)}
+              >
+                {t("Cancel")}
+              </Button>
+              <Button variant="primary" onClick={handleConfirmUseNS}>
                 {t("Confirm")}
               </Button>
             </div>
