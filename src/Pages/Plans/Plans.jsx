@@ -12,6 +12,7 @@ import "./Plans.css";
 import PrivateSession from "./PrivateSessions/PrivateSession";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { formatDate } from "../../utils/FormatDate";
 
 let planId;
 const Plans = () => {
@@ -254,20 +255,20 @@ const Plans = () => {
         setPlans(editedPlans);
       } catch (error) {
         if (error.response.status === 400) {
-           if (error.response.data.errors) {
-             toast.error(
-               <div>
-                 <strong>{error.response.data.message}</strong>
-                 <ul>
-                   {error.response.data.errors.map((err, index) => (
-                     <li key={index}>{err.msg}</li>
-                   ))}
-                 </ul>
-               </div>
-             );
-           } else {
-             toast.error(error.response.data.message);
-           }
+          if (error.response.data.errors) {
+            toast.error(
+              <div>
+                <strong>{error.response.data.message}</strong>
+                <ul>
+                  {error.response.data.errors.map((err, index) => (
+                    <li key={index}>{err.msg}</li>
+                  ))}
+                </ul>
+              </div>
+            );
+          } else {
+            toast.error(error.response.data.message);
+          }
         } else {
           toast.error(t("Something went wrong"));
         }
@@ -441,6 +442,9 @@ const Plans = () => {
                         <div className="line1 flexcenterbetween">
                           <div className="d-flex flex-column justify-content-center align-items-start">
                             <span className="midText">{plan?.name}</span>
+                            <p className="text-small-opacity">
+                              {formatDate(plan?.createdAt)}
+                            </p>
                             {(plan?.offer.cost || plan?.offer.duration) &&
                               new Date(plan?.offer.expireAt) > new Date() && (
                                 <small className="offerEndIn opacityL d-block">

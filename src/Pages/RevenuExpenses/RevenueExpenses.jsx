@@ -16,6 +16,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import SmallLoader from "../../components/SmallLoader/SmallLoader";
+import { formatDate } from "../../utils/FormatDate";
 
 const RevenueExpenses = () => {
   const [revenue, setRevenue] = useState([]);
@@ -55,13 +56,22 @@ const RevenueExpenses = () => {
       {
         label: "My Expense",
         data: stats?.monthlyExpenses,
-        backgroundColor: "#396AFF",
-        borderColor: "#396AFF",
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        hoverBackgroundColor: "#E7EDFF",
+        hoverBorderColor: "#396AFF",
+        borderWidth: 2,
+        borderRadius: 2,
+      },
+      {
+        label: "My Income",
+        data: stats?.monthlyExpenses,
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderColor: "rgba(54, 162, 235, 1)",
         hoverBackgroundColor: "#E7EDFF",
         hoverBorderColor: "#FF82AC",
         borderWidth: 2,
-        borderRadius: 10,
-        pointStyle: "star",
+        borderRadius: 2,
       },
     ],
   };
@@ -138,6 +148,8 @@ const RevenueExpenses = () => {
       console.error("Error:", error);
     }
   };
+
+  console.log("stats", stats);
 
   const refetchTransactions = async () => {
     try {
@@ -283,6 +295,9 @@ const RevenueExpenses = () => {
       toast.error(error.response.data.message);
     }
   };
+
+  console.log(revenue);
+  console.log(expenses);
 
   return (
     <div className="m-4">
@@ -593,6 +608,7 @@ const RevenueExpenses = () => {
                   <Form.Control
                     type="text"
                     placeholder="Cost"
+                    className="text-sm"
                     name="cost"
                     value={editData.amount}
                     onChange={(e) => {
@@ -631,6 +647,7 @@ const TransactionTable = ({ data, handleDelete, handleEdit }) => (
         <th>Title</th>
         <th>Type</th>
         <th>Amount</th>
+        <th>Date</th>
         {/* <th>repeat</th> */}
         <th className="text-center">Actions</th>
       </tr>
@@ -641,6 +658,7 @@ const TransactionTable = ({ data, handleDelete, handleEdit }) => (
           <td>{item.title}</td>
           <td>{item.type}</td>
           <td>{item.amount}</td>
+          <td>{formatDate(item.createdAt)}</td>
           {/* <td>
             {item.repeat ? (
               <Table>

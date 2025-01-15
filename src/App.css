@@ -353,6 +353,32 @@ input {
 
 }
 
+.TextButton {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: var(--main-color-500);
+    background-color: transparent;
+    border: none;
+    font-size: medium;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-weight: var(--main-font-weight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.TextButton span:first-child {
+    margin-right: 0.5rem;
+
+}
+
+.TextButton:hover {
+    cursor: pointer;
+    color: var(--main-color-500);
+    text-decoration: underline
+}
+
 .PrimaryButton {
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
@@ -640,4 +666,10 @@ button:disabled {
 
 .modal-header .btn-close {
     margin: 0;
+}
+
+.text-small-opacity {
+    font-size: small;
+    opacity: 0.3;
+    text-align: start;
 }

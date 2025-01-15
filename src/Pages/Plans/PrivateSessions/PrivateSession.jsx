@@ -11,6 +11,7 @@ import {
 import { toast } from "react-toastify";
 import Loader from "../../../components/Loader/Loader";
 import { useTranslation } from "react-i18next";
+import { formatDate } from "../../../utils/FormatDate";
 
 const PrivateSession = () => {
   const { t } = useTranslation();
@@ -331,6 +332,9 @@ const PrivateSession = () => {
                 <div className="flexcenterbetween">
                   <p className="fontLarge">
                     {session.sessions} Sessions package
+                    <div className="text-small-opacity">
+                      {formatDate(session?.createdAt)}
+                    </div>
                     <br />
                     {(session?.offer.cost || session?.offer.sessions) &&
                       new Date(session?.offer.expireAt) > new Date() && (

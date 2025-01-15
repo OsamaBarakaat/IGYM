@@ -8,7 +8,7 @@ import Heading from "../../components/Heading/Heading";
 import avatar from "../../assetss/default/5856.jpg";
 import { CircularProgressbar } from "react-circular-progressbar";
 import { date } from "yup";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { privateAxiosInstance } from "../../api/axios";
 import { toast } from "react-toastify";
@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import Loader from "../../components/Loader/Loader";
 import HeadingHome from "../../components/HeadingHome/HeadingHome";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { formatDate } from "../../utils/FormatDate";
 
 const Home = ({ socket }) => {
   const { t, i18n } = useTranslation();
@@ -177,43 +178,50 @@ const Home = ({ socket }) => {
                     {/* <p>{item.date}</p> */}
                   </div>
                   <p className="mb-0">${item.cost}</p>
-                    <div className="d-flex justify-content-center align-items-center gap-1">
-                      <button onClick={() => handleAccept(item._id)} className="SecondaryButton">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          class="bi bi-check2"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
-                        </svg>
-                      </button>
-                      <button className="DangerButton" onClick={() => handleReject(item._id)}>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          class="bi bi-x-lg"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                        </svg>
-                      </button>
-                    </div>
-                 
+                  <div className="d-flex justify-content-center align-items-center gap-1">
+                    <button
+                      onClick={() => handleAccept(item._id)}
+                      className="SecondaryButton"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-check2"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
+                      </svg>
+                    </button>
+                    <button
+                      className="DangerButton"
+                      onClick={() => handleReject(item._id)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-x-lg"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               ))
             ) : (
-              <p>{t("noUpcomingPaymentsYet")}</p>
+              <p className="text-center w-100">{t("noUpcomingPaymentsYet")}</p>
             )}
           </div>
         </div>
 
         <div className="dountChart ">
-          {!stats?.topPlansNames.length && <p>{t("noPlansUsedYet")}</p>}
+          {!stats?.topPlansNames.length && (
+            <p className="text-center w-100">{t("noPlansUsedYet")}</p>
+          )}
           <Doughnut
             data={{
               labels: stats?.topPlansNames || [],
@@ -276,36 +284,46 @@ const Home = ({ socket }) => {
             }}
           />
         </div>
-        <div className="checkIn opacity-75">
+        <div className="checkIn opacity-75 ">
           <p>{t("check in")}</p>
-          <div className="checkInBody">
-            {!stats?.gymAttendance.length && <p>{t("noCheckIn")}</p>}
+          <div className="checkInBody min_height_30 ">
+            {!stats?.gymAttendance.length && (
+              <p className="text-center w-100">{t("noCheckIn")}</p>
+            )}
             {stats?.gymAttendance.map((item) => {
               return (
                 <div className="checkInRow">
-                  <div className="upcomingPaymentsItemImg">
-                    <img
-                      src={item.userGym?.user.image}
-                      alt="img"
-                      className="w-10"
-                    />
-                  </div>
-                  <div>
-                    <p>{item.userGym?.user.name}</p>
-                    <p className="opacity-75">{item.date.split("T")[0]}</p>
-                  </div>
-                  <div>
-                    <p>{t("Expiration Date")}</p>
-                    <p className="opacity-75">
-                      {item.userGym.plan
-                        ? item.userGym.plan.expiredAt.split("T")[0]
-                        : "Trainer"}
-                    </p>
+                  <div className="checkInFirstPart">
+                    <div className="upcomingPaymentsItemImg">
+                      <img
+                        src={item.userGym?.user.image}
+                        alt="img"
+                        className="w-10"
+                      />
+                    </div>
+                    <div>
+                      <h4>{item.userGym?.user.name}</h4>
+                      <p className="opacity-75">{formatDate(item.date)}</p>
+                    </div>
+                    <div className="divider"></div>
+                    <div>
+                      <h4>{t("Expiration Date")}</h4>
+                      <p className="opacity-75">
+                        {item.userGym.plan
+                          ? item.userGym.plan.expiredAt.split("T")[0]
+                          : "Trainer"}
+                      </p>
+                    </div>
                   </div>
 
-                  {/* <div>
-                    <button className="btn btn-primary">{t("View")}</button>
-                  </div> */}
+                  <div>
+                    <Link
+                      to={`/traineeprofile/${item.userGym?.user._id}`}
+                      className="TextButton"
+                    >
+                      {t("View")}
+                    </Link>
+                  </div>
                 </div>
               );
             })}

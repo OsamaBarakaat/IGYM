@@ -315,11 +315,12 @@ const Profile = () => {
                         controlId="floatingInput"
                         label={t("Your name")}
                         id="floatingInput"
-                        className="mb-3"
+                        className="mb-3 opacity-50"
                       >
                         <Form.Control
                           type="text"
                           placeholder={t("Your name")}
+                          disabled
                           value={userData?.name}
                           readOnly
                         />
@@ -345,7 +346,7 @@ const Profile = () => {
                         controlId="floatingInput"
                         label={t("Phone")}
                         id="floatingInput"
-                        className="mb-3"
+                        className="mb-3 opacity-50"
                       >
                         {userData &&
                           userData.phones &&
@@ -353,6 +354,7 @@ const Profile = () => {
                             <Form.Control
                               type="number"
                               placeholder="phone number"
+                              disabled
                               value={userData.phones[0]}
                               readOnly
                             />

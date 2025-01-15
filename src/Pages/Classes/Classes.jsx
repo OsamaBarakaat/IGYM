@@ -15,6 +15,7 @@ import Loader from "../../components/Loader/Loader";
 import { useTranslation } from "react-i18next";
 import History from "./History/History";
 import HeadingNoBack from "../../components/HeadingNoBack/Heading";
+import { formatDate } from "../../utils/FormatDate";
 
 const Classes = () => {
   const { t, i18n } = useTranslation();
@@ -352,7 +353,13 @@ const Classes = () => {
                       </button>
                     </div>
                     <div className="flexcenterbetween my-2">
-                      <p className="fontMid">{classItem.name}</p>
+                      <p className="fontMid text-start">
+                        {classItem.name}
+                        <p className="text-small-opacity">
+                          {formatDate(classItem?.createdAt)}
+                        </p>
+                      </p>
+
                       <p>
                         <span className="fontMid">{classItem.cost}</span>
                         <span>{t("/class")}</span>

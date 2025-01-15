@@ -82,6 +82,9 @@ const Signin = () => {
   });
   return (
     <div className="signin">
+      <div className="signin__container_logo">
+        <img src="/IGymLogo.png" alt="Logo" />
+      </div>
       <div className="main-cont-signin">
         <div className="signin-header">
           <p>
