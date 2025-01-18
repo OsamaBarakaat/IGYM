@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import avatar from "../../../assetss/default/5856.jpg";
-import Heading from "../../../components/Heading/Heading";
 import { useTranslation } from "react-i18next";
-import "./Subscriptions.css"; // Import your CSS file for styling
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import "./SubNew.css"; // Import your CSS file for styling
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import HeadingNoBack from "../../../components/HeadingNoBack/Heading";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import HeadingNoBack from "../../components/HeadingNoBack/Heading";
 
 const NotificationItem = ({
   name,
@@ -44,7 +42,7 @@ const NotificationItem = ({
   );
 };
 
-const Subscriptions = ({ socket }) => {
+const SubNew = ({ socket }) => {
   const { t, i18n } = useTranslation();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -102,7 +100,7 @@ const Subscriptions = ({ socket }) => {
 
   useEffect(() => {
     fetchSubscriptions();
-    socket.on("new subscription", () => {
+    socket?.on("new subscription", () => {
       fetchSubscriptions();
     });
   }, []);
@@ -130,4 +128,4 @@ const Subscriptions = ({ socket }) => {
   );
 };
 
-export default Subscriptions;
+export default SubNew;

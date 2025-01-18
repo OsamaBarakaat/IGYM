@@ -33,6 +33,7 @@ import History from "./Pages/Classes/History/History";
 import io from "socket.io-client";
 import TraineeProfile from "./Pages/Trainees/TraineeProfile/TraineeProfile";
 import Invitations from "./Pages/Invitations/Invitations";
+import SubNew from "./Pages/SubNew/SubNew";
 
 const ENDPOINT = "https://api.igymsystem.com/";
 // const ENDPOINT = "http://localhost:8000";
@@ -83,6 +84,7 @@ function App() {
             <Route path="/trainees" element={<Trainees />} />
             <Route path="/traineeprofile/:traineeId" element={<TraineeProfile />} />
             <Route path="/subscreptions" element={<Subscreption />} />
+            <Route path="/subnew" element={<SubNew />} />
             <Route path="/addnewrole" element={<AddNewRole />} />
             <Route path="/coachprofile/:coachId" element={<CoachProfile />} />
             <Route path="/classes" element={<Classes />} />

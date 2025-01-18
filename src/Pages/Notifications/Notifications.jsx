@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Notifications.css";
-import avatar from "../../assetss/default/5856.jpg";
 import PushNotifications from "./PushNotifications/PushNotifications";
-import Heading from "../../components/Heading/Heading";
 import { useTranslation } from "react-i18next";
-import Subscriptions from "./Subscriptions/Subscriptions";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
@@ -66,13 +63,6 @@ const Notifications = ({ socket }) => {
             >
               {t("Push Notifications")}
             </li>
-            <li
-              onClick={() => {
-                setCurrentPage(3);
-              }}
-            >
-              {t("Subscriptions")}
-            </li>
           </ul>
         </nav>
       </aside>
@@ -95,14 +85,6 @@ const Notifications = ({ socket }) => {
               }}
             >
               {t("Push Notifications")}
-            </div>
-            <div
-              className="myInfoSecondNav"
-              onClick={() => {
-                setCurrentPage(3);
-              }}
-            >
-              {t("Subscriptions")}
             </div>
           </div>
         </div>
@@ -135,11 +117,6 @@ const Notifications = ({ socket }) => {
             <div>
               <PushNotifications />
             </div>
-          </>
-        )}
-        {currentPage === 3 && (
-          <>
-            <Subscriptions socket={socket} />
           </>
         )}
       </main>

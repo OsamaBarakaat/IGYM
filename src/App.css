@@ -353,6 +353,32 @@ input {
 
 }
 
+.TextButton {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: var(--main-color-500);
+    background-color: transparent;
+    border: none;
+    font-size: medium;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-weight: var(--main-font-weight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.TextButton span:first-child {
+    margin-right: 0.5rem;
+
+}
+
+.TextButton:hover {
+    cursor: pointer;
+    color: var(--main-color-500);
+    text-decoration: underline
+}
+
 .PrimaryButton {
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
@@ -454,6 +480,58 @@ input {
 }
 
 .SecondaryButton span:first-child {
+    margin-right: 0.5rem;
+
+}
+
+.PurpleButton {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    /* color: var(--main-text-color); */
+    color: whitesmoke;
+    border: none;
+    font-size: small;
+    transition: all 0.3s ease;
+    background-color: purple;
+    cursor: pointer;
+    font-weight: var(--main-font-weight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.PurpleButton:hover {
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.PurpleButton span:first-child {
+    margin-right: 0.5rem;
+
+}
+
+.OrangeButton {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    /* color: var(--main-text-color); */
+    color: whitesmoke;
+    border: none;
+    font-size: small;
+    transition: all 0.3s ease;
+    background-color: rgb(202, 172, 1);
+    cursor: pointer;
+    font-weight: var(--main-font-weight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.OrangeButton:hover {
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.OrangeButton span:first-child {
     margin-right: 0.5rem;
 
 }
@@ -640,4 +718,10 @@ button:disabled {
 
 .modal-header .btn-close {
     margin: 0;
+}
+
+.text-small-opacity {
+    font-size: small;
+    opacity: 0.3;
+    text-align: start;
 }
