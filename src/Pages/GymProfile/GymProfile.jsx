@@ -590,10 +590,10 @@ const GymProfile = () => {
                       {gymInfo?.branchInfo.workingTimes[day]?.closing || "---"}
                     </td>
                     <td data-label={t("Peak hours")}>
-                      {gymInfo?.branchInfo.workingTimes[day]?.peak || "---"}
+                      {`${gymInfo?.branchInfo.workingTimes[day]?.peakFrom || ""} - ${gymInfo?.branchInfo.workingTimes[day]?.peakTo || ""}`}
                     </td>
                     <td data-label={t("Female hours")}>
-                      {gymInfo?.branchInfo.workingTimes[day]?.female || "---"}
+                      {`${gymInfo?.branchInfo.workingTimes[day]?.femaleFrom || ""} - ${gymInfo?.branchInfo.workingTimes[day]?.femaleTo || ""}`}
                     </td>
                   </tr>
                 ))}

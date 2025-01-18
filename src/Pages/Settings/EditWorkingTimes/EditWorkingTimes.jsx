@@ -167,8 +167,8 @@ const EditWorkingTimes = () => {
                       type="time"
                       placeholder={t("Peak Hours From")}
                       className="text-small w-100"
-                      name="peak"
-                      value={workingDays[day]?.peak || ""}
+                      name="peakFrom"
+                      value={workingDays[day]?.peakFrom || ""}
                       onChange={(e) => handleChange(e, day)}
                     />
                   </FloatingLabel>
@@ -196,8 +196,8 @@ const EditWorkingTimes = () => {
                       type="time"
                       placeholder={t("Peak Hours To")}
                       className="text-small w-100"
-                      name="peak"
-                      value={workingDays[day]?.peak || ""}
+                      name="peakTo"
+                      value={workingDays[day]?.peakTo || ""}
                       onChange={(e) => handleChange(e, day)}
                     />
                   </FloatingLabel>
@@ -231,8 +231,8 @@ const EditWorkingTimes = () => {
                       type="time"
                       placeholder="Female Hours From"
                       className="text-small"
-                      name="female"
-                      value={workingDays[day]?.female || ""}
+                      name="femaleFrom"
+                      value={workingDays[day]?.femaleFrom || ""}
                       onChange={(e) => handleChange(e, day)}
                     />
                   </FloatingLabel>
@@ -264,8 +264,8 @@ const EditWorkingTimes = () => {
                       type="time"
                       placeholder="Female Hours To"
                       className="text-small"
-                      name="female"
-                      value={workingDays[day]?.female || ""}
+                      name="femaleTo"
+                      value={workingDays[day]?.femaleTo || ""}
                       onChange={(e) => handleChange(e, day)}
                     />
                   </FloatingLabel>
