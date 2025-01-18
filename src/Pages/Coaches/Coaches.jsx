@@ -182,7 +182,9 @@ const Coaches = () => {
                                 />
                               </svg>
                             </span>
-                            <span>{t("Edit Coach details")}</span>
+                            <span className="mx-2">
+                              {t("Edit Coach details")}
+                            </span>
                           </button>
                         </div>
                       </td>

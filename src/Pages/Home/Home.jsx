@@ -80,6 +80,19 @@ const Home = ({ socket }) => {
     });
   }, []);
 
+  function changeCrowdedName(key) {
+    switch (key) {
+      case "uncrowded":
+        return t("uncrowded");
+
+      case "now is the best time to go and enjoy in gym":
+        return t("nowIsTheBest");
+
+      default:
+        return null;
+    }
+  }
+
   if (loading) {
     return (
       <>
@@ -253,8 +266,10 @@ const Home = ({ socket }) => {
               />
             </div>
             <div className="text-center opacity-75">
-              <h3>{stats?.gymCapacityPercentage.status}</h3>
-              <p>{stats?.gymCapacityPercentage.description}</p>
+              <h3>{changeCrowdedName(stats?.gymCapacityPercentage.status)}</h3>
+              <p>
+                {changeCrowdedName(stats?.gymCapacityPercentage.description)}
+              </p>
             </div>
           </div>
         </div>

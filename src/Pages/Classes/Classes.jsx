@@ -246,7 +246,7 @@ const Classes = () => {
   return (
     <div className="myInfo">
       <div className="myInfoHeading">
-        <HeadingNoBack content={"Classes"} />
+        <HeadingNoBack content={t("Classes")} />
       </div>
       <div className="flexcenterstart bigCardTwo p-2 gap-4">
         <div
@@ -349,7 +349,7 @@ const Classes = () => {
                             />
                           </svg>
                         </span>
-                        <span>{t("Edit")}</span>
+                        <span className="mx-2">{t("Edit")}</span>
                       </button>
                     </div>
                     <div className="flexcenterbetween my-2">

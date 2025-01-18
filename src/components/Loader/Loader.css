@@ -14,7 +14,7 @@
     aspect-ratio: 1;
     display: grid;
     border-radius: 50%;
-    background: conic-gradient(#25b09b 25%, #f03355 0 50%, #514b82 0 75%, #ffa516 0);
+    background: conic-gradient(var(--main-color) 25%, var(--main-text-color) 0 50%, var(--main-color) 0 75%, var(--main-text-color) 0);
     animation: l22 4s infinite linear;
 }
 

@@ -64,6 +64,14 @@ input {
     }
 }
 
+.rtl {
+    direction: rtl;
+}
+
+.ltr {
+    direction: ltr;
+}
+
 .main-color {
     color: var(--main-color);
 }
@@ -717,7 +725,7 @@ button:disabled {
 }
 
 .modal-header .btn-close {
-    margin: 0;
+    margin: 0 !important;
 }
 
 .text-small-opacity {

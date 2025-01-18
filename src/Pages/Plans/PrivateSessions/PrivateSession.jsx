@@ -15,6 +15,10 @@ import { formatDate } from "../../../utils/FormatDate";
 
 const PrivateSession = () => {
   const { t } = useTranslation();
+  const [lang, setLang] = useState("en");
+  useEffect(() => {
+    setLang(localStorage.getItem("i18nextLng") || "en");
+  }, []);
   const [modalShowAddPS, setModalShowAddPS] = useState(false);
   const [modalShowEditPS, setModalShowEditPS] = useState(false);
   const [modalShowAddOfferPS, setModalShowAddOfferPS] = useState(false);
@@ -231,7 +235,13 @@ const PrivateSession = () => {
             <div className="plans-details">
               {(session?.offer.cost || session?.offer.duration) &&
                 new Date(session?.offer.expireAt) > new Date() && (
-                  <div className="offerDesign">{t("Offer")}</div>
+                  <div
+                    className={`${
+                      lang === "en" ? "offerDesign" : "offerDesignAr"
+                    }`}
+                  >
+                    {t("Offer")}
+                  </div>
                 )}
               <div className="flexcenterend gap-2">
                 {(session?.offer.cost || session?.offer.duration) &&

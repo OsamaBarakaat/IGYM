@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-target-blank */
 import React, { useEffect, useRef, useState } from "react";
 import Heading from "../../components/Heading/Heading";
 import "./GymProfile.css";
@@ -8,7 +9,16 @@ import "swiper/css/scrollbar";
 import { Controller } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import { Form, FormLabel, InputGroup, Modal, Spinner } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Form,
+  FormLabel,
+  InputGroup,
+  Modal,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FaPhone, FaTiktok, FaFacebook, FaInstagram } from "react-icons/fa";
 import axiosInstance, { privateAxiosInstance } from "../../api/axios";
@@ -232,14 +242,34 @@ const GymProfile = () => {
     setGymInfo({ ...gymInfo, links });
   };
 
-  const handleChangePhone = (e) => {
-    const { value } = e.target;
-    const phones = value === "" ? [] : [value];
-    setGymInfo({ ...gymInfo, phones });
+  const handleChangePhone = (index, event) => {
+    const newPhones = [...gymInfo.phones];
+    newPhones[index] = event.target.value;
+    setGymInfo({ ...gymInfo, phones: newPhones });
+  };
+
+  const addPhone = () => {
+    setGymInfo({ ...gymInfo, phones: [...gymInfo.phones, ""] });
+  };
+
+  const removePhone = (index) => {
+    const newPhones = gymInfo.phones.filter((_, i) => i !== index);
+    setGymInfo({ ...gymInfo, phones: newPhones });
   };
 
   const handleSubmitLinks = async (e) => {
     e.preventDefault();
+
+    if (gymInfo.phones.some((phone) => phone === "")) {
+      toast.error(t("Please fill in all phone fields before submitting."));
+      return;
+    }
+
+    if (gymInfo.phones.length > 5) {
+      toast.error(t("You can only add up to 5 phone numbers."));
+      return;
+    }
+
     try {
       const response = await privateAxiosInstance.put(`/gyms/${gymId}`, {
         links: gymInfo.links,
@@ -590,10 +620,18 @@ const GymProfile = () => {
                       {gymInfo?.branchInfo.workingTimes[day]?.closing || "---"}
                     </td>
                     <td data-label={t("Peak hours")}>
-                      {`${gymInfo?.branchInfo.workingTimes[day]?.peakFrom || ""} - ${gymInfo?.branchInfo.workingTimes[day]?.peakTo || ""}`}
+                      {`${
+                        gymInfo?.branchInfo.workingTimes[day]?.peakFrom || ""
+                      } - ${
+                        gymInfo?.branchInfo.workingTimes[day]?.peakTo || ""
+                      }`}
                     </td>
                     <td data-label={t("Female hours")}>
-                      {`${gymInfo?.branchInfo.workingTimes[day]?.femaleFrom || ""} - ${gymInfo?.branchInfo.workingTimes[day]?.femaleTo || ""}`}
+                      {`${
+                        gymInfo?.branchInfo.workingTimes[day]?.femaleFrom || ""
+                      } - ${
+                        gymInfo?.branchInfo.workingTimes[day]?.femaleTo || ""
+                      }`}
                     </td>
                   </tr>
                 ))}
@@ -650,7 +688,6 @@ const GymProfile = () => {
               navigation
               grabCursor
               pagination={{ clickable: true }}
-              scrollbar={{ draggable: true }}
               onSwiper={(swiper) => console.log(swiper)}
               onSlideChange={() => console.log("slide change")}
               breakpoints={{
@@ -677,7 +714,7 @@ const GymProfile = () => {
                     <img
                       src={image}
                       alt={`imagee-${index}`}
-                      className=" rounded-2"
+                      className="rounded-2 h-200px"
                     />
                   </div>
                   <button
@@ -810,19 +847,44 @@ const GymProfile = () => {
           </Modal.Header>
           <Modal.Body className="modalOfLogout">
             <Form onSubmit={handleSubmitLinks}>
-              <Form.Group controlId="formPhoneNumber" className="my-2">
-                <InputGroup>
-                  <InputGroup.Text>
-                    <FaPhone />
-                  </InputGroup.Text>
-                  <Form.Control
-                    type="text"
-                    placeholder={t("Add Your Phone Number")}
-                    name="phones"
-                    value={gymInfo?.phones[0]}
-                    onChange={handleChangePhone}
-                  />
-                </InputGroup>
+              <Form.Group controlId="formGymPhones" className="my-3">
+                <p className="font-bold">{t("Gym Phones")}</p>
+                {gymInfo?.phones.map((phone, index) => (
+                  <Row key={index} className="mb-3 w-100">
+                    <Col>
+                      <InputGroup>
+                        <InputGroup.Text>
+                          <FaPhone />
+                        </InputGroup.Text>
+                        <Form.Control
+                          type="text"
+                          placeholder={t("Add Your Phone Number")}
+                          value={phone}
+                          onChange={(event) => handleChangePhone(index, event)}
+                        />
+                      </InputGroup>
+                    </Col>
+                    <Col xs="auto">
+                      {gymInfo.phones.length > 1 && (
+                        <Button
+                          variant="danger"
+                          onClick={() => removePhone(index)}
+                        >
+                          -
+                        </Button>
+                      )}
+                    </Col>
+                    <Col xs="auto">
+                      {index === gymInfo.phones.length - 1 &&
+                        gymInfo.phones.length < 5 &&
+                        phone !== "" && (
+                          <Button variant="primary" onClick={addPhone}>
+                            +
+                          </Button>
+                        )}
+                    </Col>
+                  </Row>
+                ))}
               </Form.Group>
 
               <Form.Group controlId="formTikTokLink" className="my-2">

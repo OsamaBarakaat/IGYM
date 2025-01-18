@@ -218,7 +218,7 @@ const Settings = () => {
   });
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(1);
+  const [limit, setLimit] = useState(5);
 
   // Roles
   const [roles, setRoles] = useState([]);
@@ -266,7 +266,7 @@ const Settings = () => {
   const handleShowEdit = (admin) => {
     console.log("admin", admin);
     setSelectedAdmin(admin);
-    editMember.setValues({ role: admin.role._id });
+    editMember.setValues({ role: admin?.role?._id });
     setShowEdit(true);
   };
 
@@ -459,7 +459,7 @@ const Settings = () => {
         {currentPage === 2 && (
           <div className="myInfo">
             <div className="myInfoHeading">
-              <HeadingNoBack content={"Staff members"} />
+              <HeadingNoBack content={t("Staff members")} />
             </div>
             <div className="myInfoContent m-2">
               <div className="tableContainer">
@@ -507,7 +507,7 @@ const Settings = () => {
                               </div>
                             </div>
                           </td>
-                          <td>{admin?.role.name}</td>
+                          <td>{admin?.role?.name}</td>
                           <td>{convertToCreatedAtFormat(admin?.createdAt)}</td>
                           <td>
                             <div className="d-flex justify-content-center">
@@ -531,7 +531,7 @@ const Settings = () => {
                                     />
                                   </svg>
                                 </span>
-                                <span>{t("Edit")}</span>
+                                <span className="mx-2">{t("Edit")}</span>
                               </button>
                             </div>
                           </td>
@@ -594,7 +594,7 @@ const Settings = () => {
           <div>
             <div className="myInfo">
               <div className="myInfoHeading">
-                <HeadingNoBack content={"Theme&Language"} />
+                <HeadingNoBack content={t("Theme&Language")} />
               </div>
 
               <div className="bigCard m-3">
@@ -803,7 +803,7 @@ const Settings = () => {
                   <div className="profileName text-center fontLarge my-2">
                     {selectedAdmin?.name}
                     <p className="text-center text-small-opacity">
-                      <p>{selectedAdmin?.role.name}</p>
+                      <p>{selectedAdmin?.role?.name}</p>
                       <p>{selectedAdmin?.email}</p>
                       <p>{selectedAdmin?.phones[0]}</p>
                     </p>
@@ -827,7 +827,9 @@ const Settings = () => {
                       onChange={editMember.handleChange}
                       onBlur={editMember.handleBlur}
                     >
-                      <option value="">Select role</option>
+                      <option value="" disabled>
+                        {t("Select role")}
+                      </option>
                       {roles.map((role) => (
                         <option key={role} value={role._id}>
                           {role.name}
@@ -870,6 +872,7 @@ const Settings = () => {
                         </svg>
                       </span>
                       <span
+                        className="mx-2"
                         onClick={() => {
                           activateUser(selectedAdmin?._id);
                         }}
@@ -892,6 +895,7 @@ const Settings = () => {
                         </svg>
                       </span>
                       <span
+                        className="mx-2"
                         onClick={() => {
                           suspendUser(selectedAdmin?._id);
                         }}

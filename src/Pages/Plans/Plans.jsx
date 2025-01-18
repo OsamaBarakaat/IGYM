@@ -17,6 +17,10 @@ import { formatDate } from "../../utils/FormatDate";
 let planId;
 const Plans = () => {
   const { t } = useTranslation();
+  const [lang, setLang] = useState("en");
+  useEffect(() => {
+    setLang(localStorage.getItem("i18nextLng") || "en");
+  }, []);
   const [loading, setLoading] = useState(true);
   const [modalAddPlan, setModalShowAddPlan] = useState(false);
   const [modalEditPlan, setModalShowEditPlan] = useState(false);
@@ -393,7 +397,13 @@ const Plans = () => {
                       <div>
                         {(plan?.offer.cost || plan?.offer.duration) &&
                           new Date(plan?.offer.expireAt) > new Date() && (
-                            <div className="offerDesign">{t("Offer")}</div>
+                            <div
+                              className={`${
+                                lang === "en" ? "offerDesign" : "offerDesignAr"
+                              }`}
+                            >
+                              {t("Offer")}
+                            </div>
                           )}
                       </div>
                       <div className="main-of-pd">

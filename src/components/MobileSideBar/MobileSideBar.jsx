@@ -26,7 +26,7 @@ const MobileSideBar = () => {
               <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
             </svg>
           </span>
-          <span>{t("Home")}</span>
+          <span>{t("homeNew")}</span>
         </div>
       </Link>
       <Link to={"/trainees"} className="linkMobileSide">
@@ -87,7 +87,7 @@ const MobileSideBar = () => {
               />
             </svg>
           </span>
-          <span>{t("Profile")}</span>
+          <span>{t("profile")}</span>
         </div>
       </Link>
 
@@ -220,7 +220,7 @@ const MobileSideBar = () => {
             </li>
             <li>
               <Link
-                to={"/subscreptions"}
+                to={"/subnew"}
                 className="LinkOfMobileOffcanvas"
                 onClick={() => {
                   setShow(false);
@@ -240,6 +240,29 @@ const MobileSideBar = () => {
                   </svg>
                 </span>
                 {t("Subscreptions")}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={"/subscreptions"}
+                className="LinkOfMobileOffcanvas"
+                onClick={() => {
+                  setShow(false);
+                }}
+              >
+                <span className="mx-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-flower2"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M8 16a4 4 0 0 0 4-4 4 4 0 0 0 0-8 4 4 0 0 0-8 0 4 4 0 1 0 0 8 4 4 0 0 0 4 4m3-12q0 .11-.03.247c-.544.241-1.091.638-1.598 1.084A3 3 0 0 0 8 5c-.494 0-.96.12-1.372.331-.507-.446-1.054-.843-1.597-1.084A1 1 0 0 1 5 4a3 3 0 0 1 6 0m-.812 6.052A3 3 0 0 0 11 8a3 3 0 0 0-.812-2.052c.215-.18.432-.346.647-.487C11.34 5.131 11.732 5 12 5a3 3 0 1 1 0 6c-.268 0-.66-.13-1.165-.461a7 7 0 0 1-.647-.487m-3.56.617a3 3 0 0 0 2.744 0c.507.446 1.054.842 1.598 1.084q.03.137.03.247a3 3 0 1 1-6 0q0-.11.03-.247c.544-.242 1.091-.638 1.598-1.084m-.816-4.721A3 3 0 0 0 5 8c0 .794.308 1.516.812 2.052a7 7 0 0 1-.647.487C4.66 10.869 4.268 11 4 11a3 3 0 0 1 0-6c.268 0 .66.13 1.165.461.215.141.432.306.647.487M8 9a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                  </svg>
+                </span>
+                {t("iGymPlans")}
               </Link>
             </li>
             <li>

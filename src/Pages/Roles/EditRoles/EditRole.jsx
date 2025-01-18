@@ -58,7 +58,7 @@ const EditRole = () => {
         }
       );
       console.log(response.data);
-      toast.success(response.data.message);
+      toast.success(t("Role updated successfully"));
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
@@ -92,7 +92,7 @@ const EditRole = () => {
               </FloatingLabel>
             </div>
             <div className="w-100">
-              <label htmlFor="roleIncludes">Role Includes:</label>
+              <label htmlFor="roleIncludes">{t("Role Includes:")}</label>
               <div className="role-selection">
                 {items.map((item) => (
                   <div

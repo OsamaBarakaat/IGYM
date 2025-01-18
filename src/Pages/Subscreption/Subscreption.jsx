@@ -39,10 +39,7 @@ const Subscreption = () => {
   return (
     <div className="subscreption mx-3" style={{ minHeight: "100vh" }}>
       <div className="bigCard p-2 w-100 rounded-2 d-flex justify-content-start align-items-center">
-        <div className="logo-small">
-          <img src={avatar} alt="default" />
-        </div>
-        <span>{t("Gym Owner")}</span>
+        <span>{t("Your Plan")}</span>
       </div>
       <div className="plansOfOwner">
         <div className="bigCard ppoo">
@@ -107,45 +104,47 @@ const Subscreption = () => {
         </div>
 
         {plans.map((plan) => {
-          return plan._id !== myPlan._id && (
-            <div className="bigCard ppoo">
-              <div className="planName fontMid">{plan.name}</div>
-              <div className="price fontLarge">{plan.cost}</div>
-              <div className="plansOfOwenrBody">
-                <div
-                  className="otherPlan d-flex justify-content-center align-items-center flex-column gap-2"
-                  style={{
-                    backgroundColor:
-                      plan.name === "Gold"
-                        ? "#f8ffbd"
-                        : plan.name === "Platinum"
-                        ? "#b3ebfc"
-                        : "#C0C0C0",
-                    color: "black",
-                  }}
-                >
-                  <div className="icon">
-                    <GiOldKing />
-                  </div>
-                  <div className="daysLeft fontMid">
-                    {plan.duration * 30} {t("Days")}
+          return (
+            plan._id !== myPlan._id && (
+              <div className="bigCard ppoo">
+                <div className="planName fontMid">{plan.name}</div>
+                <div className="price fontLarge">{plan.cost}</div>
+                <div className="plansOfOwenrBody">
+                  <div
+                    className="otherPlan d-flex justify-content-center align-items-center flex-column gap-2"
+                    style={{
+                      backgroundColor:
+                        plan.name === "Gold"
+                          ? "#f8ffbd"
+                          : plan.name === "Platinum"
+                          ? "#b3ebfc"
+                          : "#C0C0C0",
+                      color: "black",
+                    }}
+                  >
+                    <div className="icon">
+                      <GiOldKing />
+                    </div>
+                    <div className="daysLeft fontMid">
+                      {plan.duration * 30} {t("Days")}
+                    </div>
                   </div>
                 </div>
+                <div className="capacity fontMid">
+                  {t("up to")} {plan.maxTrainees} {t("Traineess")}
+                </div>
+                <hr />
+                <div className="d-flex justify-content-center align-items-center">
+                  <a
+                    href="https://gym-lp.vercel.app/#pricing"
+                    target="_blank"
+                    className="SecondaryButton text-decoration-none"
+                  >
+                    {t("Upgrade")}
+                  </a>
+                </div>
               </div>
-              <div className="capacity fontMid">
-                {t("up to")} {plan.maxTrainees} {t("Traineess")}
-              </div>
-              <hr />
-              <div className="d-flex justify-content-center align-items-center">
-                <a
-                  href="https://gym-lp.vercel.app/#pricing"
-                  target="_blank"
-                  className="SecondaryButton text-decoration-none"
-                >
-                  {t("Upgrade")}
-                </a>
-              </div>
-            </div>
+            )
           );
         })}
       </div>

@@ -17,7 +17,17 @@
     color: whitesmoke;
     border-top-right-radius: 1rem;
     border-bottom-right-radius: 1rem;
+}
 
+.offerDesignAr {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+    background-color: var(--main-color);
+    color: whitesmoke;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
 }
 
 .realtive {
