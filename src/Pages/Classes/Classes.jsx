@@ -830,7 +830,7 @@ const Classes = () => {
                               <FloatingLabel
                                 className="w-100"
                                 controlId="floatingInput"
-                                label={t("Featurs")}
+                                label={t("Features")}
                                 id={"floatingInput"}
                               >
                                 <Form.Control
@@ -1243,7 +1243,7 @@ const Classes = () => {
                               <FloatingLabel
                                 className="w-100"
                                 controlId="floatingInput"
-                                label={t("Featurs")}
+                                label={t("Features")}
                                 id={"floatingInput"}
                               >
                                 <Form.Control

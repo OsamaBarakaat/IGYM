@@ -15,17 +15,59 @@ import { invitationValidationSchema } from "../../../Validations/PlanValidation"
 const TraineeProfile = () => {
   const { t } = useTranslation();
   const { traineeId } = useParams();
+  const [traineeNew, setTraineeNew] = useState({});
   const { state } = useLocation();
+  const axiosPrivate = useAxiosPrivate();
   const trainee = state?.trainee;
+  console.log(trainee);
 
   const navigate = useNavigate();
-  console.log("traineeId", traineeId);
+  const getTrainee = async () => {
+    try {
+      const { data } = await axiosPrivate.get(
+        `/gyms/${gymId}/trainees/${traineeId}`
+      );
+
+      if (data) {
+        console.log(data);
+        setTraineeNew(data?.data);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    getTrainee();
+  }, [traineeId]);
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
   const [showInvitation, setShowInvitation] = useState(false);
   const handleShowInvitation = () => setShowInvitation(true);
   const handleCloseInvitation = () => setShowInvitation(false);
+  const [inBodyCount, setInBodyCount] = useState(0);
+  const [inBodyCountPrivateSession, setInBodyCountPrivateSession] = useState(0);
+  const [inBodyCountNS, setInBodyCountNS] = useState(0);
+  const [inBodyCountInvitations, setInBodyCountInvitations] = useState(0);
+  useEffect(() => {
+    setInBodyCount(
+      traineeNew?.plan?.inBody - traineeNew?.plan?.usedInBody || 0
+    );
+    setInBodyCountPrivateSession(
+      traineeNew?.plan?.nutritionSessionsNumber -
+        traineeNew?.plan?.usedPrivateSessions || 0
+    );
+    setInBodyCountNS(
+      traineeNew?.plan?.nutritionSessionsNumber -
+        traineeNew?.plan?.usedNutritionSessions || 0
+    );
+    setInBodyCountInvitations(
+      traineeNew?.plan?.invitationsNumber - traineeNew?.plan?.usedInvitations ||
+        0
+    );
+  }, [traineeNew]);
 
   const [showConfirm, setShowConfirm] = useState(false);
   const [showStepBackButton, setShowStepBackButton] = useState(false);
@@ -38,17 +80,43 @@ const TraineeProfile = () => {
       setShowConfirm(false);
       setShowStepBackButton(true);
       setStepBackTime(10);
+
       const countdown = setInterval(() => {
-        setStepBackTime((prevTime) => prevTime - 1);
-        if (stepBackTime === 0) {
-          clearInterval(countdown);
-          setShowStepBackButton(false);
-        }
+        setStepBackTime((prevTime) => {
+          if (prevTime - 1 === 0) {
+            // Countdown reached 0, make the patch call
+            clearInterval(countdown);
+            setShowStepBackButton(false);
+            handleUseInbody(); // Call the async function here
+          }
+          return prevTime - 1; // Continue decrementing the time
+        });
       }, 1000);
-      setTimer(countdown);
+
+      setTimer(countdown); // Save the interval ID
     } else {
       toast.warning(t("You have used all your free in-bodies"));
       setShowConfirm(false);
+    }
+  };
+
+  // Regular async function for handling the patch request
+  const handleUseInbody = async () => {
+    try {
+      const response = await axiosPrivate.patch(
+        `/gyms/${gymId}/trainees/${trainee._id}`,
+        {
+          inBody: true,
+        }
+      );
+
+      if (response) {
+        toast.success("In-Body used successfully");
+        console.log(response);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "An error occurred");
     }
   };
 
@@ -65,19 +133,13 @@ const TraineeProfile = () => {
       clearInterval(timer);
     };
   }, [timer]);
-  const [inBodyCount, setInBodyCount] = useState(5); // Starting count
+
   const maxFreeInBodies = 0;
   const handleCountDown = () => {
     if (inBodyCount >= 1) {
       setInBodyCount((prevCount) => prevCount - 1);
     }
   };
-
-  useEffect(() => {
-    if (inBodyCount === 0) {
-      toast.warning(t("You have used all your free in-bodies"));
-    }
-  }, [inBodyCount, t]);
 
   // -------
   const [showConfirmPrivateSession, setShowConfirmPrivateSession] =
@@ -97,16 +159,39 @@ const TraineeProfile = () => {
       setShowStepBackButtonPrivateSession(true);
       setStepBackTimePrivateSession(10);
       const countdown = setInterval(() => {
-        setStepBackTimePrivateSession((prevTime) => prevTime - 1);
-        if (stepBackTimePrivateSession === 0) {
-          clearInterval(countdown);
-          setShowStepBackButtonPrivateSession(false);
-        }
+        setStepBackTimePrivateSession((prevTime) => {
+          if (prevTime - 1 === 0) {
+            // Countdown reached 0, make the patch call
+            clearInterval(countdown);
+            setShowStepBackButtonPrivateSession(false);
+            handleUsePrivateSession(); // Call the async function here
+          }
+          return prevTime - 1; // Continue decrementing the time
+        });
       }, 1000);
       setTimerPrivateSession(countdown);
     } else {
       toast.warning(t("You have used all your free Private Session"));
       setShowConfirmPrivateSession(false);
+    }
+  };
+
+  const handleUsePrivateSession = async () => {
+    try {
+      const response = await axiosPrivate.patch(
+        `/gyms/${gymId}/trainees/${trainee._id}`,
+        {
+          privateSessions: true,
+        }
+      );
+
+      if (response) {
+        toast.success("Private Session used successfully");
+        console.log(response);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "An error occurred");
     }
   };
 
@@ -123,19 +208,7 @@ const TraineeProfile = () => {
       clearInterval(timerPrivateSession);
     };
   }, [timerPrivateSession]);
-  const [inBodyCountPrivateSession, setInBodyCountPrivateSession] = useState(5); // Starting count
-  const maxFreeInBodiesPrivateSession = 0;
-  const handleCountDownPrivateSession = () => {
-    if (inBodyCountPrivateSession >= 1) {
-      setInBodyCountPrivateSession((prevCount) => prevCount - 1);
-    }
-  };
 
-  useEffect(() => {
-    if (inBodyCountPrivateSession === 0) {
-      toast.warning(t("You have used all your free Private Session"));
-    }
-  }, [inBodyCountPrivateSession, t]);
   // -------
 
   // -------
@@ -151,16 +224,39 @@ const TraineeProfile = () => {
       setShowStepBackButtonNS(true);
       setStepBackTimeNS(10);
       const countdown = setInterval(() => {
-        setStepBackTimeNS((prevTime) => prevTime - 1);
-        if (stepBackTimeNS === 0) {
-          clearInterval(countdown);
-          setShowStepBackButtonNS(false);
-        }
+        setStepBackTimeNS((prevTime) => {
+          if (prevTime - 1 === 0) {
+            // Countdown reached 0, make the patch call
+            clearInterval(countdown);
+            setShowStepBackButtonNS(false);
+            handleUseNS(); // Call the async function here
+          }
+          return prevTime - 1; // Continue decrementing the time
+        });
       }, 1000);
       setTimerNS(countdown);
     } else {
       toast.warning(t("You have used all your free Private Session"));
       setShowConfirmNS(false);
+    }
+  };
+
+  const handleUseNS = async () => {
+    try {
+      const response = await axiosPrivate.patch(
+        `/gyms/${gymId}/trainees/${trainee._id}`,
+        {
+          nutritionSessions: true,
+        }
+      );
+
+      if (response) {
+        toast.success("Nutriation Session used successfully");
+        console.log(response);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "An error occurred");
     }
   };
 
@@ -177,22 +273,9 @@ const TraineeProfile = () => {
       clearInterval(timerNS);
     };
   }, [timerNS]);
-  const [inBodyCountNS, setInBodyCountNS] = useState(5); // Starting count
-  const maxFreeInBodiesNS = 0;
-  const handleCountDownNS = () => {
-    if (inBodyCountNS >= 1) {
-      setInBodyCountNS((prevCount) => prevCount - 1);
-    }
-  };
+  // Starting count
 
-  useEffect(() => {
-    if (inBodyCountNS === 0) {
-      toast.warning(t("You have used all your free Private Session"));
-    }
-  }, [inBodyCountNS, t]);
   // -------
-
-  const axiosPrivate = useAxiosPrivate();
 
   //   const fetchData = async () => {
   //     try {
@@ -229,41 +312,67 @@ const TraineeProfile = () => {
     validationSchema: invitationValidationSchema,
     onSubmit: async (values) => {
       console.log("values", values);
+      try {
+        const response = await axiosPrivate.post(`/gyms/${gymId}/invitations`, {
+          user: trainee?.user?._id,
+          invitationName: values.invitationName,
+          invitationPhone: values.invitationPhoneNumber.toString(),
+          invitationNationalId: values.invitationNationalId,
+        });
+
+        if (response) {
+          toast.success("Invitation used successfully");
+          fetchInvitations();
+
+          setInBodyCountInvitations((prev) => prev - 1);
+
+          console.log(response);
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error(error.response.data.message);
+      }
     },
   });
 
-  const tableOfInvitations = [
-    {
-      id: 1,
-      name: "Invitation 1",
-      phoneNumber: "01000000000",
-      nationalId: "12345678912345",
-    },
-    {
-      id: 2,
-      name: "Invitation 2",
-      phoneNumber: "01000000000",
-      nationalId: "12345678912345",
-    },
-    {
-      id: 3,
-      name: "Invitation 3",
-      phoneNumber: "01000000000",
-      nationalId: "12345678912345",
-    },
-    {
-      id: 4,
-      name: "Invitation 4",
-      phoneNumber: "01000000000",
-      nationalId: "12345678912345",
-    },
-    {
-      id: 5,
-      name: "Invitation 5",
-      phoneNumber: "01000000000",
-      nationalId: "12345678912345",
-    },
-  ];
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const { data: userData, gymId } = useSelector((state) => state.user);
+  console.log(userData, gymId);
+
+  const [keyWord, setKeyWord] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [Invitations, setInvitations] = useState([]);
+
+  const pageArr = [];
+  for (let i = 0; i < Invitations?.pagination?.numberOfPages; i++) {
+    pageArr.push(i);
+  }
+
+  const fetchInvitations = async () => {
+    setLoading(true);
+    try {
+      let url = `/gyms/${gymId}/invitations?page=${page}&limit=${limit}&user=${trainee?.user?._id}`;
+      if (keyWord) {
+        url += `&keyword=${keyWord}`;
+      }
+
+      const { data } = await axiosPrivate.get(url);
+      if (data) {
+        console.log(data);
+        setLoading(false);
+        setInvitations(data.data);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchInvitations();
+  }, [gymId, keyWord, page, limit]);
+
   return (
     <div className="m-2">
       <Heading content={t("Trainee Profile")} />
@@ -306,7 +415,7 @@ const TraineeProfile = () => {
                   handleShowInvitation();
                 }}
               >
-                {t("Use Invitation")}
+                {t("Use Invitation")} : {inBodyCountInvitations}
               </button>
             </div>
             {showStepBackButton && (
@@ -409,12 +518,12 @@ const TraineeProfile = () => {
               <div className="inputFeild">
                 <FloatingLabel
                   controlId="floatingInput"
-                  label={t("Phone Number")}
+                  label={t("Phone number")}
                   id={"floatingInput"}
                 >
                   <Form.Control
                     type="text"
-                    placeholder={t("Phone Number")}
+                    placeholder={t("Phone number")}
                     name="phoneNumber"
                     defaultValue={trainee?.user?.phone}
                     disabled
@@ -456,49 +565,103 @@ const TraineeProfile = () => {
         </div>
       </form>
 
-      {tableOfInvitations && tableOfInvitations.length > 0 ? (
-        <>
-          <div className="coachDetails my-3 bigCard">
-            <div className="head">{t("Table of Invitations")}</div>
+      <div className="coachDetails my-3 bigCard">
+        <div className="head">{t("Table of Invitations")}</div>
+        {Invitations?.documents?.length > 0 ? (
+          <>
             <table className="mainTableTwo">
               <thead>
                 <tr>
                   <th>{t("Invitation Name")}</th>
                   <th>{t("Invitation Phone Number")}</th>
-                  <th>{t("Invitation National ID")}</th>
+                  <th>{t("Invitation national ID")}</th>
+                  <th>{t("Invitation Date")}</th>
                 </tr>
               </thead>
+
               <tbody>
-                {tableOfInvitations.map((trainee) => {
+                {Invitations?.documents?.map((trainee) => {
                   return (
                     <tr key={trainee?.id}>
                       <td data-label={t("Invitation Name")} className="tdtdtd">
                         <div className="profileName">
-                          {trainee?.name || "No Name"}
+                          {trainee?.invitationName || "No Name"}
                         </div>
                       </td>
                       <td
                         data-label={t("Invitation Phone Number")}
                         className="tdtdtd"
                       >
-                        {trainee?.phoneNumber}
+                        {trainee?.invitationPhone}
                       </td>
                       <td
-                        data-label={t("Invitation National ID")}
+                        data-label={t("Invitation national ID")}
                         className="tdtdtd"
                       >
-                        {trainee?.nationalId}
+                        {trainee?.invitationNationalId}
+                      </td>
+                      <td data-label={t("Invitation Date")}>
+                        {new Date(trainee.createdAt).toLocaleString()}
                       </td>
                     </tr>
                   );
                 })}
               </tbody>
             </table>
-          </div>
-        </>
-      ) : (
-        <></>
-      )}
+            <div className="d-flex justify-content-center align-items-center pagination my-2">
+              <div className="w-50 d-flex justify-content-between align-items-center">
+                <button
+                  className={`PrimaryButtonTwo`}
+                  style={{
+                    cursor: Invitations?.pagination?.prev
+                      ? "pointer"
+                      : "not-allowed",
+                  }}
+                  onClick={() => {
+                    setPage(page - 1);
+                  }}
+                  disabled={!Invitations?.pagination?.prev}
+                >
+                  {t("Previous")}
+                </button>
+                <div className="pages">
+                  {pageArr.map((page) => {
+                    return (
+                      <span
+                        className="mx-3 pag-item"
+                        onClick={() => {
+                          setPage(page + 1);
+                        }}
+                      >
+                        {page + 1}
+                      </span>
+                    );
+                  })}
+                </div>
+                <button
+                  className={`PrimaryButtonTwo`}
+                  style={{
+                    cursor: Invitations?.pagination?.next
+                      ? "pointer"
+                      : "not-allowed",
+                  }}
+                  onClick={() => {
+                    setPage(page + 1);
+                  }}
+                  disabled={!Invitations?.pagination?.next}
+                >
+                  {t("Next")}
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flexcentercenter ">{t("No Invitations yet")}</div>
+          </>
+        )}
+      </div>
+
       <div className="modal-use-inbody">
         <Modal show={show} onHide={handleClose} centered>
           <div>
@@ -565,7 +728,7 @@ const TraineeProfile = () => {
                     >
                       <Form.Control
                         type="text"
-                        placeholder={t("invitation Name")}
+                        placeholder={t("Invitation Name")}
                         name="invitationName"
                         value={values.invitationName}
                         onChange={handleChange}
@@ -581,7 +744,7 @@ const TraineeProfile = () => {
                   <div className="mb-2 w-100">
                     <FloatingLabel
                       controlId="floatingInput"
-                      label={t("Invitation Name")}
+                      label={t("phone number")}
                       id={
                         errors.invitationPhoneNumber &&
                         touched.invitationPhoneNumber
@@ -592,7 +755,7 @@ const TraineeProfile = () => {
                       <Form.Control
                         type="number"
                         min={0}
-                        placeholder={t("invitation Phone number")}
+                        placeholder={t("phone number")}
                         name="invitationPhoneNumber"
                         value={values.invitationPhoneNumber}
                         onChange={handleChange}
@@ -609,7 +772,7 @@ const TraineeProfile = () => {
                   <div className="mb-2 w-100">
                     <FloatingLabel
                       controlId="floatingInput"
-                      label={t("Invitation National ID")}
+                      label={t("Invitation national ID")}
                       id={
                         errors.invitationNationalId &&
                         touched.invitationNationalId
@@ -619,7 +782,7 @@ const TraineeProfile = () => {
                     >
                       <Form.Control
                         type="text"
-                        placeholder={t("invitation National ID")}
+                        placeholder={t("Invitation national ID")}
                         name="invitationNationalId"
                         value={values.invitationNationalId}
                         onChange={handleChange}
@@ -711,7 +874,7 @@ const TraineeProfile = () => {
             ></button>
           </Modal.Header>
           <Modal.Body>
-            <p>{t("Are you sure you want to use an Private Session?")}</p>
+            <p>{t("Are you sure you want to use an Nutriation Session?")}</p>
             <div className="d-flex justify-content-end gap-3">
               <Button
                 variant="secondary"

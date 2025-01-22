@@ -238,6 +238,9 @@
     margin: 0.5rem;
     max-height: 70vh;
     overflow-y: auto;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
     /* max-width: 330px;
     margin: auto; */
 
@@ -281,6 +284,8 @@
     justify-content: space-between;
     align-items: center;
     margin: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 5px;
 }
 
 .upcomingPaymentsItemBody p {
@@ -427,4 +432,44 @@
 
 p {
     margin: 0 !important;
+}
+
+.flexcolcenterstart {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    /* flex-direction: column; */
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-size: smaller;
+}
+
+.redsquare {
+    background-color: rgba(255, 72, 72, 0.554);
+    padding: 0.5rem;
+}
+
+.redbg {
+    background-color: rgba(255, 72, 72, 0.554);
+
+}
+
+.bluesquare {
+    background-color: rgba(72, 151, 255, 0.574);
+    padding: 0.5rem;
+}
+
+.bluebg {
+    background-color: rgba(72, 151, 255, 0.574);
+
+}
+
+.greensquare {
+    background-color: rgba(72, 255, 81, 0.527);
+    padding: 0.5rem;
+}
+
+.greenbg {
+    background-color: rgba(72, 255, 81, 0.527);
+
 }

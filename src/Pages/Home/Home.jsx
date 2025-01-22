@@ -172,13 +172,22 @@ const Home = ({ socket }) => {
           </div>
         </div>
         <div className="upcomingPayments">
-          <div className="upcomingPaymentsTitle">
-            <p>{t("Upcoming Payments")}</p>
-          </div>
           <div className="upcomingPaymentsBody">
+            <div className="upcomingPaymentsTitle">
+              <p>{t("Upcoming Payments")}</p>
+            </div>
             {stats?.upcomingPayments.length ? (
               stats?.upcomingPayments.map((item) => (
-                <div className="upcomingPaymentsItem" key={item._id}>
+                <div
+                  className={`upcomingPaymentsItem ${
+                    item?.type === "class"
+                      ? "redbg"
+                      : item?.type === "plan"
+                      ? "bluebg"
+                      : "greenbg"
+                  }`}
+                  key={item._id}
+                >
                   <div className="upcomingPaymentsItemImg">
                     <img
                       src={item.user?.image}
@@ -228,6 +237,20 @@ const Home = ({ socket }) => {
             ) : (
               <p className="text-center w-100">{t("noUpcomingPaymentsYet")}</p>
             )}
+          </div>
+          <div className="flexcolcenterstart">
+            <div className="flexcenterstart">
+              <p>{t("class")}:</p>
+              <div className="redsquare"></div>
+            </div>
+            <div className="flexcenterstart">
+              <p>{t("new commer")}:</p>
+              <div className="bluesquare"></div>
+            </div>
+            <div className="flexcenterstart">
+              <p>{t("private session")}:</p>
+              <div className="greensquare"></div>
+            </div>
           </div>
         </div>
 
