@@ -11,6 +11,7 @@ const HeadingHome = ({ content }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: userData } = useSelector((state) => state.user);
+  console.log("user data", userData);
   const lang = localStorage.getItem("language");
 
   // open ? `inactive-button-tooltip` :
@@ -23,20 +24,23 @@ const HeadingHome = ({ content }) => {
   return (
     <div className="titleContainerHome">
       <h2 className="titleHome">{content}</h2>
-      <OverlayTrigger
-        placement="auto"
-        delay={{ show: 25, hide: 150 }}
-        overlay={profile}
+      <div
+        className="flexcenterstart gap-1"
+        onClick={() => {
+          navigate("/profile");
+        }}
       >
-        <div
-          className="logoOfHome"
-          onClick={() => {
-            navigate("/profile");
-          }}
+        <div className="text-mid">{userData?.name}</div>
+        <OverlayTrigger
+          placement="bottom"
+          delay={{ show: 25, hide: 150 }}
+          overlay={profile}
         >
-          <img src={userData?.image || defaultAvatar} alt="default" />
-        </div>
-      </OverlayTrigger>
+          <div className="logoOfHome">
+            <img src={userData?.image || defaultAvatar} alt="default" />
+          </div>
+        </OverlayTrigger>
+      </div>
     </div>
   );
 };

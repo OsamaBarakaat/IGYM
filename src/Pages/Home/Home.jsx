@@ -244,7 +244,7 @@ const Home = ({ socket }) => {
               <div className="redsquare"></div>
             </div>
             <div className="flexcenterstart">
-              <p>{t("new commer")}:</p>
+              <p>{t("Plan")}:</p>
               <div className="bluesquare"></div>
             </div>
             <div className="flexcenterstart">
