@@ -31,6 +31,8 @@ const useAxiosPrivate = () => {
                     console.log("new access token", newAccessToken);
                     prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
                     return privateAxiosInstance(prevRequest);
+                } else if (error?.response?.status === 447) {
+                    window.location.href = "/signin";
                 }
                 return Promise.reject(error);
             }

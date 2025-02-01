@@ -14,7 +14,6 @@ const useRefreshToken = () => {
             dispatch(setUser({token: data.data.accessToken}));
             return data.data.accessToken;
         } catch (error) {
-            console.log(error);
             if (error?.response?.status === 401) {
                 dispatch(reSetUser());
                 navigate("/signin");
