@@ -61,6 +61,7 @@ const Plans = () => {
     setTimeout(() => {
       actions.resetForm();
       actions.setSubmitting(false);
+      setInputs([""]);
     }, 1000);
   };
   const {
@@ -161,6 +162,7 @@ const Plans = () => {
 
   const handleShowEditPlan = async (plan) => {
     setSelectedPlan(plan);
+    setInputs22(plan?.features);
     setModalShowEditPlan(true);
   };
 

@@ -254,9 +254,9 @@ const RevenueExpenses = () => {
         `/gyms/${gymId}/transactions/${id}`
       );
       toast.success(response.data.message);
-      setAllTransaction((prev) => prev.filter((item) => item._id !== id));
-      setRevenue((prev) => prev.filter((item) => item._id !== id));
-      setExpenses((prev) => prev.filter((item) => item._id !== id));
+      fetchAllTransaction();
+      fetchAllIncome();
+      fetchAllExpense();
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
