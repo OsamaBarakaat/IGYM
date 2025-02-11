@@ -473,3 +473,21 @@ p {
     background-color: rgba(72, 255, 81, 0.527);
 
 }
+
+.pag-item {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.pag-item:hover {
+    background-color: #ddd;
+}
+
+.active-page {
+    background-color: #007bff;
+    /* Change to your preferred highlight color */
+    color: rgb(9, 255, 0);
+    font-weight: bold;
+}

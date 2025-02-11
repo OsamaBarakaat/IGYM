@@ -313,19 +313,22 @@ const Trainees = () => {
                   {t("Previous")}
                 </button>
                 <div className="pages">
-                  {pageArr.map((page) => {
-                    return (
-                      <span
-                        className="mx-3 pag-item"
-                        onClick={() => {
-                          setPage(page + 1);
-                        }}
-                      >
-                        {page + 1}
-                      </span>
-                    );
-                  })}
-                </div>
+                        {pageArr.map((pageNumber) => {
+                          return (
+                            <span
+                              key={pageNumber}
+                              className={`mx-3 pag-item ${
+                                page === pageNumber + 1 ? "active-page" : ""
+                              }`}
+                              onClick={() => {
+                                setPage(pageNumber + 1);
+                              }}
+                            >
+                              {pageNumber + 1}
+                            </span>
+                          );
+                        })}
+                      </div>
                 <button
                   className={`PrimaryButtonTwo`}
                   style={{

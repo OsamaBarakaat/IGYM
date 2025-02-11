@@ -210,15 +210,18 @@ const Coaches = () => {
                   {t("Previous")}
                 </button>
                 <div className="pages">
-                  {pageArr.map((page) => {
+                  {pageArr.map((pageNumber) => {
                     return (
                       <span
-                        className="mx-3 pag-item"
+                        key={pageNumber}
+                        className={`mx-3 pag-item ${
+                          page === pageNumber + 1 ? "active-page" : ""
+                        }`}
                         onClick={() => {
-                          setPage(page + 1);
+                          setPage(pageNumber + 1);
                         }}
                       >
-                        {page + 1}
+                        {pageNumber + 1}
                       </span>
                     );
                   })}

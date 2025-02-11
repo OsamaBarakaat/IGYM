@@ -569,6 +569,18 @@ const TraineeProfile = () => {
         <div className="head">{t("Table of Invitations")}</div>
         {Invitations?.documents?.length > 0 ? (
           <>
+            <div>
+              <input
+                type="search"
+                className="w-50 p-2 rounded-3 searchInput"
+                placeholder={t("Search by name or number ...")}
+                value={keyWord}
+                onChange={(e) => {
+                  setPage(1);
+                  setKeyWord(e.target.value);
+                }}
+              />
+            </div>
             <table className="mainTableTwo">
               <thead>
                 <tr>
@@ -601,7 +613,14 @@ const TraineeProfile = () => {
                         {trainee?.invitationNationalId}
                       </td>
                       <td data-label={t("Invitation Date")}>
-                        {new Date(trainee.createdAt).toLocaleString()}
+                        {new Date(trainee.createdAt).toLocaleString(undefined, {
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
+                          hour12: true,
+                        })}
                       </td>
                     </tr>
                   );
@@ -625,15 +644,18 @@ const TraineeProfile = () => {
                   {t("Previous")}
                 </button>
                 <div className="pages">
-                  {pageArr.map((page) => {
+                  {pageArr.map((pageNumber) => {
                     return (
                       <span
-                        className="mx-3 pag-item"
+                        key={pageNumber}
+                        className={`mx-3 pag-item ${
+                          page === pageNumber + 1 ? "active-page" : ""
+                        }`}
                         onClick={() => {
-                          setPage(page + 1);
+                          setPage(pageNumber + 1);
                         }}
                       >
-                        {page + 1}
+                        {pageNumber + 1}
                       </span>
                     );
                   })}

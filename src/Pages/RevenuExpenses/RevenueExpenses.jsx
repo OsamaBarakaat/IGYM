@@ -16,15 +16,23 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import SmallLoader from "../../components/SmallLoader/SmallLoader";
-import { formatDate } from "../../utils/FormatDate";
+import { useTranslation } from "react-i18next";
 
 const RevenueExpenses = () => {
+  const { t } = useTranslation();
   const [revenue, setRevenue] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [allTransactions, setAllTransaction] = useState([]);
+  const [pageAllTransactions, setPageAllTransactions] = useState(1);
+  const [pageRevenue, setPageRevenue] = useState(1);
+  const [pageExpenses, setPageExpenses] = useState(1);
+
   const [showModalRevenue, setShowModalRevenue] = useState(false);
   const [showModalExpense, setShowModalExpense] = useState(false);
   const [stats, setStats] = useState(null);
+  console.log("revenue", revenue);
+  console.log("expenses", expenses);
+  console.log("allTransactions", allTransactions);
   const [key, setKey] = useState("all");
 
   const handleShowModalRevenue = () => {
@@ -54,7 +62,7 @@ const RevenueExpenses = () => {
     ],
     datasets: [
       {
-        label: "My Expense",
+        label: t("myExpense"),
         data: stats?.monthlyExpenses,
         backgroundColor: "rgba(255, 99, 132, 0.2)",
         borderColor: "rgba(255, 99, 132, 1)",
@@ -64,7 +72,7 @@ const RevenueExpenses = () => {
         borderRadius: 2,
       },
       {
-        label: "My Income",
+        label: t("myIncome"),
         data: stats?.monthlyIncome,
         backgroundColor: "rgba(54, 162, 235, 0.2)",
         borderColor: "rgba(54, 162, 235, 1)",
@@ -76,7 +84,7 @@ const RevenueExpenses = () => {
     ],
   };
 
-  const expenseTitles = ["Rent", "Food", "Maintenance", "Bill"];
+  const expenseTitles = [t("Rent"), t("Food"), t("Maintenance"), t("Bill")];
   const initialFormData = expenseTitles.reduce(
     (acc, title) => {
       acc[title] = { cost: "" };
@@ -154,7 +162,7 @@ const RevenueExpenses = () => {
   const refetchTransactions = async () => {
     try {
       const { data } = await axiosPrivate.get(
-        `/gyms/${gymId}/transactions?limit=200`
+        `/gyms/${gymId}/transactions?limit=5&page=${pageAllTransactions}`
       );
       setAllTransaction(data?.data?.result?.documents); // Update your state with the fetched data
       setStats(data?.data?.stats);
@@ -165,7 +173,7 @@ const RevenueExpenses = () => {
   const refetchIncome = async () => {
     try {
       const { data } = await axiosPrivate.get(
-        `/gyms/${gymId}/transactions?type=income&limit=200`
+        `/gyms/${gymId}/transactions?type=income&limit=5&page=${pageRevenue}`
       );
       setRevenue(data?.data?.result?.documents); // Update your state with the fetched data
     } catch (error) {
@@ -176,7 +184,7 @@ const RevenueExpenses = () => {
   const refetchExpenses = async () => {
     try {
       const { data } = await axiosPrivate.get(
-        `/gyms/${gymId}/transactions?type=expense&limit=200`
+        `/gyms/${gymId}/transactions?type=expense&limit=5&page=${pageExpenses}`
       );
       setExpenses(data?.data?.result?.documents); // Update your state with the fetched data
     } catch (error) {
@@ -205,12 +213,12 @@ const RevenueExpenses = () => {
     setLoading(true);
     try {
       const { data } = await axiosPrivate.get(
-        `/gyms/${gymId}/transactions?limit=200`
+        `/gyms/${gymId}/transactions?limit=5&page=${pageAllTransactions}`
       );
 
       setAllTransaction(data?.data?.result?.documents);
       setLoading(false);
-      setAllTransactionsPagination(data?.data?.pagination);
+      setAllTransactionsPagination(data?.data?.result?.pagination);
       setStats(data?.data?.stats);
     } catch (error) {
       setLoading(false);
@@ -222,11 +230,11 @@ const RevenueExpenses = () => {
   const fetchAllIncome = async () => {
     try {
       const { data } = await axiosPrivate.get(
-        `/gyms/${gymId}/transactions?type=income&limit=200`
+        `/gyms/${gymId}/transactions?type=income&limit=5&page=${pageRevenue}`
       );
 
       setRevenue(data?.data?.result?.documents);
-      setAllIncomePagination(data?.data?.pagination);
+      setAllIncomePagination(data?.data?.result?.pagination);
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
@@ -236,13 +244,13 @@ const RevenueExpenses = () => {
   const fetchAllExpense = async () => {
     try {
       const { data } = await axiosPrivate.get(
-        `/gyms/${gymId}/transactions?type=expense&limit=200`
+        `/gyms/${gymId}/transactions?type=expense&limit=5&page=${pageExpenses}`
       );
 
       console.log("data sss", data.data);
 
       setExpenses(data?.data?.result?.documents);
-      setAllExpensePagination(data?.data?.pagination);
+      setAllExpensePagination(data?.data?.result?.pagination);
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
@@ -264,9 +272,16 @@ const RevenueExpenses = () => {
   };
   useEffect(() => {
     fetchAllTransaction();
+  }, [pageAllTransactions]);
+
+  useEffect(() => {
     fetchAllIncome();
+  }, [pageRevenue]);
+
+  useEffect(() => {
     fetchAllExpense();
-  }, []);
+  }, [pageExpenses]);
+
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [editData, setEditData] = useState({});
   const handleEdit = async (item) => {
@@ -296,8 +311,18 @@ const RevenueExpenses = () => {
     }
   };
 
-  console.log(revenue);
-  console.log(expenses);
+  const translateType = (type) => {
+    switch (type) {
+      case "income":
+        return t("Income");
+
+      case "expense":
+        return t("Expense");
+
+      default:
+        break;
+    }
+  };
 
   return (
     <div className="m-4">
@@ -308,7 +333,7 @@ const RevenueExpenses = () => {
             onClick={() => handleShowModalRevenue(true)}
           >
             <h5 className="card-title d-flex justify-content-start mb-3">
-              Income
+              {t("myIncome")}
             </h5>
             <div className="card-body d-flex justify-content-center align-items-center flex-column h-75">
               <div className="roundeddd roundeddd-one plusHidden">
@@ -328,7 +353,7 @@ const RevenueExpenses = () => {
             onClick={() => handleShowModalExpense(true)}
           >
             <h5 className="card-title d-flex justify-content-start mb-3">
-              Expense
+              {t("myExpense")}
             </h5>
             <div className="card-body d-flex justify-content-center align-items-center flex-column h-75">
               <div className="roundeddd roundeddd-two plusHiddenTwo">
@@ -351,32 +376,50 @@ const RevenueExpenses = () => {
 
       {!loading ? (
         <>
-          <p className="fontMid main-text-color">Recent Transactions</p>
+          <p className="fontMid main-text-color">{t("RecentTransactions")}</p>
           <Tabs
             activeKey={key}
             onSelect={(k) => setKey(k)}
             id="transaction-tabs"
             className="mb-3"
           >
-            <Tab eventKey="all" title="All Transactions">
+            <Tab eventKey="all" title={t("AllTransactions")}>
               <TransactionTable
                 data={allTransactions}
                 handleDelete={handleDelete}
                 handleEdit={handleEdit}
+                page={pageAllTransactions}
+                setPage={setPageAllTransactions}
+                pagination={allTransactionsPagination}
+                pagesArr={pageArrAllTransactions}
+                t={t}
+                translateType={translateType}
               />
             </Tab>
-            <Tab eventKey="income" title="Income">
+            <Tab eventKey="income" title={t("Income")}>
               <TransactionTable
                 data={revenue}
                 handleDelete={handleDelete}
                 handleEdit={handleEdit}
+                page={pageRevenue}
+                setPage={setPageRevenue}
+                pagination={allIncomePagination}
+                pagesArr={pageArrAllIncome}
+                translateType={translateType}
+                t={t}
               />
             </Tab>
-            <Tab eventKey="expenses" title="Expenses">
+            <Tab eventKey="expenses" title={t("Expenses")}>
               <TransactionTable
                 data={expenses}
                 handleDelete={handleDelete}
                 handleEdit={handleEdit}
+                page={pageExpenses}
+                setPage={setPageExpenses}
+                pagination={allExpensePagination}
+                pagesArr={pageArrAllExpense}
+                translateType={translateType}
+                t={t}
               />
             </Tab>
           </Tabs>
@@ -387,7 +430,7 @@ const RevenueExpenses = () => {
 
       <Modal show={showModalRevenue} onHide={handleCloseModalRevenue} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Add New Income</Modal.Title>
+          <Modal.Title>{t("Add New Income")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="cardsInRevenue">
@@ -468,7 +511,7 @@ const RevenueExpenses = () => {
         </Modal.Body>
         <Modal.Footer className="my-2">
           <Button variant="secondary" onClick={handleCloseModalRevenue}>
-            Close
+            {t("Close")}
           </Button>
           <Button
             variant="primary"
@@ -477,14 +520,14 @@ const RevenueExpenses = () => {
               handleCloseModalRevenue();
             }}
           >
-            Add Income
+            {t("AddIncome")}
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={showModalExpense} onHide={handleCloseModalExpense} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Add New Expense</Modal.Title>
+          <Modal.Title>{t("Add New Expense")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="cardsInRevenue">
@@ -510,7 +553,7 @@ const RevenueExpenses = () => {
                 <div className="cardBody">
                   {card === "extra" ? (
                     <>
-                      <h5 className="card-title">Other</h5>
+                      <h5 className="card-title">{t("Other")}</h5>
                       <FloatingLabel
                         controlId={`floatingInput${index}`}
                         label="Title"
@@ -569,7 +612,7 @@ const RevenueExpenses = () => {
         </Modal.Body>
         <Modal.Footer className="my-2">
           <Button variant="secondary" onClick={handleCloseModalExpense}>
-            Close
+            {t("Close")}
           </Button>
           <Button
             variant="primary"
@@ -578,14 +621,14 @@ const RevenueExpenses = () => {
               handleCloseModalExpense();
             }}
           >
-            Add Expense
+            {t("Add Expense")}
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={showModalEdit} onHide={handleCloseModalEdit}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit</Modal.Title>
+          <Modal.Title>{t("Edit")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="">
@@ -622,7 +665,7 @@ const RevenueExpenses = () => {
         </Modal.Body>
         <Modal.Footer className="my-2">
           <Button variant="secondary" onClick={handleCloseModalEdit}>
-            Close
+            {t("Close")}
           </Button>
           <Button
             variant="primary"
@@ -632,7 +675,7 @@ const RevenueExpenses = () => {
               handleEditSubmit(editData);
             }}
           >
-            Edit
+            {t("Edit")}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -640,26 +683,46 @@ const RevenueExpenses = () => {
   );
 };
 
-const TransactionTable = ({ data, handleDelete, handleEdit }) => (
-  <Table striped bordered hover responsive>
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Type</th>
-        <th>Amount</th>
-        <th>Date</th>
-        {/* <th>repeat</th> */}
-        <th className="text-center">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {data.map((item, index) => (
-        <tr key={index} className="tableOfRepeat">
-          <td>{item.title}</td>
-          <td>{item.type}</td>
-          <td>{item.amount}</td>
-          <td>{formatDate(item.createdAt)}</td>
-          {/* <td>
+const TransactionTable = ({
+  data,
+  handleDelete,
+  handleEdit,
+  page,
+  setPage,
+  pagination,
+  pagesArr,
+  t,
+  translateType,
+}) => (
+  <>
+    <Table striped bordered hover responsive>
+      <thead>
+        <tr>
+          <th>{t("Title")}</th>
+          <th>{t("Type")}</th>
+          <th>{t("Amount")}</th>
+          <th>{t("Date")}</th>
+          {/* <th>repeat</th> */}
+          <th className="text-center">{t("Actions")}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((item, index) => (
+          <tr key={index} className="tableOfRepeat">
+            <td>{item.title}</td>
+            <td>{translateType(item.type)}</td>
+            <td>{item.amount}</td>
+            <td>
+              {new Date(item.createdAt).toLocaleString(undefined, {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
+              })}
+            </td>
+            {/* <td>
             {item.repeat ? (
               <Table>
                 <thead>
@@ -679,30 +742,73 @@ const TransactionTable = ({ data, handleDelete, handleEdit }) => (
               "No Repeat"
             )}
           </td> */}
-          <td className="d-flex justify-content-center gap-2">
-            <Button
-              variant="danger"
-              title="Delete"
-              onClick={() => {
-                handleDelete(item._id);
-              }}
-            >
-              <Trash2Icon size={20} />
-            </Button>
-            <button
-              className="SecondaryButton"
-              title="Edit"
-              onClick={() => {
-                handleEdit(item);
-              }}
-            >
-              <Edit size={20} />
-            </button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </Table>
+            <td className="d-flex justify-content-center gap-2">
+              <Button
+                variant="danger"
+                title="Delete"
+                onClick={() => {
+                  handleDelete(item._id);
+                }}
+              >
+                <Trash2Icon size={20} />
+              </Button>
+              <button
+                className="SecondaryButton"
+                title="Edit"
+                onClick={() => {
+                  handleEdit(item);
+                }}
+              >
+                <Edit size={20} />
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+    <div className="d-flex justify-content-center align-items-center pagination my-2">
+      <div className="w-50 d-flex justify-content-between align-items-center">
+        <button
+          className={`PrimaryButtonTwo`}
+          style={{
+            cursor: pagination?.prev ? "pointer" : "not-allowed",
+          }}
+          onClick={() => {
+            setPage(page - 1);
+          }}
+          disabled={page === 1}
+        >
+          {t("Previous")}
+        </button>
+        <div className="pages">
+          {pagesArr.map((page) => {
+            return (
+              <span
+                className="mx-3 pag-item"
+                onClick={() => {
+                  setPage(page + 1);
+                }}
+              >
+                {page + 1}
+              </span>
+            );
+          })}
+        </div>
+        <button
+          className={`PrimaryButtonTwo`}
+          style={{
+            cursor: pagination?.next ? "pointer" : "not-allowed",
+          }}
+          onClick={() => {
+            setPage(page + 1);
+          }}
+          disabled={page === pagination?.numberOfPages}
+        >
+          {t("Next")}
+        </button>
+      </div>
+    </div>
+  </>
 );
 
 export default RevenueExpenses;

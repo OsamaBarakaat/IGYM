@@ -120,7 +120,7 @@ const SideBar = () => {
   return (
     <>
       <aside className={open ? "sideBar" : "inactiveSideBar"}>
-        <div className="logoOfSideBar">{t("Logo")}</div>
+        {/* <div className="logoOfSideBar">{t("Logo")}</div> */}
         <ul className="ulOfSideBar">
           <OverlayTrigger
             placement={lang === "ar" ? "left" : "right"}

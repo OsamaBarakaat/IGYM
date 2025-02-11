@@ -103,7 +103,14 @@ const Notifications = ({ socket }) => {
                     </div>
                     <div>
                       <p className="text-center opacity-50 midText">
-                        {new Date(notification.createdAt).toLocaleString()}
+                        {new Date(notification.createdAt).toLocaleString(undefined, {
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
+                          hour12: true,
+                        })}
                       </p>
                     </div>
                   </div>

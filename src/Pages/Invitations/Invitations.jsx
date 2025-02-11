@@ -7,6 +7,7 @@ import HeadingNoBack from "../../components/HeadingNoBack/Heading";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../api/axios";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import SmallLoader from "../../components/SmallLoader/SmallLoader";
 
 const Invitations = () => {
   const { t } = useTranslation();
@@ -18,48 +19,6 @@ const Invitations = () => {
   const [keyWord, setKeyWord] = useState(null);
   const [loading, setLoading] = useState(false);
   const [Invitations, setInvitations] = useState([]);
-  const tableOfInvitations = [
-    {
-      id: 1,
-      name: "Invitation 1",
-      phoneNumber: "01000000000",
-      nationalId: "12345678912345",
-      invitationDate: "2021-10-10",
-      invitationFrom: "john doe",
-    },
-    {
-      id: 2,
-      name: "Invitation 2",
-      phoneNumber: "01000000000",
-      nationalId: "12345678912345",
-      invitationDate: "2021-10-10",
-      invitationFrom: "john doe",
-    },
-    {
-      id: 3,
-      name: "Invitation 3",
-      phoneNumber: "01000000000",
-      nationalId: "12345678912345",
-      invitationDate: "2021-10-10",
-      invitationFrom: "john doe",
-    },
-    {
-      id: 4,
-      name: "Invitation 4",
-      phoneNumber: "01000000000",
-      nationalId: "12345678912345",
-      invitationDate: "2021-10-10",
-      invitationFrom: "john doe",
-    },
-    {
-      id: 5,
-      name: "Invitation 5",
-      phoneNumber: "01000000000",
-      nationalId: "12345678912345",
-      invitationDate: "2021-10-10",
-      invitationFrom: "john doe",
-    },
-  ];
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
@@ -80,26 +39,22 @@ const Invitations = () => {
       const { data } = await axiosPrivate.get(url);
       if (data) {
         console.log(data);
-        setLoading(false);
         setInvitations(data.data);
       }
     } catch (error) {
       console.error(error);
-      setLoading(false);
+    } finally {
+      setLoading(false); // Stop loading after data is fetched
     }
   };
 
   useEffect(() => {
-    fetchInvitations();
-  }, [gymId, keyWord, page, limit]);
+    const delay = setTimeout(() => {
+      fetchInvitations();
+    }, 500);
 
-  if (loading) {
-    return (
-      <>
-        <Loader />
-      </>
-    );
-  }
+    return () => clearTimeout(delay);
+  }, [gymId, keyWord, page, limit]);
 
   return (
     <div className="myInfo">
@@ -121,132 +76,109 @@ const Invitations = () => {
                 }}
               />
             </div>
-            <table className="mainTableTwo">
-              <thead>
-                <tr>
-                  <th>{t("Invitation Name")}</th>
-                  <th>{t("Invitation Phone Number")}</th>
-                  <th>{t("Invitation national ID")}</th>
-                  <th>{t("Invitation Date")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Invitations?.documents?.map((invitation) => {
-                  return (
-                    <tr>
-                      <td data-label={t("Invitation Name")}>
-                        <div className="d-flex align-items-center justify-content-start cursor-pointer">
-                          <div className="profileName mx-3">
-                            {invitation.invitationName || "No Name"}
-                          </div>
-                        </div>
-                      </td>
-                      <td data-label={t("Phone")}>
-                        {invitation.invitationPhone}
-                      </td>
-                      <td data-label={t("Invitation national ID")}>
-                        {invitation.invitationNationalId}
-                      </td>
-                      <td data-label={t("Invitation Date")}>
-                        {new Date(invitation.createdAt).toLocaleString()}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            <div className="d-flex justify-content-center align-items-center pagination my-2">
-              <div className="w-50 d-flex justify-content-between align-items-center">
-                <button
-                  className={`PrimaryButtonTwo`}
-                  style={{
-                    cursor: Invitations?.pagination?.prev
-                      ? "pointer"
-                      : "not-allowed",
-                  }}
-                  onClick={() => {
-                    setPage(page - 1);
-                  }}
-                  disabled={!Invitations?.pagination?.prev}
-                >
-                  {t("Previous")}
-                </button>
-                <div className="pages">
-                  {pageArr.map((page) => {
-                    return (
-                      <span
-                        className="mx-3 pag-item"
+            <>
+              {loading ? (
+                <>
+                  <div>
+                    <SmallLoader />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <table className="mainTableTwo">
+                    <thead>
+                      <tr>
+                        <th>{t("Invitation Name")}</th>
+                        <th>{t("Invitation Phone Number")}</th>
+                        <th>{t("Invitation national ID")}</th>
+                        <th>{t("Invitation Date")}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Invitations?.documents?.map((invitation) => {
+                        return (
+                          <tr>
+                            <td data-label={t("Invitation Name")}>
+                              <div className="d-flex align-items-center justify-content-start cursor-pointer">
+                                <div className="profileName mx-3">
+                                  {invitation.invitationName || "No Name"}
+                                </div>
+                              </div>
+                            </td>
+                            <td data-label={t("Phone")}>
+                              {invitation.invitationPhone}
+                            </td>
+                            <td data-label={t("Invitation national ID")}>
+                              {invitation.invitationNationalId}
+                            </td>
+                            <td data-label={t("Invitation Date")}>
+                              {new Date(invitation.createdAt).toLocaleString(undefined, {
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
+                          hour12: true,
+                        })}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                  <div className="d-flex justify-content-center align-items-center pagination my-2">
+                    <div className="w-50 d-flex justify-content-between align-items-center">
+                      <button
+                        className={`PrimaryButtonTwo`}
+                        style={{
+                          cursor: Invitations?.pagination?.prev
+                            ? "pointer"
+                            : "not-allowed",
+                        }}
+                        onClick={() => {
+                          setPage(page - 1);
+                        }}
+                        disabled={!Invitations?.pagination?.prev}
+                      >
+                        {t("Previous")}
+                      </button>
+                      <div className="pages">
+                        {pageArr.map((pageNumber) => {
+                          return (
+                            <span
+                              key={pageNumber}
+                              className={`mx-3 pag-item ${
+                                page === pageNumber + 1 ? "active-page" : ""
+                              }`}
+                              onClick={() => {
+                                setPage(pageNumber + 1);
+                              }}
+                            >
+                              {pageNumber + 1}
+                            </span>
+                          );
+                        })}
+                      </div>
+
+                      <button
+                        className={`PrimaryButtonTwo`}
+                        style={{
+                          cursor: Invitations?.pagination?.next
+                            ? "pointer"
+                            : "not-allowed",
+                        }}
                         onClick={() => {
                           setPage(page + 1);
                         }}
+                        disabled={!Invitations?.pagination?.next}
                       >
-                        {page + 1}
-                      </span>
-                    );
-                  })}
-                </div>
-                <button
-                  className={`PrimaryButtonTwo`}
-                  style={{
-                    cursor: Invitations?.pagination?.next
-                      ? "pointer"
-                      : "not-allowed",
-                  }}
-                  onClick={() => {
-                    setPage(page + 1);
-                  }}
-                  disabled={!Invitations?.pagination?.next}
-                >
-                  {t("Next")}
-                </button>
-              </div>
-            </div>
-            {/* <div className="d-flex justify-content-center align-items-center pagination my-2">
-              <div className="w-50 d-flex justify-content-between align-items-center">
-                <button
-                  className={`PrimaryButtonTwo`}
-                  style={{
-                    cursor: Invitations?.pagination.prev
-                      ? "pointer"
-                      : "not-allowed",
-                  }}
-                  onClick={() => {
-                    setPage(page - 1);
-                  }}
-                  disabled={!Invitations?.pagination.prev}
-                >
-                  {t("Previous")}
-                </button>
-                <div className="pages">
-                  {pageArr.map((page) => {
-                    return (
-                      <span
-                        className="mx-3 pag-item"
-                        onClick={() => {
-                          setPage(page + 1);
-                        }}
-                      >
-                        {page + 1}
-                      </span>
-                    );
-                  })}
-                </div>
-                <button
-                  className={`PrimaryButtonTwo`}
-                  style={{
-                    cursor: Invitations?.pagination.next
-                      ? "pointer"
-                      : "not-allowed",
-                  }}
-                  onClick={() => {
-                    setPage(page + 1);
-                  }}
-                  disabled={!Invitations?.pagination.next}
-                >
-                  {t("Next")}
-                </button>
-              </div>
-            </div> */}
+                        {t("Next")}
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
           </div>
         </div>
       </div>

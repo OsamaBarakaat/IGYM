@@ -25,12 +25,15 @@ const HeadingHome = ({ content }) => {
     <div className="titleContainerHome">
       <h2 className="titleHome">{content}</h2>
       <div
-        className="flexcenterstart gap-1"
+        className="flexcenterstart gap-1 box-shadow"
         onClick={() => {
           navigate("/profile");
         }}
       >
-        <div className="text-mid">{userData?.name}</div>
+        <div>
+          <div className="text-mid">{userData?.name}</div>
+          <div className="text-mid">{userData?.role?.name}</div>
+        </div>
         <OverlayTrigger
           placement="bottom"
           delay={{ show: 25, hide: 150 }}
