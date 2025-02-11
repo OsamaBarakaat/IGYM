@@ -24,26 +24,26 @@ const HeadingHome = ({ content }) => {
   return (
     <div className="titleContainerHome">
       <h2 className="titleHome">{content}</h2>
-      <div
-        className="flexcenterstart gap-1 box-shadow"
-        onClick={() => {
-          navigate("/profile");
-        }}
+      <OverlayTrigger
+        placement="bottom"
+        delay={{ show: 25, hide: 150 }}
+        overlay={profile}
       >
-        <div>
-          <div className="text-mid">{userData?.name}</div>
-          <div className="text-mid">{userData?.role?.name}</div>
-        </div>
-        <OverlayTrigger
-          placement="bottom"
-          delay={{ show: 25, hide: 150 }}
-          overlay={profile}
+        <div
+          className="flexcenterstart gap-1 box"
+          onClick={() => {
+            navigate("/profile");
+          }}
         >
+          <div>
+            <div className="text-mid">{userData?.name}</div>
+            <div className="text-mid">{userData?.role?.name}</div>
+          </div>
           <div className="logoOfHome">
             <img src={userData?.image || defaultAvatar} alt="default" />
           </div>
-        </OverlayTrigger>
-      </div>
+        </div>
+      </OverlayTrigger>
     </div>
   );
 };

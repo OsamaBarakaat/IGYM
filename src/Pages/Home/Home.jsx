@@ -356,7 +356,7 @@ const Home = ({ socket }) => {
 
                   <div>
                     <Link
-                      to={`/traineeprofile/${item.userGym?.user._id}`}
+                      to={`/traineeprofile/${item.userGym?._id}`}
                       className="TextButton"
                     >
                       {t("View")}

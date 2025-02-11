@@ -207,7 +207,6 @@ const Settings = () => {
       }
     }
   };
-  console.log(inviteLink);
   const sendInvite = useFormik({
     initialValues: {
       email: "",
@@ -226,16 +225,15 @@ const Settings = () => {
     try {
       const { data } = await privateAxiosInstance.get(`/gyms/${gymId}/roles`);
       setRoles(data.data.documents);
+      console.log("roles", data.data.documents);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    if (show) {
-      fetchRoles();
-    }
-  }, [show]);
+    fetchRoles();
+  }, []);
 
   const fetchMembers = async () => {
     setLoading(true);

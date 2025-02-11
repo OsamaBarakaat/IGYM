@@ -18,7 +18,7 @@ const TraineeProfile = () => {
   const [traineeNew, setTraineeNew] = useState({});
   const { state } = useLocation();
   const axiosPrivate = useAxiosPrivate();
-  const trainee = state?.trainee;
+  const trainee = state?.trainee || traineeNew;
   console.log(trainee);
 
   const navigate = useNavigate();
@@ -371,7 +371,7 @@ const TraineeProfile = () => {
 
   useEffect(() => {
     fetchInvitations();
-  }, [gymId, keyWord, page, limit]);
+  }, [gymId, keyWord, page, limit, traineeId, trainee]);
 
   return (
     <div className="m-2">
