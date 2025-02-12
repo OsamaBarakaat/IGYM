@@ -35,9 +35,9 @@ import TraineeProfile from "./Pages/Trainees/TraineeProfile/TraineeProfile";
 import Invitations from "./Pages/Invitations/Invitations";
 import SubNew from "./Pages/SubNew/SubNew";
 
-// const ENDPOINT = "https://api.igymsystem.com/";
+ const ENDPOINT = "https://api.igymsystem.com/";
 // const ENDPOINT = "http://localhost:8000";
-const ENDPOINT = "https://gym-api-d2a5.onrender.com"
+//const ENDPOINT = "https://gym-api-d2a5.onrender.com"
 let socket = io(ENDPOINT);
 
 function App() {
