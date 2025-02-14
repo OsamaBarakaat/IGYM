@@ -271,17 +271,11 @@
 }
 
 
-.upcomingPaymentsItemBody {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 0.5rem;
-}
+
 
 .upcomingPaymentsItem {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     align-items: center;
     margin: 0.5rem;
     padding: 0.5rem;
@@ -294,6 +288,13 @@
     color: var(--main-text-color);
     opacity: 0.8;
     margin: 0.5rem;
+    font-size: medium;
+    text-align: start;
+}
+
+.upcomingPaymentsItemBody+p {
+    font-size: medium;
+    text-align: start;
 }
 
 .dountChart {
@@ -379,8 +380,9 @@
 
 
 .checkInRow {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "firstPart linkkk";
     align-items: center;
     gap: 1rem;
     font-size: small;
@@ -389,10 +391,12 @@
 }
 
 .checkInFirstPart {
-    display: flex;
-    justify-content: start;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    text-align: start;
     align-items: center;
     white-space: nowrap;
+    grid-area: "firstPart";
     gap: 1rem;
 
     div {
@@ -404,6 +408,10 @@
     }
 
 
+}
+
+.linkkk {
+    grid-area: linkkk;
 }
 
 .divider {

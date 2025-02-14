@@ -162,7 +162,7 @@ const RevenueExpenses = () => {
   const refetchTransactions = async () => {
     try {
       const { data } = await axiosPrivate.get(
-        `/gyms/${gymId}/transactions?limit=5&page=${pageAllTransactions}`
+        `/gyms/${gymId}/transactions?limit=10&page=${pageAllTransactions}`
       );
       setAllTransaction(data?.data?.result?.documents); // Update your state with the fetched data
       setStats(data?.data?.stats);
@@ -173,7 +173,7 @@ const RevenueExpenses = () => {
   const refetchIncome = async () => {
     try {
       const { data } = await axiosPrivate.get(
-        `/gyms/${gymId}/transactions?type=income&limit=5&page=${pageRevenue}`
+        `/gyms/${gymId}/transactions?type=income&limit=10&page=${pageRevenue}`
       );
       setRevenue(data?.data?.result?.documents); // Update your state with the fetched data
     } catch (error) {
@@ -184,7 +184,7 @@ const RevenueExpenses = () => {
   const refetchExpenses = async () => {
     try {
       const { data } = await axiosPrivate.get(
-        `/gyms/${gymId}/transactions?type=expense&limit=5&page=${pageExpenses}`
+        `/gyms/${gymId}/transactions?type=expense&limit=10&page=${pageExpenses}`
       );
       setExpenses(data?.data?.result?.documents); // Update your state with the fetched data
     } catch (error) {
@@ -213,7 +213,7 @@ const RevenueExpenses = () => {
     setLoading(true);
     try {
       const { data } = await axiosPrivate.get(
-        `/gyms/${gymId}/transactions?limit=5&page=${pageAllTransactions}`
+        `/gyms/${gymId}/transactions?limit=10&page=${pageAllTransactions}`
       );
 
       setAllTransaction(data?.data?.result?.documents);
@@ -230,7 +230,7 @@ const RevenueExpenses = () => {
   const fetchAllIncome = async () => {
     try {
       const { data } = await axiosPrivate.get(
-        `/gyms/${gymId}/transactions?type=income&limit=5&page=${pageRevenue}`
+        `/gyms/${gymId}/transactions?type=income&limit=10&page=${pageRevenue}`
       );
 
       setRevenue(data?.data?.result?.documents);
@@ -244,15 +244,12 @@ const RevenueExpenses = () => {
   const fetchAllExpense = async () => {
     try {
       const { data } = await axiosPrivate.get(
-        `/gyms/${gymId}/transactions?type=expense&limit=5&page=${pageExpenses}`
+        `/gyms/${gymId}/transactions?type=expense&limit=10&page=${pageExpenses}`
       );
-
-      console.log("data sss", data.data);
 
       setExpenses(data?.data?.result?.documents);
       setAllExpensePagination(data?.data?.result?.pagination);
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
     }
   };
@@ -266,7 +263,6 @@ const RevenueExpenses = () => {
       setRevenue((prev) => prev.filter((item) => item._id !== id));
       setExpenses((prev) => prev.filter((item) => item._id !== id));
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
     }
   };
@@ -306,7 +302,6 @@ const RevenueExpenses = () => {
         prev.map((item) => (item._id === newData._id ? newData : item))
       );
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
     }
   };
@@ -343,7 +338,7 @@ const RevenueExpenses = () => {
                 <Plus size={40} className="mb-2" color="#396AFF" />
               </div>
 
-              <h4 className="mt-3">${stats?.income}</h4>
+              <h4 className="mt-3">EGP{stats?.income}</h4>
             </div>
           </div>
         </div>
@@ -363,7 +358,7 @@ const RevenueExpenses = () => {
                 <Plus size={40} className="mb-2" color="#FF82AC" />
               </div>
 
-              <h4 className="mt-3">${stats?.expenses}</h4>
+              <h4 className="mt-3">EGP{stats?.expenses}</h4>
             </div>
           </div>
         </div>
@@ -457,11 +452,11 @@ const RevenueExpenses = () => {
                   <div className="w-100 mb-3">
                     <FloatingLabel
                       controlId={`floatingInput${index}`}
-                      label="Title"
+                      label={t("Title")}
                     >
                       <Form.Control
                         type="text"
-                        placeholder="Title"
+                        placeholder={t("Title")}
                         className="text-sm"
                         name="title"
                         value={formData[card].title}
@@ -472,11 +467,11 @@ const RevenueExpenses = () => {
                   <div className="w-100 mb-3">
                     <FloatingLabel
                       controlId={`floatingCost${index}`}
-                      label="Cost"
+                      label={t("Cost")}
                     >
                       <Form.Control
                         type="text"
-                        placeholder="Cost"
+                        placeholder={t("Cost")}
                         className="text-sm"
                         name="cost"
                         value={formData[card].cost}
@@ -556,11 +551,11 @@ const RevenueExpenses = () => {
                       <h5 className="card-title">{t("Other")}</h5>
                       <FloatingLabel
                         controlId={`floatingInput${index}`}
-                        label="Title"
+                        label={t("Title")}
                       >
                         <Form.Control
                           type="text"
-                          placeholder="Title"
+                          placeholder={t("Title")}
                           name="title"
                           className="text-sm"
                           value={formData[card].title}
@@ -573,12 +568,12 @@ const RevenueExpenses = () => {
                   )}
                   <FloatingLabel
                     controlId={`floatingCost${index}`}
-                    label="Cost"
+                    label={t("Cost")}
                     className="mt-3"
                   >
                     <Form.Control
                       type="text"
-                      placeholder="Cost"
+                      placeholder={t("Cost")}
                       className="text-sm"
                       name="cost"
                       value={formData[card].cost}
@@ -634,10 +629,10 @@ const RevenueExpenses = () => {
           <div className="">
             <div className="cardBody">
               <div className="w-100 mb-3">
-                <FloatingLabel controlId={`floatingCost`} label="Title">
+                <FloatingLabel controlId={`floatingCost`} label={t("Title")}>
                   <Form.Control
                     type="text"
-                    placeholder="Title"
+                    placeholder={t("Title")}
                     name="title"
                     value={editData.title}
                     onChange={(e) => {
@@ -647,10 +642,10 @@ const RevenueExpenses = () => {
                 </FloatingLabel>
               </div>
               <div className="w-100 mb-3">
-                <FloatingLabel controlId={`floatingCost`} label="Cost">
+                <FloatingLabel controlId={`floatingCost`} label={t("Cost")}>
                   <Form.Control
                     type="text"
-                    placeholder="Cost"
+                    placeholder={t("Cost")}
                     className="text-sm"
                     name="cost"
                     value={editData.amount}

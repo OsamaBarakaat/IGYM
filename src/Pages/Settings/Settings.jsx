@@ -217,7 +217,7 @@ const Settings = () => {
   });
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
 
   // Roles
   const [roles, setRoles] = useState([]);

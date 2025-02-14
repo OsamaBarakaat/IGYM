@@ -121,7 +121,7 @@ const Home = ({ socket }) => {
           </div>
           <div className="card-body">
             <p className="card-title">{t("My Balance")}</p>
-            <p className="card-details">${stats?.revenue?.balance}</p>
+            <p className="card-details">EGP{stats?.revenue?.balance}</p>
           </div>
         </div>
         <div
@@ -144,7 +144,7 @@ const Home = ({ socket }) => {
           </div>
           <div className="card-body">
             <p className="card-title">{t("Revenue")}</p>
-            <p className="card-details">$ {stats?.revenue?.income}</p>
+            <p className="card-details">EGP {stats?.revenue?.income}</p>
           </div>
         </div>
         <div
@@ -168,7 +168,7 @@ const Home = ({ socket }) => {
           </div>
           <div className="card-body">
             <p className="card-title">{t("Expenses")}</p>
-            <p className="card-details">$ {stats?.revenue?.expenses}</p>
+            <p className="card-details">EGP {stats?.revenue?.expenses}</p>
           </div>
         </div>
         <div className="upcomingPayments">
@@ -199,8 +199,8 @@ const Home = ({ socket }) => {
                     <p>{item?.user.name}</p>
                     {/* <p>{item.date}</p> */}
                   </div>
-                  <p className="mb-0">${item.cost}</p>
-                  <div className="d-flex justify-content-center align-items-center gap-1">
+                  <p className="mb-0">EGP{item.cost}</p>
+                  <div className="d-flex justify-content-center align-items-center gap-1 buttons">
                     <button
                       onClick={() => handleAccept(item._id)}
                       className="SecondaryButton"
@@ -354,7 +354,7 @@ const Home = ({ socket }) => {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="linkkk">
                     <Link
                       to={`/traineeprofile/${item.userGym?._id}`}
                       className="TextButton"

@@ -34,6 +34,7 @@ const Layout = ({ socket }) => {
       console.log(data.data);
       dispatch(
         setUser({
+          allData: data?.data,
           data: data?.data?.userData,
           gymId: data?.data?.gymId,
           plan: data?.data?.plan,
@@ -66,7 +67,7 @@ const Layout = ({ socket }) => {
 
       socket.on("read notification", () => {
         console.log("read notification");
-        
+
         dispatch(setUnReadNotification(0));
       });
     }
@@ -96,7 +97,7 @@ const Layout = ({ socket }) => {
         <div className="app-container">
           {windowWidth > 768 && (
             <div className="sideBarOfAppJs">
-              <SideBar/>
+              <SideBar />
             </div>
           )}
           <div className="main-content">

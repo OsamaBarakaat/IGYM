@@ -336,7 +336,7 @@ const TraineeProfile = () => {
   });
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const { data: userData, gymId } = useSelector((state) => state.user);
   console.log(userData, gymId);
 

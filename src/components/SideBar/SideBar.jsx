@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./SideBar.css";
 import { Link, useLocation } from "react-router-dom";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
@@ -7,13 +7,29 @@ import Badge from "react-bootstrap/Badge";
 
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 const SideBar = () => {
-  const location = useLocation();
+  const axiosPrivate = useAxiosPrivate();
+  const { gymId } = useSelector((state) => state.user);
+  const [gymName, setGymName] = useState("");
+  const fetchGymData = async () => {
+    try {
+      const { data } = await axiosPrivate.get(`/gyms/${gymId}`);
+      if (data) {
+        console.log(data.data);
+        setGymName(data?.data?.name);
+      }
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+  useEffect(() => {
+    fetchGymData();
+  }, [gymId]);
+
   const [open, setOpen] = useState(true);
   const [click, setClick] = useState(false);
   const unReadNotfication = useSelector((state) => state.unReadNotification);
-
-  console.log("unReadNotfication", unReadNotfication);
 
   const toggelShow = () => {
     setClick(!click);
@@ -120,7 +136,16 @@ const SideBar = () => {
   return (
     <>
       <aside className={open ? "sideBar" : "inactiveSideBar"}>
-        {/* <div className="logoOfSideBar">{t("Logo")}</div> */}
+        <div className="logoOfSideBar">
+          {/* <img src={gymLogo || ""} alt="logo" className="logoSmall" /> */}
+          <div class="wrapper">
+            <div>
+              <h3 class="flicker-text">
+                <Link to={"/settings"} className="noStyle">{gymName}</Link>
+              </h3>
+            </div>
+          </div>
+        </div>
         <ul className="ulOfSideBar">
           <OverlayTrigger
             placement={lang === "ar" ? "left" : "right"}

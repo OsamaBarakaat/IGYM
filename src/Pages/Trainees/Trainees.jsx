@@ -51,7 +51,7 @@ const Trainees = () => {
   const [loading, setLoading] = useState(true);
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
 
   const pageArr = [];
   for (let i = 0; i < Trainees?.pagination?.numberOfPages; i++) {
