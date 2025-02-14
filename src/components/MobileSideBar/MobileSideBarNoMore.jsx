@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 import "./MobileSideBar.css";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button } from "react-bootstrap";
 
-const MobileSideBar = () => {
+const MobileSideBarNoMore = () => {
   const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  const location = useLocation();
-
   return (
     <div className="mobileSide">
       <Link to={"/"} className="linkMobileSide">
@@ -95,7 +91,7 @@ const MobileSideBar = () => {
         </div>
       </Link>
 
-      <div onClick={handleShow} className="primary-color">
+      {/* <div onClick={handleShow} className="primary-color">
         <span className="spanIconInMobile">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -112,7 +108,7 @@ const MobileSideBar = () => {
           </svg>
         </span>
         <span title="More">{t("More")}</span>
-      </div>
+      </div> */}
       <Offcanvas
         show={show}
         onHide={handleClose}
@@ -292,15 +288,6 @@ const MobileSideBar = () => {
                 {t("Notifications")}
               </Link>
             </li>
-            {(location.pathname === "/" ||
-              location.pathname === "/revenueexpenses" ||
-              location.pathname === "/settings") && (
-              <li className="bg-danger">
-                <Button className="btn btn-danger" onClick={handleClose}>
-                  {t("Close")}
-                </Button>
-              </li>
-            )}
           </ul>
         </Offcanvas.Body>
       </Offcanvas>
@@ -308,4 +295,4 @@ const MobileSideBar = () => {
   );
 };
 
-export default MobileSideBar;
+export default MobileSideBarNoMore;

@@ -64,7 +64,7 @@ const Invitations = () => {
       <div className="myInfoContent m-2">
         <div className="bigCard">
           <div className="tableContainer">
-            <div className="addMember px-4 flexcenterbetween">
+            <div className="addMember px-4 ">
               <input
                 type="search"
                 className="w-50 p-2 rounded-3 searchInput"

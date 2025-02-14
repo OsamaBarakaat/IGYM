@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SideBar from "../../components/SideBar/SideBar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import MobileSideBar from "../../components/MobileSideBar/MobileSideBar";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../Sotre/Action/User.action";
@@ -9,6 +9,7 @@ import Loader from "../../components/Loader/Loader";
 import RequireAuth from "../Auth/ProtectdRoutes/RequireAuth";
 import { toast } from "react-toastify";
 import { setUnReadNotification } from "../../Sotre/Action/unReadNotification";
+import MobileSideBarNoMore from "../../components/MobileSideBar/MobileSideBarNoMore";
 
 const Layout = ({ socket }) => {
   const user = useSelector((state) => state.user);
@@ -84,6 +85,9 @@ const Layout = ({ socket }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  const location = useLocation()
+  console.log(location)
   if (loading) {
     return (
       <>
@@ -102,8 +106,8 @@ const Layout = ({ socket }) => {
           )}
           <div className="main-content">
             <Outlet />
+            {windowWidth <= 768 && <MobileSideBar />}
           </div>
-          {windowWidth <= 768 && <MobileSideBar />}
         </div>
       </RequireAuth>
     </>

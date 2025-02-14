@@ -39,3 +39,21 @@
         font-size: 1.2em !important;
     }
 }
+
+.addMember {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media (max-width:768px) {
+    .addMember {
+        flex-direction: column;
+
+        div,
+        button,
+        input {
+            width: 100% !important;
+        }
+    }
+}

@@ -174,7 +174,7 @@ const Trainees = () => {
       <div className="myInfoContent m-2">
         <div className="bigCard">
           <div className="tableContainer">
-            <div className="addMember px-4 flexcenterbetween">
+            <div className="addMember px-4 ">
               <button className="PrimaryButton" onClick={handleShow}>
                 <span>
                   <svg

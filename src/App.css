@@ -13,7 +13,6 @@
 
 body {
     font-family: "arabic-font" !important;
-    font-size: 1.25rem !important;
     font-weight: 600 !important;
 
 }
@@ -154,13 +153,7 @@ input {
 
 }
 
-@media screen and (max-width: 768px) {
-    .main-content {
-        padding-bottom: 3rem;
-        margin-bottom: 5rem;
-    }
 
-}
 
 .midText {
     font-size: 1.175rem;
