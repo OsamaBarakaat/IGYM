@@ -340,12 +340,24 @@ const Home = ({ socket }) => {
                       />
                     </div>
                     <div>
-                      <h4>{item.userGym?.user.name}</h4>
-                      <p className="opacity-75">{formatDate(item.date)}</p>
+                      <h5>{item.userGym?.user.name}</h5>
+                      <p className="opacity-75">
+                        {new Date(item.date).toLocaleString(undefined, {
+                          timeZone: "UTC",
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
+                          hour12: true,
+                        })}
+                      </p>
                     </div>
-                    <div className="divider"></div>
+                    <div className="flexcentercenter">
+                      <div className="divider"></div>
+                    </div>
                     <div>
-                      <h4>{t("Expiration Date")}</h4>
+                      <h5>{t("Expiration Date")}</h5>
                       <p className="opacity-75">
                         {item.userGym.plan
                           ? item.userGym.plan.expiredAt.split("T")[0]

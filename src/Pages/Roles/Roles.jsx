@@ -19,13 +19,15 @@ const Roles = () => {
   const axiosPrivate = useAxiosPrivate();
   const rolesArray = [
     "GYM_INFO",
-    "MEMBERS",
     "TRAINEES",
     "COACHES",
     "CLASSES",
     "PLANS",
     "NOTIFICATIONS",
     "HOME",
+    "STAFF",
+    "FINANCIAL",
+    "UPCOMINGPAYEMENTS",
   ];
 
   const handleEditRole = (roleId) => {
@@ -123,7 +125,7 @@ const Roles = () => {
                     return (
                       <div
                         key={index}
-                        className=" w-40 m-1 p-1 flexcenterstart"
+                        className=" w-40 m-1 p-1 gap-2 flexcenterstart"
                       >
                         <span className="spanSVGPrimary">
                           <svg
@@ -137,7 +139,7 @@ const Roles = () => {
                             <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
                           </svg>
                         </span>
-                        <span className="mx-2">{permission}</span>
+                        <span>{t(`${permission}`)}</span>
                       </div>
                     );
                   })}
@@ -151,7 +153,7 @@ const Roles = () => {
                       return (
                         <div
                           key={index}
-                          className=" w-40 m-1 p-1 flexcenterstart"
+                          className=" w-40 m-1 p-1 gap-2 flexcenterstart"
                         >
                           <span className="spanSVGDanger">
                             <svg
@@ -165,7 +167,7 @@ const Roles = () => {
                               <path d="M15 8a6.97 6.97 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0" />
                             </svg>
                           </span>
-                          <span className="">{role}</span>
+                          <span className="">{t(`${role}`)}</span>
                         </div>
                       );
                     })}

@@ -614,6 +614,7 @@ const TraineeProfile = () => {
                       </td>
                       <td data-label={t("Invitation Date")}>
                         {new Date(trainee.createdAt).toLocaleString(undefined, {
+                          timeZone: "UTC",
                           year: "numeric",
                           month: "numeric",
                           day: "numeric",

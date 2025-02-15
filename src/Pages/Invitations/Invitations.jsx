@@ -112,14 +112,18 @@ const Invitations = () => {
                               {invitation.invitationNationalId}
                             </td>
                             <td data-label={t("Invitation Date")}>
-                              {new Date(invitation.createdAt).toLocaleString(undefined, {
-                          year: "numeric",
-                          month: "numeric",
-                          day: "numeric",
-                          hour: "numeric",
-                          minute: "numeric",
-                          hour12: true,
-                        })}
+                              {new Date(invitation.createdAt).toLocaleString(
+                                undefined,
+                                {
+                                  timeZone: "UTC",
+                                  year: "numeric",
+                                  month: "numeric",
+                                  day: "numeric",
+                                  hour: "numeric",
+                                  minute: "numeric",
+                                  hour12: true,
+                                }
+                              )}
                             </td>
                           </tr>
                         );

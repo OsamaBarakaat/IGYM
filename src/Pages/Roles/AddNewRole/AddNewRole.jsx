@@ -22,7 +22,9 @@ const AddNewRole = () => {
     { id: "CLASSES", name: t("Classes"), icon: "🏃‍♂️" },
     { id: "NOTIFICATIONS", name: t("Notifications"), icon: "🔔" },
     { id: "GYM_INFO", name: t("Gym Info"), icon: "📊" },
-    { id: "MEMBERS", name: t("Members"), icon: "👤" },
+    { id: "STAFF", name: t("Staff"), icon: "👤" },
+    { id: "FINANCIAL", name: t("Financial"), icon: "💵" },
+    { id: "UPCOMINGPAYEMENTS", name: t("UpcomingPayemnt"), icon: "💱" },
   ];
 
   const handleItemClick = (item) => {

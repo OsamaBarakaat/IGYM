@@ -709,6 +709,7 @@ const TransactionTable = ({
             <td>{item.amount}</td>
             <td>
               {new Date(item.createdAt).toLocaleString(undefined, {
+                timeZone: "UTC",
                 year: "numeric",
                 month: "numeric",
                 day: "numeric",
