@@ -35,10 +35,14 @@ import TraineeProfile from "./Pages/Trainees/TraineeProfile/TraineeProfile";
 import Invitations from "./Pages/Invitations/Invitations";
 import SubNew from "./Pages/SubNew/SubNew";
 
- const ENDPOINT = "https://api.igymsystem.com/";
-// const ENDPOINT = "http://localhost:8000";
-//const ENDPOINT = "https://gym-api-d2a5.onrender.com"
-let socket = io(ENDPOINT);
+// const ENDPOINT = "https://api.igymsystem.com/";
+const ENDPOINT = "http://localhost:8000";
+// const ENDPOINT = "https://gym-api-d2a5.onrender.com"
+let socket = io(ENDPOINT, {
+  reconnection: true,
+  reconnectionAttempts: 10,
+  reconnectionDelay: 500, // Retry every 500ms
+});
 
 function App() {
   const theme = useSelector((state) => {
@@ -61,11 +65,21 @@ function App() {
   useEffect(() => {
     if (gymId) {
       socket.emit("setup", gymId);
-      socket.on("connected", () => {
-        console.log("socket connect");
-      });
+      console.log("Setup emitted");
+
+      const handleConnect = () => {
+        console.log("Socket reconnected");
+        socket.emit("setup", gymId); // Re-emit setup on reconnect
+      };
+
+      socket.on("connect", handleConnect);
+
+      return () => {
+        socket.off("connect", handleConnect); // Cleanup to avoid duplicate listeners
+      };
     }
   }, [gymId]);
+
 
   return (
     <Router>
