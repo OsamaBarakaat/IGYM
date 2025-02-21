@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
+const landingPageLink = "https://igymsystem.com/";
 const Subscreption = () => {
   const { t } = useTranslation();
   const [plans, setPlans] = useState([]);
@@ -94,7 +95,7 @@ const Subscreption = () => {
           <hr />
           <div className="d-flex justify-content-center align-items-center">
             <a
-              href="https://gym-lp.vercel.app/#pricing"
+              href={`${landingPageLink}#pricing`}
               target="_blank"
               className="SecondaryButton text-decoration-none"
             >
@@ -136,7 +137,7 @@ const Subscreption = () => {
                 <hr />
                 <div className="d-flex justify-content-center align-items-center">
                   <a
-                    href="https://gym-lp.vercel.app/#pricing"
+                    href={`${landingPageLink}#pricing`}
                     target="_blank"
                     className="SecondaryButton text-decoration-none"
                   >
