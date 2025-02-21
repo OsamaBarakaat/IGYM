@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import { invitationValidationSchema } from "../../../Validations/PlanValidation";
+import { convertToCreatedAtFormat } from "../../../createdAt";
 
 const TraineeProfile = () => {
   const { t } = useTranslation();
@@ -140,6 +141,10 @@ const TraineeProfile = () => {
       setInBodyCount((prevCount) => prevCount - 1);
     }
   };
+  const [showDeleteTrainee, setShowDeleteTrainee] = useState(false);
+
+  const handleCloseDeleteTrainee = () => setShowDeleteTrainee(false);
+  const handleShowDeleteTrainee = () => setShowDeleteTrainee(true);
 
   // -------
   const [showConfirmPrivateSession, setShowConfirmPrivateSession] =
@@ -560,7 +565,48 @@ const TraineeProfile = () => {
                   />
                 </FloatingLabel>
               </div>
+              <div className="inputFeild">
+                <FloatingLabel
+                  controlId="floatingInput"
+                  label={t("Join date")}
+                  id={"floatingInput"}
+                >
+                  <Form.Control
+                    type="text"
+                    placeholder={t("Join date")}
+                    name="joinDate"
+                    defaultValue={convertToCreatedAtFormat(
+                      trainee?.plan?.startedAt
+                    )}
+                    disabled
+                  />
+                </FloatingLabel>
+              </div>
+              <div className="inputFeild">
+                <FloatingLabel
+                  controlId="floatingInput"
+                  label={t("Expire date")}
+                  id={"floatingInput"}
+                >
+                  <Form.Control
+                    type="text"
+                    placeholder={t("Expire date")}
+                    name="expireDate"
+                    defaultValue={convertToCreatedAtFormat(
+                      trainee?.plan?.expiredAt
+                    )}
+                    disabled
+                  />
+                </FloatingLabel>
+              </div>
             </div>
+            <Button
+              variant="danger"
+              className="w-100 mt-3"
+              onClick={handleShowDeleteTrainee}
+            >
+              {t("Delete Trainee")}
+            </Button>
           </div>
         </div>
       </form>
@@ -910,6 +956,26 @@ const TraineeProfile = () => {
               </Button>
             </div>
           </Modal.Body>
+        </Modal>
+
+        <Modal
+          show={showDeleteTrainee}
+          onHide={handleCloseDeleteTrainee}
+          backdrop="static"
+          keyboard={false}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>{t("Delete Trainee")}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {t("Are you sure you want to delete trainee?")}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseDeleteTrainee}>
+              {t("Close")}
+            </Button>
+            <Button variant="primary">{t("Delete")}</Button>
+          </Modal.Footer>
         </Modal>
       </div>
     </div>

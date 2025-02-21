@@ -242,7 +242,7 @@ const Trainees = () => {
                       <td data-label={t("Gender")}>{trainee?.user?.gender}</td>
                       <td data-label={t("Plan")}>{trainee?.plan?.name}</td>
                       <td data-label={t("Join Date")}>
-                        {convertToCreatedAtFormat(trainee?.createdAt)}
+                        {convertToCreatedAtFormat(trainee?.plan?.startedAt)}
                       </td>
                       <td data-label={t("Expire Date")}>
                         {convertToCreatedAtFormat(trainee?.plan?.expiredAt)}
@@ -313,22 +313,22 @@ const Trainees = () => {
                   {t("Previous")}
                 </button>
                 <div className="pages">
-                        {pageArr.map((pageNumber) => {
-                          return (
-                            <span
-                              key={pageNumber}
-                              className={`mx-3 pag-item ${
-                                page === pageNumber + 1 ? "active-page" : ""
-                              }`}
-                              onClick={() => {
-                                setPage(pageNumber + 1);
-                              }}
-                            >
-                              {pageNumber + 1}
-                            </span>
-                          );
-                        })}
-                      </div>
+                  {pageArr.map((pageNumber) => {
+                    return (
+                      <span
+                        key={pageNumber}
+                        className={`mx-3 pag-item ${
+                          page === pageNumber + 1 ? "active-page" : ""
+                        }`}
+                        onClick={() => {
+                          setPage(pageNumber + 1);
+                        }}
+                      >
+                        {pageNumber + 1}
+                      </span>
+                    );
+                  })}
+                </div>
                 <button
                   className={`PrimaryButtonTwo`}
                   style={{
