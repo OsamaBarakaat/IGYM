@@ -60,7 +60,7 @@ const Coaches = () => {
     e.preventDefault();
     try {
       await axiosPrivate.post(`/gyms/${gymId}/coaches`, {
-        userPhone: inputRef.current.value,
+        email: inputRef.current.value,
         name: nameRef.current.value,
       });
       fetchCoaches();
@@ -282,16 +282,15 @@ const Coaches = () => {
                     <div>
                       <FloatingLabel
                         controlId="floatingInput"
-                        label={t("Phone number")}
+                        label={t("Email")}
                         id={"floatingInput"}
                         className="mb-3"
                       >
                         <Form.Control
-                          type="number"
+                          type="email"
                           ref={inputRef}
                           min={0}
-                          placeholder={t("Phone number")}
-                          name="number"
+                          placeholder={t("Email")}
                         />
                       </FloatingLabel>
                     </div>

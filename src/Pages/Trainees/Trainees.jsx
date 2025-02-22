@@ -89,12 +89,12 @@ const Trainees = () => {
     e.preventDefault();
 
     if (!inputRef.current.value || !planRef.current.value) {
-      toast.error(t("user phone and plan are required"));
+      toast.error(t("user email and plan are required"));
       return;
     }
     try {
       await axiosPrivate.post(`/gyms/${gymId}/trainees`, {
-        userPhone: inputRef.current.value,
+        email: inputRef.current.value,
         planId: planRef.current.value,
       });
       fetchTrainees();
@@ -373,16 +373,16 @@ const Trainees = () => {
                     <div>
                       <FloatingLabel
                         controlId="floatingInput"
-                        label={t("Phone number")}
+                        label={t("Email")}
                         id={"floatingInput"}
                         className="mb-3"
                       >
                         <Form.Control
                           ref={inputRef}
-                          type="number"
+                          type="email"
                           min={0}
-                          placeholder={t("Phone number")}
-                          name="number"
+                          placeholder={t("Email")}
+                          name="email"
                         />
                       </FloatingLabel>
                     </div>
