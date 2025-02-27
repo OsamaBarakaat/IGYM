@@ -378,6 +378,24 @@ const TraineeProfile = () => {
     fetchInvitations();
   }, [gymId, keyWord, page, limit, traineeId, trainee]);
 
+  const handleDeleteTrainee = async () => {
+    try {
+      const response = await axiosPrivate.delete(
+        `/gyms/${gymId}/trainees/${traineeId}`
+      );
+      if (response) {
+        console.log(response);
+        toast.success(t("trainee deleted succefully"));
+        setTimeout(() => {
+          navigate("/trainees");
+        }, 1000);
+      }
+    } catch (error) {
+      toast.error("some thing went wrong");
+      console.log(error);
+    }
+  };
+
   return (
     <div className="m-2">
       <Heading content={t("Trainee Profile")} />
@@ -974,7 +992,14 @@ const TraineeProfile = () => {
             <Button variant="secondary" onClick={handleCloseDeleteTrainee}>
               {t("Close")}
             </Button>
-            <Button variant="primary">{t("Delete")}</Button>
+            <Button
+              variant="primary"
+              onClick={() => {
+                handleDeleteTrainee();
+              }}
+            >
+              {t("Delete")}
+            </Button>
           </Modal.Footer>
         </Modal>
       </div>
