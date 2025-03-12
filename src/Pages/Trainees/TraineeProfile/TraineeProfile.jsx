@@ -12,7 +12,14 @@ import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import { invitationValidationSchema } from "../../../Validations/PlanValidation";
 import { convertToCreatedAtFormat } from "../../../createdAt";
-
+const isTraineeInFreeze = (trainee) => {
+  const today = new Date();
+  return trainee?.plan?.freeze?.some(({ start, end }) => {
+    const freezeStart = new Date(start);
+    const freezeEnd = new Date(end);
+    return today >= freezeStart && today <= freezeEnd;
+  });
+};
 const TraineeProfile = () => {
   const { t } = useTranslation();
   const { traineeId } = useParams();
@@ -21,6 +28,12 @@ const TraineeProfile = () => {
   const axiosPrivate = useAxiosPrivate();
   const trainee = state?.trainee || traineeNew;
   console.log(trainee);
+
+  const [isFrozen, setIsFrozen] = useState(false);
+
+  useEffect(() => {
+    setIsFrozen(isTraineeInFreeze(trainee));
+  }, [trainee]);
 
   const navigate = useNavigate();
   const getTrainee = async () => {
@@ -401,7 +414,24 @@ const TraineeProfile = () => {
       <Heading content={t("Trainee Profile")} />
       <form action="">
         <div className="mainContentOfCoach ">
-          <div className="imageAndsave bigCard d-flex justify-content-center align-items-center flex-column">
+          <div className="imageAndsave bigCard d-flex justify-content-center align-items-center flex-column p-4">
+            {isFrozen && (
+              <div className="crystal-overlay">
+                {/* Add multiple crystal elements for animation */}
+                {[...Array(20)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="crystal-particle"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      animationDelay: `${Math.random() * 2}s`,
+                    }}
+                  />
+                ))}
+                <div className="frost-text">{t("FROZEN")}</div>
+              </div>
+            )}
+
             <div className="coachImage ">
               <img
                 src={trainee?.user?.image || defaultt}
@@ -615,6 +645,27 @@ const TraineeProfile = () => {
                     )}
                     disabled
                   />
+                </FloatingLabel>
+              </div>
+              <div className="inputFeild">
+                <FloatingLabel
+                  controlId="floatingInput"
+                  label={t("Freeze Days")}
+                  id={"floatingInput"}
+                >
+                  <Form.Control
+                    type="text"
+                    placeholder={t("Freeze Days")}
+                    name="freezeDays"
+                    value={`${trainee?.plan.usedFreezeDays} / ${trainee?.plan.freezeDays}`}
+                    disabled
+                    title={`${trainee?.plan.usedFreezeDays} days used out of ${trainee?.plan.freezeDays} total freeze days`}
+                    aria-label={`Used freeze days: ${trainee?.plan.usedFreezeDays} out of ${trainee?.plan.freezeDays} total`}
+                  />
+                  {/* Optional: Add a small progress indicator
+                  <div className="freeze-days-progress mt-1">
+                    Remaining: {trainee?.plan.freezeDays - trainee?.plan.usedFreezeDays} days
+                  </div> */}
                 </FloatingLabel>
               </div>
             </div>

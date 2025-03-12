@@ -64,3 +64,120 @@
     gap: 10px;
     padding: 20px;
 }
+
+/* Frost overlay effect */
+.crystal-overlay {
+    /* position: absolute;
+    top: 0;
+    left: 0; */
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0.4) 50%,
+            rgba(255, 255, 255, 0.1) 100%);
+    backdrop-filter: blur(2px);
+    animation: frost-appear 0.5s ease-out;
+}
+
+/* Falling crystals animation */
+.crystal-particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(45deg, #3ca7ee, #bae6fd);
+    clip-path: polygon(50% 0%, 100% 25%, 50% 100%, 0% 25%);
+    animation: crystal-fall 3s linear infinite;
+    opacity: 0.8;
+}
+
+@keyframes crystal-fall {
+    0% {
+        transform: translateY(-50%) rotate(0deg);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translateY(50vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Frost text effect */
+.frost-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #498ab5;
+    text-shadow:
+        0 0 10px #bae6fd,
+        0 0 20px #7dd3fc,
+        0 0 30px #38bdf8;
+    animation: text-glitch 2s infinite;
+}
+
+@keyframes frost-appear {
+    from {
+        opacity: 0;
+        filter: hue-rotate(0deg);
+    }
+
+    to {
+        opacity: 1;
+        filter: hue-rotate(360deg);
+    }
+}
+
+@keyframes text-glitch {
+    0% {
+        transform: translate(-50%, -50%) skew(0deg);
+    }
+
+    20% {
+        transform: translate(-50%, -50%) skew(2deg);
+    }
+
+    40% {
+        transform: translate(-50%, -50%) skew(-2deg);
+    }
+
+    60% {
+        transform: translate(-50%, -50%) skew(3deg);
+    }
+
+    80% {
+        transform: translate(-50%, -50%) skew(-1deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) skew(0deg);
+    }
+}
+
+/* Add frost effect to image */
+.coachImage.frost-effect img {
+    filter: brightness(1.1) contrast(0.9) saturate(0.5);
+    position: relative;
+}
+
+.coachImage.frost-effect::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 50%;
+    background: linear-gradient(45deg,
+            rgba(186, 224, 250, 0.1),
+            rgba(186, 230, 253, 0.2));
+    pointer-events: none;
+}

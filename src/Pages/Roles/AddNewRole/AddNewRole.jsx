@@ -24,6 +24,7 @@ const AddNewRole = () => {
     { id: "GYM_INFO", name: t("Gym Info"), icon: "📊" },
     { id: "MEMBERS", name: t("Staff"), icon: "👤" },
     { id: "FINANCIAL", name: t("Financial"), icon: "💵" },
+    { id: "STAFF", name: t("Staff members"), icon: "💪" },
     { id: "UPCOMINGPAYEMENTS", name: t("UpcomingPayemnt"), icon: "💱" },
   ];
 
