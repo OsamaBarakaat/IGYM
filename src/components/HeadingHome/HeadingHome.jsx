@@ -8,22 +8,24 @@ import Tooltip from "react-bootstrap/Tooltip";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import axiosInstance from "../../api/axios";
+import Loader from "../Loader/Loader";
+import { Spinner } from "react-bootstrap";
 
 const HeadingHome = ({ content }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data: userData } = useSelector((state) => state.user);
+  const { data: userData, gymId } = useSelector((state) => state.user);
   const [gymInfo, setGymInfo] = useState(null);
-  console.log("user data", userData);
-  const lang = localStorage.getItem("language");
-  const { gymId } = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(true); // Track loading state
+
   const fetchGymInfo = async () => {
     try {
       const response = await axiosInstance.get(`/gyms/${gymId}`);
-      console.log("gymInfo", response.data.data);
       setGymInfo(response.data.data);
     } catch (error) {
       toast.error(error.response.data.message);
+    } finally {
+      setLoading(false); // Stop loading after fetching
     }
   };
 
@@ -31,7 +33,6 @@ const HeadingHome = ({ content }) => {
     fetchGymInfo();
   }, []);
 
-  // open ? `inactive-button-tooltip` :
   const profile = (props) => (
     <Tooltip id={"button-tooltip"} {...props}>
       {t("profile")}
@@ -48,19 +49,18 @@ const HeadingHome = ({ content }) => {
       >
         <div
           className="flexcenterstart gap-1 box"
-          onClick={() => {
-            navigate("/profile");
-          }}
+          onClick={() => navigate("/profile")}
         >
           <div>
             <div className="text-mid">{userData?.name}</div>
             <div className="text-mid">{userData?.role?.name}</div>
           </div>
           <div className="logoOfHome">
-            <img
-              src={gymInfo?.logo || userData?.image || defaultAvatar}
-              alt="default"
-            />
+            {loading ? (
+              <Spinner animation="border" />
+            ) : (
+              <img src={gymInfo?.logo || defaultAvatar} alt="Gym Logo" />
+            )}
           </div>
         </div>
       </OverlayTrigger>
