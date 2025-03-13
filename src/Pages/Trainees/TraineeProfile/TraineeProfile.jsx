@@ -650,6 +650,21 @@ const TraineeProfile = () => {
               <div className="inputFeild">
                 <FloatingLabel
                   controlId="floatingInput"
+                  label={t("status")}
+                  id={"floatingInput"}
+                >
+                  <Form.Control
+                    type="text"
+                    placeholder={t("status")}
+                    name="status"
+                    value={`${isFrozen ? t("Frozen") : t("Active")}`}
+                    disabled
+                  />
+                </FloatingLabel>
+              </div>
+              <div className="inputFeild">
+                <FloatingLabel
+                  controlId="floatingInput"
                   label={t("Freeze Days")}
                   id={"floatingInput"}
                 >
