@@ -40,17 +40,44 @@ const Home = ({ socket }) => {
     }
   };
 
-  const handleAccept = async (id) => {
-    try {
-      await axiosPrivate.patch(`/gyms/${gymId}/subscriptions/${id}`, {
-        status: "accepted",
-      });
-      toast.success(t("Subscription accepted successfully"));
-      fetchStats();
-    } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
+  const handleAccept = async (item) => {
+    if (!item || typeof item !== "object") {
+      console.error("Invalid item provided to handleAccept");
+      return;
     }
+
+    try {
+      if (item.type === "plan" && item.isNewUser === false) {
+        return await handlePlanRenewal(item);
+      } else {
+        return await handleSubscriptionAcceptance(item);
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const handlePlanRenewal = async (item) => {
+    await axiosPrivate.post(`/gyms/${gymId}/trainees/${item._id}/renew`, {
+      planId: item.plan,
+    });
+    toast.success(t("Trainee plan updated successfully"));
+    await fetchStats();
+  };
+
+  const handleSubscriptionAcceptance = async (item) => {
+    await axiosPrivate.patch(`/gyms/${gymId}/subscriptions/${item._id}`, {
+      status: "accepted",
+    });
+    toast.success(t("Subscription accepted successfully"));
+    await fetchStats();
+  };
+
+  const handleError = (error) => {
+    console.error("Error in handleAccept:", error);
+    toast.error(
+      error.response?.data?.message || "An unexpected error occurred"
+    );
   };
 
   const handleReject = async (id) => {
@@ -80,6 +107,25 @@ const Home = ({ socket }) => {
       fetchStats();
     });
   }, []);
+
+  // const handleEditTraineePlan = async (e) => {
+  //     e.preventDefault();
+
+  //     try {
+  //       await axiosPrivate.post(
+  //         `/gyms/${gymId}/trainees/${showEditTrainee.traineeId}/renew`,
+  //         {
+  //           planId: newPlanRef.current.value,
+  //         }
+  //       );
+  //       fetchTrainees();
+  //       handleCloseEditTrainee();
+  //       toast.success(t("Trainee plan updated successfully"));
+  //     } catch (error) {
+  //       console.log(error);
+  //       toast.error(error.response.data.message);
+  //     }
+  //   };
 
   function changeCrowdedName(key) {
     switch (key) {
@@ -207,7 +253,7 @@ const Home = ({ socket }) => {
                   <p className="mb-0">EGP{item.cost}</p>
                   <div className="d-flex justify-content-center align-items-center gap-1 buttons">
                     <button
-                      onClick={() => handleAccept(item._id)}
+                      onClick={() => handleAccept(item)}
                       className="SecondaryButton"
                     >
                       <svg
@@ -243,7 +289,7 @@ const Home = ({ socket }) => {
               <p className="text-center w-100">{t("noUpcomingPaymentsYet")}</p>
             )}
           </div>
-          <div className="flexcolcenterstart">
+          <div className="flexcolcenterstart sticky-bottom">
             <div className="flexcenterstart">
               <p>{t("class")}:</p>
               <div className="redsquare"></div>
