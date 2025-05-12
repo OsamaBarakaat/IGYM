@@ -58,7 +58,8 @@ const Home = ({ socket }) => {
   };
 
   const handlePlanRenewal = async (item) => {
-    await axiosPrivate.post(`/gyms/${gymId}/trainees/${item._id}/renew`, {
+    console.log("Renewing plan for item:", item);
+    await axiosPrivate.post(`/gyms/${gymId}/trainees/${item.user._id}/renew`, {
       planId: item.plan,
     });
     toast.success(t("Trainee plan updated successfully"));
@@ -95,7 +96,6 @@ const Home = ({ socket }) => {
 
   useEffect(() => {
     fetchStats();
-
     socket.on("new subscription", () => {
       console.log("new subscription");
       fetchStats();

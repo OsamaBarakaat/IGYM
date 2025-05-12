@@ -104,7 +104,7 @@ const Notifications = ({ socket }) => {
                     <div>
                       <p className="text-center opacity-50 midText">
                         {new Date(notification.createdAt).toLocaleString(undefined, {
-                          timeZone: "UTC",
+                          // timeZone: "Africa/Cairo",
                           year: "numeric",
                           month: "numeric",
                           day: "numeric",
