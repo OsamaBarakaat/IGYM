@@ -124,7 +124,7 @@ const PushNotifications = () => {
               <div>
                 <FloatingLabel
                   controlId="floatingInput"
-                  label={t("email")}
+                  label={t("Email")}
                   id={
                     formikSingle.errors.email && formikSingle.touched.email
                       ? "floatingError"
@@ -134,7 +134,7 @@ const PushNotifications = () => {
                 >
                   <Form.Control
                     type="text"
-                    placeholder={t("email")}
+                    placeholder={t("Email")}
                     onChange={formikSingle.handleChange}
                     onBlur={formikSingle.handleBlur}
                     value={formikSingle.values.email}
