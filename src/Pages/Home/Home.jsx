@@ -230,6 +230,14 @@ const Home = ({ socket }) => {
             {stats?.upcomingPayments.length ? (
               stats?.upcomingPayments.map((item) => (
                 <div
+                  title={new Date(item?.createdAt).toLocaleString(undefined, {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  })}
                   className={`upcomingPaymentsItem ${
                     item?.type === "class"
                       ? "redbg"
